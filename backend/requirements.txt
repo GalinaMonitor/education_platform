@@ -19,3 +19,4 @@ zope.interface
 python-jose
 passlib
 python-multipart
+fastapi_pagination

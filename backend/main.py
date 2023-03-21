@@ -16,12 +16,13 @@ from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
 from db.services.theme import ThemeService
 from db.services.user import UserService
+from settings import settings
 
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[settings.front_url],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

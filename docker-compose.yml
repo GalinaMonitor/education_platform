@@ -1,0 +1,54 @@
+version: "3.9"
+
+networks:
+  network:
+    ipam:
+      driver: default
+      config:
+        - subnet: "11.1.0.0/24"
+
+services:
+  backend:
+    networks:
+      network:
+        ipv4_address: 11.1.0.11
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    container_name: backend
+    depends_on:
+        postgres:
+          condition: service_healthy
+
+  postgres:
+    networks:
+      network:
+        ipv4_address: 11.1.0.100
+    image: postgres:13.3
+    container_name: postgres
+    env_file:
+      - .env
+    ports:
+      - '5432:5432'
+    #    volumes:
+    #      - /data/postgresql/bot:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d admin_db" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    networks:
+      network:
+        ipv4_address: 11.1.0.10
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    container_name: frontend

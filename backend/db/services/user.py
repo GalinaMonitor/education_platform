@@ -2,8 +2,9 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.exceptions import NotFoundException
-from db.models.all_models import User, CreateUser
+from db.models import User, Chat
 from db.services.base import BaseService
+from models import CreateUser
 
 
 class UserService(BaseService):
@@ -24,6 +25,14 @@ class UserService(BaseService):
 
     async def get_by_email(self, email: str) -> User:
         statement = select(self.model).where(self.model.email == email)
+        results = await self.session.exec(statement)
+        result = results.first()
+        if not result:
+            raise NotFoundException()
+        return result
+
+    async def get_base_chat(self, id: int) -> Chat:
+        statement = select(Chat).where(Chat.user_id == id and Chat.coursechapter_id is None)
         results = await self.session.exec(statement)
         result = results.first()
         if not result:

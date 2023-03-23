@@ -8,13 +8,14 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from auth import Token, authenticate_user, ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token, \
     get_current_active_user
 from db.config import get_session
-from db.models.all_models import CreateUser, User
+from db.models import User
 from db.services.user import UserService
+from models import CreateUser
 
 router = APIRouter()
 
 
-@router.post("/form_token", response_model=Token)
+@router.post("/form_token/", response_model=Token)
 async def form_login_for_access_token(
         form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: AsyncSession = Depends(get_session)
 ):
@@ -32,7 +33,7 @@ async def form_login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/token", response_model=Token)
+@router.post("/token/", response_model=Token)
 async def login_for_access_token(
         user: CreateUser, session: AsyncSession = Depends(get_session)
 ):
@@ -57,6 +58,6 @@ async def read_users_me(
     return current_user
 
 
-@router.post("/users", response_model=User)
+@router.post("/users/", response_model=User)
 async def create_user(user: CreateUser, session: AsyncSession = Depends(get_session)):
     return await UserService(session).create(user)

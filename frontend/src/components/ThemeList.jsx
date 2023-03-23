@@ -14,7 +14,7 @@ const ThemeList = ({course_chapter_id}) => {
 
     useEffect(() => {
         fetchThemes()
-    }, [])
+    }, [course_chapter_id])
 
     return (
         <>

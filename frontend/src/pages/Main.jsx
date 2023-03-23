@@ -21,7 +21,7 @@ const Main: FC = () => {
                 </Col>
                 <Col span={16}>
                     <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'} text={'ЧАТ С ПЛАТФОРМОЙ'}>
-                        <Chat course_chapter_id={1}/>
+                        <Chat/>
                     </Card>
                 </Col>
             </Row>

@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.config import engine
-from db.models.all_models import User
+from db.models import User
 from db.services.user import UserService
 from settings import settings
 

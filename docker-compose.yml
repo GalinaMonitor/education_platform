@@ -23,6 +23,49 @@ services:
     depends_on:
         postgres:
           condition: service_healthy
+        redis:
+          condition: service_healthy
+
+  redis:
+    networks:
+      network:
+        ipv4_address: 11.1.0.102
+    image: redis/redis-stack
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery_beat:
+    networks:
+      network:
+        ipv4_address: 11.1.0.12
+    image: education_platform-backend
+    env_file:
+      - .env
+    restart: always
+    container_name: celery_beat
+    depends_on:
+      - backend
+    entrypoint: [ "celery", "-A", "async_tasks.celery_config", "beat", "--loglevel=INFO" ]
+
+  celery_worker:
+    networks:
+      network:
+        ipv4_address: 11.1.0.13
+    image: education_platform-backend
+    env_file:
+      - .env
+    restart: always
+    container_name: celery_worker
+    depends_on:
+      - backend
+    entrypoint: [ "celery", "-A", "async_tasks.celery_config", "worker", "--loglevel=INFO" ]
 
   postgres:
     networks:

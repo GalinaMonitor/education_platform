@@ -10,15 +10,17 @@ import {timeOptions} from "../utils/constants";
 const CourseList: FC = () => {
     const [courses, setCourses] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalCourseId, setModalCourseId] = useState(null)
+    const [modalReceiveTime, setModalReceiveTime] = useState('10:00')
 
     const showModal = (course_id) => {
-        console.log(course_id)
+        setModalCourseId(course_id)
         setIsModalOpen(true);
     };
 
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
+    const handleTimeChange = (value) => {
+        setModalReceiveTime(value)
+    }
 
     const handleCancel = () => {
         setIsModalOpen(false);
@@ -28,6 +30,16 @@ const CourseList: FC = () => {
         const response = await CourseService.get()
         setCourses([...response.data])
     })
+
+    const [updateReceiveTime, TimeIsLoading, TimeError] = useFetching(async () => {
+        await CourseService.set_receive_time(modalCourseId, modalReceiveTime)
+    })
+
+    const handleOk = () => {
+        updateReceiveTime()
+        setIsModalOpen(false);
+        setTimeout(fetchCourses, 100);
+    };
 
     useEffect(() => {
         fetchCourses()
@@ -52,7 +64,7 @@ const CourseList: FC = () => {
                     </Dropdown>
                     <Button onClick={() => {
                         showModal(course.id)
-                    }}>Время</Button>
+                    }}>{course.receive_time}</Button>
                     <TextBlock key={course.id} big_text={course.name}/>
                     <Divider/>
                 </>
@@ -60,7 +72,7 @@ const CourseList: FC = () => {
             <Modal open={isModalOpen} onCancel={handleCancel} footer={[]}>
                 <p className={'text-center'}>Во сколько Вам будет удобно получать обучающий материал?</p>
                 <div>
-                    <Select defaultValue="10:00" options={timeOptions}/>
+                    <Select defaultValue="10:00" options={timeOptions} onChange={handleTimeChange}/>
                     <Button onClick={handleOk}>ОК</Button>
                 </div>
             </Modal>

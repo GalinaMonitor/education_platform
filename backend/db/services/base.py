@@ -11,8 +11,10 @@ class BaseService:
         self.session = session
         self.model = None
 
-    async def list(self) -> List[SQLModel]:
+    async def list(self, **kwargs) -> List[SQLModel]:
         statement = select(self.model)
+        for key, value in kwargs.items():
+            statement = statement.where(getattr(self.model, key) == value)
         results = await self.session.exec(statement)
         result = results.all()
         return result

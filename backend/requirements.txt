@@ -20,3 +20,6 @@ python-jose
 passlib
 python-multipart
 fastapi_pagination
+celery
+redis
+requests

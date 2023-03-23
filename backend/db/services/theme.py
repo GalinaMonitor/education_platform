@@ -1,6 +1,6 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.models.all_models import Theme
+from db.models import Theme
 from db.services.base import BaseService
 
 

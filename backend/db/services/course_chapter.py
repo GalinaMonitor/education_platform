@@ -1,9 +1,9 @@
 from typing import List
 
-from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select
+from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.models.all_models import Message, CourseChapter, Theme
+from db.models import CourseChapter, Theme
 from db.services.base import BaseService
 
 

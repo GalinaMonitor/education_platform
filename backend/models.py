@@ -1,5 +1,5 @@
 from datetime import time
-from typing import List
+from typing import List, Optional
 
 from sqlmodel import SQLModel
 
@@ -17,6 +17,12 @@ class CourseRead(SQLModel):
 class CreateUser(SQLModel):
     email: str
     password: str
+
+
+class UpdateUser(SQLModel):
+    fullname: Optional[str]
+    company: Optional[str]
+    job: Optional[str]
 
 
 class UpdateChat(SQLModel):

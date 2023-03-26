@@ -39,7 +39,7 @@ class BaseService:
         model = results.first()
         if not model:
             raise NotFoundException()
-        for key, value in data.dict().items():
+        for key, value in data.dict(exclude_unset=True).items():
             setattr(model, key, value)
         self.session.add(model)
         await self.session.commit()

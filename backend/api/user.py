@@ -10,6 +10,7 @@ from auth import get_current_active_user
 
 from db.services.chat import ChatService
 from db.services.user import UserService
+from models import UpdateUser
 
 router = APIRouter()
 
@@ -21,3 +22,9 @@ async def get_messages(current_user: Annotated[User, Depends(get_current_active_
     chat_service = ChatService(session)
     chat = await user_service.get_base_chat(id=current_user.id)
     return paginate(await chat_service.messages(chat.id))
+
+
+@router.patch('/')
+async def patch(user: UpdateUser, current_user: Annotated[User, Depends(get_current_active_user)],
+                session: AsyncSession = Depends(get_session)):
+    return await UserService(session).update(id=current_user.id, data=user)

@@ -20,6 +20,8 @@ class Chat(SQLModel, table=True):
 class User(SQLModel, table=True):
     id: int = Field(sa_column=Column(Integer, autoincrement=True, primary_key=True))
     fullname: str = Field(default='')
+    company: str = Field(default='')
+    job: str = Field(default='')
     email: str = Field(unique=True)
     hashed_password: str
     has_subscription: bool = Field(default=False)

@@ -23,6 +23,7 @@ class UpdateUser(SQLModel):
     fullname: Optional[str]
     company: Optional[str]
     job: Optional[str]
+    avatar: str
 
 
 class UpdateChat(SQLModel):

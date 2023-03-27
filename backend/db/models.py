@@ -19,6 +19,7 @@ class Chat(SQLModel, table=True):
 
 class User(SQLModel, table=True):
     id: int = Field(sa_column=Column(Integer, autoincrement=True, primary_key=True))
+    avatar: str = Field(default='')
     fullname: str = Field(default='')
     company: str = Field(default='')
     job: str = Field(default='')

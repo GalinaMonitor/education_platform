@@ -7,6 +7,10 @@ class Settings(BaseSettings):
     secret_key: str
     front_url: str
     kinescope_api_key: str
+    aws_access_key_id: str
+    aws_secret_access_key: str
+    aws_bucket_name: str
+    aws_host: str
 
 
 settings = Settings()

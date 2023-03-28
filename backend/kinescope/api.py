@@ -21,6 +21,7 @@ class FileAsset(BaseModel):
 class Video(BaseModel):
     id: str
     title: str
+    play_link: str
     assets: List[VideoAsset]
     additional_materials: List[FileAsset]
 

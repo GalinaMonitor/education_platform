@@ -76,4 +76,5 @@ class Video(SQLModel, table=True):
     id: str = Field(default=None, primary_key=True)
     order: int
     name: str
+    link: str
     coursechapter_id: Optional[int] = Field(foreign_key='coursechapter.id', nullable=True, default=None)

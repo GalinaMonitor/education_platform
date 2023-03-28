@@ -6,7 +6,7 @@ from celery.schedules import crontab
 
 from db.config import async_session
 from db.exceptions import NotFoundException
-from db.models import Video, Message, DataType
+from db.models import Video, Message, DataType, Chat
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
@@ -42,6 +42,7 @@ async def sync_kinescope():
                         id=video.id,
                         order=int(video.title.split('. ')[0]),
                         name=video.title,
+                        link=video.play_link,
                         coursechapter_id=course_chapter.id
                     ))
 
@@ -58,12 +59,17 @@ async def send_video():
         for chat in chat_list:
             new_video = await VideoService(session).list(coursechapter_id=chat.coursechapter_id,
                                                          order=chat.last_video + 1)
+            if new_video:
+                new_video = new_video[0]
+            else:
+                continue
             await MessageService(session).create(Message(
                 datetime=datetime.now(),
-                content=new_video.name,
+                content=new_video.link,
                 content_type=DataType.VIDEO,
                 chat_id=chat.id,
             ))
+            await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
 
 
 @celery_app.task
@@ -75,17 +81,17 @@ def send_video_task():
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         crontab(
+            hour='0',
+            minute='30',
+            day_of_week='*'
+        ),
+        sync_kinescope_task,
+    )
+    sender.add_periodic_task(
+        crontab(
             hour='*',
             minute='0',
             day_of_week='1-5'
         ),
         send_video_task,
-    )
-    sender.add_periodic_task(
-        crontab(
-            hour='0',
-            minute='0',
-            day_of_week='1-5'
-        ),
-        sync_kinescope_task,
     )

@@ -1,3 +1,5 @@
+import secrets
+
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -15,6 +17,8 @@ class UserService(BaseService):
     async def create(self, data: CreateUser) -> User:
         from auth import pwd_context
 
+        if not data.password:
+            data.password = secrets.token_urlsafe(32)
         new_model = User(
             email=data.email,
             hashed_password=pwd_context.hash(data.password)

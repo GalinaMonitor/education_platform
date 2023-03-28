@@ -1,14 +1,17 @@
-import React, {FC, useState} from 'react';
+import React from 'react';
+import useUserStore from "../store";
 import {Button, Form, Input} from "antd";
 import {rules} from "../utils/rules";
-import useUserStore from "../store";
 
-const RegisterForm: FC = () => {
+const EmailForm = ({handleFormData, onSubmit = null}) => {
     const {isLoading, error} = useUserStore()
-    const [email, setEmail] = useState('')
 
-    const submit = () => {}
-
+    const submit = (values) => {
+        handleFormData(values)
+        if (onSubmit) {
+            onSubmit()
+        }
+    }
     return (
         <Form
             onFinish={submit}
@@ -23,7 +26,7 @@ const RegisterForm: FC = () => {
                     rules.required('Введите email')
                 ]}
             >
-                <Input value={email} onChange={e => setEmail(e.target.value)}/>
+                <Input/>
             </Form.Item>
             <Form.Item>
                 <Button htmlType='submit' loading={isLoading}>
@@ -34,4 +37,4 @@ const RegisterForm: FC = () => {
     );
 };
 
-export default RegisterForm;
+export default EmailForm;

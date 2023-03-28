@@ -25,6 +25,19 @@ const useUserStore = create(persist(devtools((set) => ({
 
         set({isLoading: false})
     },
+    register: async (values) => {
+        set({isLoading: true})
+        try {
+            const register_response = await AuthService.register(values);
+            if (register_response.status !== 200) {
+                set({error: 'Неудачная регистрация'})
+            }
+        } catch (e) {
+            set({error: 'Неудачная регистрация'})
+        }
+
+        set({isLoading: false})
+    },
     checkAuth: async () => {
         try {
             const user_response = await AuthService.get_user();

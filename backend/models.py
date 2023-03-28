@@ -16,14 +16,17 @@ class CourseRead(SQLModel):
 
 class CreateUser(SQLModel):
     email: str
-    password: str
+    password: Optional[str]
+    fullname: Optional[str]
+    company: Optional[str]
+    job: Optional[str]
 
 
 class UpdateUser(SQLModel):
     fullname: Optional[str]
     company: Optional[str]
     job: Optional[str]
-    avatar: str
+    avatar: Optional[str]
 
 
 class UpdateChat(SQLModel):

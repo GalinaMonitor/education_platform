@@ -16,7 +16,7 @@ from settings import settings
 router = APIRouter()
 
 
-@router.get("/messages", response_model=Page[Message])
+@router.get("/messages/", response_model=Page[Message])
 async def get_messages(
     current_user: Annotated[User, Depends(get_current_active_user)], session: AsyncSession = Depends(get_session)
 ) -> List[Message]:

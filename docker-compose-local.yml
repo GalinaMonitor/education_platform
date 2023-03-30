@@ -12,7 +12,9 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.11
-    image: gmonitor/education_platform-backend:master
+    build:
+      context: backend
+      dockerfile: Dockerfile
     env_file:
       - .env
     ports:
@@ -43,7 +45,7 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.12
-    image: gmonitor/education_platform-backend:master
+    image: education_platform-backend
     env_file:
       - .env
     restart: always
@@ -56,7 +58,7 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.13
-    image: gmonitor/education_platform-backend:master
+    image: education_platform-backend
     env_file:
       - .env
     restart: always
@@ -87,7 +89,9 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.10
-    image: gmonitor/education_platform-frontend:master
+    build:
+      context: frontend
+      dockerfile: Dockerfile
     env_file:
       - .env
     ports:

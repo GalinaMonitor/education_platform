@@ -1,0 +1,43 @@
+name: Publish on Docker Hub and Deploy
+
+on: [ push ]
+
+jobs:
+  build_and_pub:
+    runs-on: [ ubuntu-latest ]
+    env:
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      NAME: ${{ secrets.DOCKER_NAME }}
+    steps:
+      - name: Login to docker.io
+        run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - uses: actions/checkout@master
+      - name: Build front image
+        run: docker compose build frontend -t $LOGIN/$NAME:${GITHUB_REF:11} -f frontend/Dockerfile .
+      - name: Push front image to docker.io
+        run: docker push $LOGIN/$NAME-front:${GITHUB_REF:11}
+      - name: Build back image
+        run: docker compose build backend -t $LOGIN/$NAME:${GITHUB_REF:11} -f backend/Dockerfile .
+      - name: Push back image to docker.io
+        run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
+
+  deploy:
+    runs-on: [ ubuntu-latest ]
+    needs: build_and_pub
+    env:
+      LOGIN: ${{ secrets.DOCKER_LOGIN }}
+      NAME: ${{ secrets.DOCKER_NAME }}
+      KEY: ${{ secrets.SSH_KEY }}
+    steps:
+      - name: Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /opt/education_platform
+            echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+            git pull
+            docker compose pull && docker compose up --build -d

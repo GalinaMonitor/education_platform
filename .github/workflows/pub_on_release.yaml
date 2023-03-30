@@ -17,7 +17,7 @@ jobs:
       - name: Push front image to docker.io
         run: docker push $LOGIN/$NAME-front:${GITHUB_REF:11}
       - name: Build back image
-        run: docker build backend -t $LOGIN/$NAME-back:${GITHUB_REF:11} -f backend/Dockerfile backend
+        run: docker build -t $LOGIN/$NAME-back:${GITHUB_REF:11} -f backend/Dockerfile backend
       - name: Push back image to docker.io
         run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
 

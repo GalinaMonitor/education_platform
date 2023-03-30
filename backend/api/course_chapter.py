@@ -13,12 +13,12 @@ from db.services.course_chapter import CourseChapterService
 router = APIRouter()
 
 
-@router.get("/{id}/themes/")
+@router.get("/{id}/themes")
 async def get_themes(id: int, session: AsyncSession = Depends(get_session)) -> List[Theme]:
     return await CourseChapterService(session).themes(id)
 
 
-@router.get("/{id}/messages/", response_model=Page[Message])
+@router.get("/{id}/messages", response_model=Page[Message])
 async def get_messages(
     id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],

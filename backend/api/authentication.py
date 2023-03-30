@@ -20,7 +20,7 @@ from models import CreateUser
 router = APIRouter()
 
 
-@router.post("/form_token/", response_model=Token)
+@router.post("/form_token", response_model=Token)
 async def form_login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: AsyncSession = Depends(get_session)
 ):
@@ -36,7 +36,7 @@ async def form_login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.post("/token/", response_model=Token)
+@router.post("/token", response_model=Token)
 async def login_for_access_token(user: CreateUser, session: AsyncSession = Depends(get_session)):
     user = await authenticate_user(session, user.email, user.password)
     if not user:
@@ -50,11 +50,11 @@ async def login_for_access_token(user: CreateUser, session: AsyncSession = Depen
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-@router.get("/users/me/", response_model=User)
+@router.get("/users/me", response_model=User)
 async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user
 
 
-@router.post("/users/", response_model=User)
+@router.post("/users", response_model=User)
 async def create_user(user: CreateUser, session: AsyncSession = Depends(get_session)):
     return await UserService(session).create(user)

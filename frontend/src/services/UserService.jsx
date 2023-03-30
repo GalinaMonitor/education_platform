@@ -6,10 +6,10 @@ export default class UserService {
     }
 
     static async patch(data) {
-        return $api.patch(`/user/`, data)
+        return $api.patch(`/user`, data)
     }
 
     static async update_avatar(photo) {
-        return $api.post(`/user/avatar/`, photo)
+        return $api.post(`/user/avatar`, photo)
     }
 }

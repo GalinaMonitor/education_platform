@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi_mail import ConnectionConfig
 from fastapi_pagination import add_pagination
 from sqlmodel import SQLModel
 
@@ -29,6 +30,19 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+email_conf = ConnectionConfig(
+    MAIL_USERNAME=settings.mail_username,
+    MAIL_PASSWORD=settings.mail_password,
+    MAIL_FROM=settings.mail_username,
+    MAIL_PORT=465,
+    MAIL_SERVER="smtp.yandex.ru",
+    MAIL_FROM_NAME="Education platform",
+    MAIL_STARTTLS=False,
+    MAIL_SSL_TLS=True,
+    USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True
 )
 
 app.include_router(authentication_router, prefix='/auth')

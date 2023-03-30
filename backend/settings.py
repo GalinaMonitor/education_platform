@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     aws_secret_access_key: str
     aws_bucket_name: str
     aws_host: str
+    mail_username: str
+    mail_password: str
 
 
 settings = Settings()

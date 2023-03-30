@@ -11,7 +11,7 @@ const {useState} = React;
 
 
 const Register = () => {
-    const [register] = useUserStore()
+    const {register} = useUserStore()
     const [current, setCurrent] = useState(0);
     const [formValues, setFormValues] = useState({})
     const [registerUser, isLoading, error] = useFetching(async () => {

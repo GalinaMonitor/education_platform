@@ -24,3 +24,4 @@ celery
 redis
 requests
 boto3
+fastapi_mail

@@ -1,5 +1,6 @@
 import secrets
 
+from fastapi_mail import MessageSchema, MessageType, FastMail
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -16,12 +17,22 @@ class UserService(BaseService):
 
     async def create(self, data: CreateUser) -> User:
         from auth import pwd_context
+        from main import email_conf
 
         if not data.password:
-            data.password = secrets.token_urlsafe(32)
+            password = secrets.token_urlsafe(32)
+            message = MessageSchema(
+                subject="Registration",
+                recipients=[data.email],
+                body=f"Here is your password {password}",
+                subtype=MessageType.plain)
+            fm = FastMail(email_conf)
+            await fm.send_message(message)
+        else:
+            password = data.password
         new_model = User(
             email=data.email,
-            hashed_password=pwd_context.hash(data.password)
+            hashed_password=pwd_context.hash(password)
         )
         self.session.add(new_model)
         await self.session.commit()

@@ -18,7 +18,7 @@ async def get_courses(session: AsyncSession = Depends(get_session)) -> List[Cour
     return await CourseService(session).list()
 
 
-@router.get("/{id}/course_chapters/")
+@router.get("/{id}/course_chapters")
 async def get_course_chapters(id: int, session: AsyncSession = Depends(get_session)) -> List[CourseChapter]:
     return await CourseService(session).course_chapters(id)
 

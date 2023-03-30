@@ -13,7 +13,7 @@ from models import CourseRead, Time
 router = APIRouter()
 
 
-@router.get("/")
+@router.get("")
 async def get_courses(session: AsyncSession = Depends(get_session)) -> List[CourseRead]:
     return await CourseService(session).list()
 

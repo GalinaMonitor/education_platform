@@ -26,7 +26,7 @@ async def get_messages(
     return paginate(await chat_service.messages(chat.id))
 
 
-@router.patch("/")
+@router.patch("")
 async def patch(
     user: UpdateUser,
     current_user: Annotated[User, Depends(get_current_active_user)],

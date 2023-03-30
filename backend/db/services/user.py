@@ -1,11 +1,11 @@
 import secrets
 
-from fastapi_mail import MessageSchema, MessageType, FastMail
+from fastapi_mail import FastMail, MessageSchema, MessageType
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.exceptions import NotFoundException
-from db.models import User, Chat
+from db.models import Chat, User
 from db.services.base import BaseService
 from models import CreateUser
 
@@ -25,15 +25,13 @@ class UserService(BaseService):
                 subject="Registration",
                 recipients=[data.email],
                 body=f"Here is your password {password}",
-                subtype=MessageType.plain)
+                subtype=MessageType.plain,
+            )
             fm = FastMail(email_conf)
             await fm.send_message(message)
         else:
             password = data.password
-        new_model = User(
-            email=data.email,
-            hashed_password=pwd_context.hash(password)
-        )
+        new_model = User(email=data.email, hashed_password=pwd_context.hash(password))
         self.session.add(new_model)
         await self.session.commit()
         return new_model

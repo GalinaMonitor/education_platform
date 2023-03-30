@@ -8,11 +8,7 @@ from settings import settings
 
 engine = create_async_engine(settings.db_url, echo=True)
 async_session = sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    autocommit=False,
-    autoflush=False,
-    expire_on_commit=False
+    bind=engine, class_=AsyncSession, autocommit=False, autoflush=False, expire_on_commit=False
 )
 
 

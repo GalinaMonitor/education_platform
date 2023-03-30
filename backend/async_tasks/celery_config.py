@@ -6,7 +6,7 @@ from celery.schedules import crontab
 
 from db.config import async_session
 from db.exceptions import NotFoundException
-from db.models import Video, Message, DataType, Chat
+from db.models import Chat, DataType, Message, Video
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
@@ -21,8 +21,8 @@ celery_app = Celery(
     enable_ut=True,
     timezone="Europe/Moscow",
     redis_socket_timeout=15,
-    event_serializer='json',
-    task_serializer='json',
+    event_serializer="json",
+    task_serializer="json",
     acks_late=True,
     prefetch_multiplier=1,
     create_missing_queues=True,
@@ -38,13 +38,15 @@ async def sync_kinescope():
                 try:
                     await VideoService(session).retrieve(id=video.id)
                 except NotFoundException:
-                    await VideoService(session).create(data=Video(
-                        id=video.id,
-                        order=int(video.title.split('. ')[0]),
-                        name=video.title,
-                        link=video.play_link,
-                        coursechapter_id=course_chapter.id
-                    ))
+                    await VideoService(session).create(
+                        data=Video(
+                            id=video.id,
+                            order=int(video.title.split(". ")[0]),
+                            name=video.title,
+                            link=video.play_link,
+                            coursechapter_id=course_chapter.id,
+                        )
+                    )
 
 
 @celery_app.task
@@ -57,18 +59,21 @@ async def send_video():
         time = datetime.strptime(str(datetime.now().hour), "%H").time()
         chat_list = await ChatService(session).list(receive_time=time)
         for chat in chat_list:
-            new_video = await VideoService(session).list(coursechapter_id=chat.coursechapter_id,
-                                                         order=chat.last_video + 1)
+            new_video = await VideoService(session).list(
+                coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1
+            )
             if new_video:
                 new_video = new_video[0]
             else:
                 continue
-            await MessageService(session).create(Message(
-                datetime=datetime.now(),
-                content=new_video.link,
-                content_type=DataType.VIDEO,
-                chat_id=chat.id,
-            ))
+            await MessageService(session).create(
+                Message(
+                    datetime=datetime.now(),
+                    content=new_video.link,
+                    content_type=DataType.VIDEO,
+                    chat_id=chat.id,
+                )
+            )
             await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
 
 
@@ -80,18 +85,10 @@ def send_video_task():
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(
-            hour='0',
-            minute='30',
-            day_of_week='*'
-        ),
+        crontab(hour="0", minute="30", day_of_week="*"),
         sync_kinescope_task,
     )
     sender.add_periodic_task(
-        crontab(
-            hour='*',
-            minute='0',
-            day_of_week='1-5'
-        ),
+        crontab(hour="*", minute="0", day_of_week="1-5"),
         send_video_task,
     )

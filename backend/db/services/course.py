@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.models import Course, CourseChapter, Chat
+from db.models import Chat, Course, CourseChapter
 from db.services.base import BaseService
 from models import CourseRead
 
@@ -28,7 +28,13 @@ class CourseService(BaseService):
         return result
 
     async def change_receive_time(self, id: int, user_id, receive_time: time):
-        statement = select(Chat).join(CourseChapter).where(Chat.user_id == user_id and CourseChapter.course_id == id and Chat.coursechapter_id == CourseChapter.id)
+        statement = (
+            select(Chat)
+            .join(CourseChapter)
+            .where(
+                Chat.user_id == user_id and CourseChapter.course_id == id and Chat.coursechapter_id == CourseChapter.id
+            )
+        )
         results = await self.session.exec(statement)
         results = results.all()
         print(results)

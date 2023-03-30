@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlmodel import select, SQLModel
+from sqlmodel import SQLModel, select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from db.exceptions import NotFoundException

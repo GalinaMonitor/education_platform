@@ -75,11 +75,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except JWTError:
         raise UnauthorizedException
     async_session = sessionmaker(
-        bind=engine,
-        class_=AsyncSession,
-        autocommit=False,
-        autoflush=False,
-        expire_on_commit=False
+        bind=engine, class_=AsyncSession, autocommit=False, autoflush=False, expire_on_commit=False
     )
     async with async_session() as session:
         user = await UserService(session).get_by_email(username)
@@ -88,7 +84,5 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def get_current_active_user(
-        current_user: Annotated[User, Depends(get_current_user)]
-):
+async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
     return current_user

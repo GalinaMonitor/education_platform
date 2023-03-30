@@ -9,19 +9,17 @@ from settings import settings
 class AWSClient:
     def __init__(self):
         self.session = boto3.client(
-            's3',
+            "s3",
             endpoint_url=settings.aws_host,
-            region_name='ru-1',
+            region_name="ru-1",
             aws_access_key_id=settings.aws_access_key_id,
             aws_secret_access_key=settings.aws_secret_access_key,
-            config=Config(s3={'addressing_style': 'path'})
+            config=Config(s3={"addressing_style": "path"}),
         )
         self.bucket_name = settings.aws_bucket_name
 
     def upload_file(self, file_io: io.BytesIO, filename: str):
-        self.session.upload_fileobj(
-            file_io, Bucket=self.bucket_name, Key=filename
-        )
+        self.session.upload_fileobj(file_io, Bucket=self.bucket_name, Key=filename)
 
     def download_file(self, filename: str):
         file_io = io.BytesIO()

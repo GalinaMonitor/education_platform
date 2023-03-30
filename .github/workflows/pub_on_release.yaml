@@ -13,11 +13,11 @@ jobs:
         run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
       - uses: actions/checkout@master
       - name: Build front image
-        run: docker compose build frontend -t $LOGIN/$NAME:${GITHUB_REF:11} -f frontend/Dockerfile .
+        run: docker build -t $LOGIN/$NAME:${GITHUB_REF:11} -f frontend/Dockerfile frontend
       - name: Push front image to docker.io
         run: docker push $LOGIN/$NAME-front:${GITHUB_REF:11}
       - name: Build back image
-        run: docker compose build backend -t $LOGIN/$NAME:${GITHUB_REF:11} -f backend/Dockerfile .
+        run: docker build backend -t $LOGIN/$NAME:${GITHUB_REF:11} -f backend/Dockerfile backend
       - name: Push back image to docker.io
         run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
 

@@ -35,12 +35,12 @@ const CourseChat: FC = () => {
                         <ProgramList/>
                     </Card>
                     <Card style={{height: '190px'}} className={'ml-10 mr-2.5 mb-5'}>
-                        <Link to={RouteNames.MAIN}>
-                            <Row justify={'space-around'} align={'middle'}>
-                                <TextBlock small_text={'Куратор'} big_text={'Елизавета'}/>
+                        <Row justify={'space-around'} align={'middle'} className={"h-full"}>
+                            <TextBlock small_text={'Куратор'} big_text={'Елизавета'}/>
+                            <Link to={RouteNames.MAIN}>
                                 <Image src={'/lizbet.svg'} preview={false}/>
-                            </Row>
-                        </Link>
+                            </Link>
+                        </Row>
                     </Card>
                 </Col>
                 <Col span={6}>
@@ -49,7 +49,8 @@ const CourseChat: FC = () => {
                     </Card>
                 </Col>
                 <Col span={12}>
-                    <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'} text={`ЧАТ С НАСТАВНИКОМ ${course.name}`}>
+                    <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'}
+                          text={`ЧАТ С НАСТАВНИКОМ ${course.name}`}>
                         <Chat course_chapter_id={id}/>
                     </Card>
                 </Col>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {Card, Row} from "antd";
+import {Button, Card, Image, Layout, Row} from "antd";
 import {Link} from "react-router-dom";
 import UserInfoForm from "../components/UserInfoForm";
 import EmailForm from "../components/EmailForm";
@@ -59,15 +59,19 @@ const Register = () => {
     ];
 
     return (
-        <Row justify="center" align="middle" className="h100">
-            <Card>
-                <>
-                    <h2>{steps[current].title}</h2>
-                    <div>{steps[current].content}</div>
-                </>
-                <Link to="/login">Войти</Link>
-            </Card>
-        </Row>
+        <Layout className={'h-full bg-white flex flex-col justify-center'}>
+            <Row justify="center" align="middle"><Image width={80} src={'/lizbet.svg'} preview={false}/></Row>
+            <Row justify="center" align="middle"><Image width={300} src={'/ku-logo.svg'} preview={false}/></Row>
+            <Row justify="center" align="middle" className={"mt-10"}>
+                <Card style={{background: "#F1F1F1", paddingRight: "50px", paddingLeft: "50px"}}>
+                    <>
+                        <h2>{steps[current].title}</h2>
+                        <div>{steps[current].content}</div>
+                    </>
+                    <Link to="/login"><Button type={"primary"} style={{width: "100%"}}>Войти</Button></Link>
+                </Card>
+            </Row>
+        </Layout>
     );
 };
 

@@ -1,8 +1,9 @@
 import React, {useState} from 'react';
-import {Input, message, Upload} from "antd";
+import {Avatar, Divider, Input, message, Upload} from "antd";
 import useUserStore from "../store";
 import {useFetching} from "../hooks/useFetching";
 import UserService from "../services/UserService";
+import {LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -72,20 +73,13 @@ const Settings = () => {
             <Upload
                 name="avatar"
                 listType="picture-circle"
-                className="avatar-uploader"
                 showUploadList={false}
                 action={uploadPhotoFunc}
                 beforeUpload={beforeUpload}
                 onChange={handleChange}
             >
                 {imageUrl ? (
-                    <img
-                        src={imageUrl}
-                        alt="avatar"
-                        style={{
-                            width: '100%',
-                        }}
-                    />
+                    <Avatar src={imageUrl} size={100}/>
                 ) : (
                     <div>
                         <div
@@ -93,18 +87,22 @@ const Settings = () => {
                                 marginTop: 8,
                             }}
                         >
-                            Upload
+                            Ваше фото
                         </div>
+                        {loading ? <LoadingOutlined/> : <PlusOutlined/>}
                     </div>
                 )}
             </Upload>
             <div className={'mt-3 mb-3'}>
-                <p className={'text-xs'} style={{'color': 'grey'}}>{'Имя'}</p>
+                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Имя</p>
                 <Input defaultValue={user.fullname} onPressEnter={changeFullname}/>
-                <p className={'text-xs'} style={{'color': 'grey'}}>{'Компания'}</p>
+                <Divider/>
+                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Компания</p>
                 <Input defaultValue={user.company} onPressEnter={changeCompany}/>
-                <p className={'text-xs'} style={{'color': 'grey'}}>{'Должность'}</p>
+                <Divider/>
+                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Должность</p>
                 <Input defaultValue={user.job} onPressEnter={changeJob}/>
+                <Divider/>
             </div>
         </div>
     );

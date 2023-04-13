@@ -8,24 +8,24 @@ import Chat from "../components/Chat";
 
 const Main: FC = () => {
     return (
-        <>
+        <div className={'h-full'}>
             <Card className={'ml-10 mt-10 mr-10'} text={''}>
                 <Navbar/>
             </Card>
-            <Row className={'h-fit'}>
-                <Col span={8}>
-                    <Card style={{height: '600px'}} className={'ml-10 mr-2.5 mt-5 mb-5'}
+            <Row className={'h-4/6'}>
+                <Col span={6}>
+                    <Card className={'h-full ml-10 mr-2.5 mt-5 mb-5'}
                           text={'ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ'}>
                         <ProgramList/>
                     </Card>
                 </Col>
-                <Col span={16}>
-                    <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'} text={'ЧАТ С ПЛАТФОРМОЙ'}>
-                        <Chat/>
+                <Col span={18}>
+                    <Card className={'mt-5 mr-10 mb-5v h-full'} text={'ЧАТ С ПЛАТФОРМОЙ'}>
+                        <Chat show_lizbet={true}/>
                     </Card>
                 </Col>
             </Row>
-        </>
+        </div>
     );
 };
 

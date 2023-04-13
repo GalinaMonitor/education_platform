@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
 import {useFetching} from "../hooks/useFetching";
-import Message from "./UI/Message";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Divider, List, Skeleton} from "antd";
+import {Divider, Image, List, Row, Skeleton} from "antd";
 import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
+import Message from "./Message";
+import {format_datetime} from "../utils/utils";
+import TextBlock from "./UI/TextBlock";
 
-const Chat = ({course_chapter_id = null}) => {
+const Chat = ({course_chapter_id = null, show_lizbet = false}) => {
     const [messages, setMessages] = useState([])
     const [limit, setLimit] = useState(10);
     const [hasMore, setHasMore] = useState(true)
@@ -35,46 +37,59 @@ const Chat = ({course_chapter_id = null}) => {
         fetchMessages(limit, page)
     }, [course_chapter_id, limit, page])
 
-    return (
-        <div
-            id="scrollableDiv"
-            style={{
-                paddingTop: '50px',
-                height: '500px',
-                overflow: 'auto',
-                overflowAnchor: 'none',
-                display: 'flex',
-                flexDirection: 'column-reverse',
-            }}
-        >
-            <InfiniteScroll
-                dataLength={messages.length}
-                next={() => {
-                    setPage(page + 1)
-                }}
-                style={{display: 'flex', flexDirection: 'column-reverse'}}
-                inverse={true}
-                hasMore={hasMore}
-                loader={
-                    <Skeleton
-                        paragraph={{
-                            rows: 1,
-                        }}
-                        active
-                    />
-                }
+    let className = ""
+    if (show_lizbet) {
+        className += "w-4/5"
+    }
 
-                endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
-                scrollableTarget="scrollableDiv"
+    return (
+        <div className={"h-full"}>
+            <div
+                id="scrollableDiv"
+                className={`${className} pt-5 overflow-auto flex flex-col-reverse h-full`}
+                style={{
+                    overflowAnchor: 'none',
+                }}
             >
-                <List
-                    dataSource={messages}
-                    renderItem={(item) => (
-                        <Message key={item.id} text={item.content} time={item.datetime}
-                                 type={item.content_type}/>
-                    )}
-                />
-            </InfiniteScroll>
+                <InfiniteScroll
+                    dataLength={messages.length}
+                    next={() => {
+                        setPage(page + 1)
+                    }}
+                    style={{display: 'flex', flexDirection: 'column-reverse'}}
+                    inverse={true}
+                    hasMore={hasMore}
+                    loader={
+                        <Skeleton
+                            paragraph={{
+                                rows: 1,
+                            }}
+                            active
+                        />
+                    }
+
+                    endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                    scrollableTarget="scrollableDiv"
+                >
+                    <List
+                        dataSource={messages}
+                        renderItem={(item) => (
+                            <Message key={item.id} text={item.content} time={item.datetime}
+                                     type={item.content_type}/>
+                        )}
+                    />
+                </InfiniteScroll>
+            </div>
+            {
+                show_lizbet && (
+                    <div className={'absolute bottom-10 right-24 text-right'}>
+                        <Row>
+                            <TextBlock big_text={"Елизавета"} small_text={"Куратор"}/>
+                            <Image className={'ml-5'} width={"100px"} src={"/lizbet.svg"} preview={false}/>
+                        </Row>
+                    </div>
+                )
+            }
         </div>
     );
 };

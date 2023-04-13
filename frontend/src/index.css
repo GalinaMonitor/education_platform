@@ -3,17 +3,18 @@
 @tailwind utilities;
 
 html {
-  height: 100%;
+    height: 100%;
+    background: #f5f5f5;
 }
 
 body {
-  height: 100%;
+    height: 100%;
 }
 
 div#root {
-  height: 100%;
+    height: 100%;
 }
 
 div.app {
-  height: 100%;
+    height: 100%;
 }

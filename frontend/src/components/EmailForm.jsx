@@ -15,6 +15,7 @@ const EmailForm = ({handleFormData, onSubmit = null}) => {
     return (
         <Form
             onFinish={submit}
+            layout="vertical"
         >
             {error && <div style={{color: 'red'}}>
                 {error}
@@ -28,9 +29,9 @@ const EmailForm = ({handleFormData, onSubmit = null}) => {
             >
                 <Input/>
             </Form.Item>
-            <Form.Item>
-                <Button htmlType='submit' loading={isLoading}>
-                    Submit
+            <Form.Item className={"mb-2"}>
+                <Button style={{width: "100%"}} htmlType='submit' loading={isLoading}>
+                    Отправить
                 </Button>
             </Form.Item>
         </Form>

@@ -2,10 +2,11 @@ import React, {FC, useEffect, useState} from 'react';
 import TextBlock from "./UI/TextBlock";
 import CourseService from "../services/CourseService";
 import {useFetching} from "../hooks/useFetching";
-import {Button, Divider, Dropdown, Image, Modal, Row, Select} from "antd";
-import {Link, redirect, useNavigate} from "react-router-dom";
+import {Button, Divider, Image, Modal, Row, Select} from "antd";
+import {Link, useNavigate} from "react-router-dom";
 import {RouteNames} from "../router";
 import {timeOptions} from "../utils/constants";
+import {format_time} from "../utils/utils";
 
 const CourseList: FC = () => {
     const navigate = useNavigate();
@@ -51,6 +52,12 @@ const CourseList: FC = () => {
         setTimeout(fetchCourses, 100);
     };
 
+    const previewImages = [
+        {level: "Базовый", image: "/base-level.svg"},
+        {level: "Продвинутый", image: "/medium-level.svg"},
+        {level: "Эксперт", image: "/expert-level.svg"},
+    ]
+
     useEffect(() => {
         fetchCourses()
     }, [])
@@ -59,14 +66,14 @@ const CourseList: FC = () => {
         <>
             {courses.map((course, index) =>
                 <>
-                    <Button onClick={() => {
+                    <Button className={'mr-2'} shape={"round"} onClick={() =>
+                        showTimeModal(course.id)
+                    }>{format_time(course.receive_time)}</Button>
+                    <Button shape={"round"} onClick={() => {
                         showCourseModal(course.coursechapters)
                     }}>
                         Уровень
                     </Button>
-                    <Button onClick={() => {
-                        showTimeModal(course.id)
-                    }}>{course.receive_time}</Button>
                     <TextBlock key={course.id} big_text={course.name}/>
                     <Divider/>
                 </>
@@ -81,15 +88,14 @@ const CourseList: FC = () => {
             <Modal open={isCourseModalOpen} onCancel={handleCancel} footer={[]} width={'700px'}>
                 <p className={'text-center'}>Какой уровень Вас интересует</p>
                 <Row justify={'space-around'} align={'middle'}>
-                    {courseChapters.map((item) =>
-                        <Image key={item.id} src={'/base-level.svg'} preview={false} onClick={() => {
+                    {courseChapters.map((item, index) =>
+                        <Image key={item.id} src={previewImages[index].image} preview={false} onClick={() => {
                             navigate(`${RouteNames.COURSE_CHAT}/${item.id}`)
                             handleCancel()
                         }}/>
                     )}
                 </Row>
-                <p className={'text-center'}>Изучить структуру обучения</p>
-
+                <Link to={"/"}><p className={'text-center'}>Изучить структуру обучения</p></Link>
             </Modal>
         </>
     )

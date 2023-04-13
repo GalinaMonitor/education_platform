@@ -20,7 +20,7 @@ const ThemeList = ({course_chapter_id}) => {
         <>
             {themes.map((theme, index) =>
                 <>
-                    <TextBlock key={theme.id} big_text={theme.name} small_text={`Задача №${theme.id}`}/>
+                    <TextBlock key={theme.id} big_text={theme.name} small_text={`Задача №${index + 1}`}/>
                     <Divider/>
                 </>
             )}

@@ -14,11 +14,10 @@ const App = () => {
 
     return (
         <BrowserRouter>
-            <Layout>
+            <Layout className={'h-full'}>
                 <AppRouter/>
             </Layout>
         </BrowserRouter>
-
     );
 }
 

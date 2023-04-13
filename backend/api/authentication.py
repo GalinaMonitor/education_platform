@@ -13,7 +13,9 @@ from auth import (
     get_current_active_user,
 )
 from db.config import get_session
-from db.models import User
+from db.models import Chat, User
+from db.services.chat import ChatService
+from db.services.course_chapter import CourseChapterService
 from db.services.user import UserService
 from models import CreateUser
 
@@ -57,4 +59,8 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_active
 
 @router.post("/users", response_model=User)
 async def create_user(user: CreateUser, session: AsyncSession = Depends(get_session)):
-    return await UserService(session).create(user)
+    user = await UserService(session).create(user)
+    course_chapters = await CourseChapterService(session).list()
+    for course_chapter in course_chapters:
+        await ChatService(session).create(Chat(user_id=user.id, coursechapter_id=course_chapter.id))
+    return user

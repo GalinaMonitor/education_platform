@@ -14,6 +14,12 @@ class CourseRead(SQLModel):
     receive_time: time
 
 
+class ShortCourseRead(SQLModel):
+    id: int
+    description: str
+    name: str
+
+
 class CreateUser(SQLModel):
     email: str
     password: Optional[str]

@@ -4,7 +4,6 @@ from typing import List, Optional
 
 from sqlalchemy import Column, Integer, func
 from sqlalchemy.dialects.postgresql import TIME
-from sqlalchemy.orm import column_property, declared_attr
 from sqlmodel import Field, Relationship, SQLModel, select
 
 
@@ -64,10 +63,6 @@ class Course(SQLModel, table=True):
     description: str = Field(default="")
     name: str
     coursechapters: List["CourseChapter"] = Relationship(back_populates="course")
-
-    @declared_attr
-    def receive_time(self):
-        return column_property(select([func.max(Chat.receive_time)]).scalar_subquery())
 
 
 class Video(SQLModel, table=True):

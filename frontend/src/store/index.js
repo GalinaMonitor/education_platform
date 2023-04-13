@@ -25,6 +25,11 @@ const useUserStore = create(persist(devtools((set) => ({
 
         set({isLoading: false})
     },
+    logout: async () => {
+        set({token: ''});
+        set({user: {}});
+        set({isAuth: false})
+    },
     register: async (values) => {
         set({isLoading: true})
         try {

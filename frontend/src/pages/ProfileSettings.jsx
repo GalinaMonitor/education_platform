@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
 import Navbar from "../components/Navbar";
-import {Col, Row} from "antd";
+import {Button, Col, Row} from "antd";
 import '../App.css'
 import Card from '../components/UI/Card';
 import Chat from "../components/Chat";
 import Settings from "../components/Settings";
+import {Link} from "react-router-dom";
+import {RouteNames} from "../router";
 
 const ProfileSettings: FC = () => {
     return (
@@ -17,6 +19,7 @@ const ProfileSettings: FC = () => {
                     <Card style={{height: '600px'}} className={'ml-10 mr-2.5 mt-5 mb-5'}
                           text={'ПРОФИЛЬ'}>
                         <Settings/>
+                        <Link to={RouteNames.MAIN}><Button>Закрыть</Button></Link>
                     </Card>
                 </Col>
                 <Col span={16}>

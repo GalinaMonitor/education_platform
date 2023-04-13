@@ -1,7 +1,7 @@
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
-from fastapi_pagination import Page, paginate
+from fastapi_pagination import LimitOffsetPage, Page, paginate
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from auth import get_current_active_user
@@ -18,7 +18,7 @@ async def get_themes(id: int, session: AsyncSession = Depends(get_session)) -> L
     return await CourseChapterService(session).themes(id)
 
 
-@router.get("/{id}/messages", response_model=Page[Message])
+@router.get("/{id}/messages", response_model=LimitOffsetPage[Message])
 async def get_messages(
     id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],

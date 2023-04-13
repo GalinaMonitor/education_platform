@@ -2,28 +2,37 @@ import React, {FC, useEffect, useState} from 'react';
 import TextBlock from "./UI/TextBlock";
 import CourseService from "../services/CourseService";
 import {useFetching} from "../hooks/useFetching";
-import {Button, Divider, Dropdown, Modal, Select} from "antd";
-import {Link} from "react-router-dom";
+import {Button, Divider, Dropdown, Image, Modal, Row, Select} from "antd";
+import {Link, redirect, useNavigate} from "react-router-dom";
 import {RouteNames} from "../router";
 import {timeOptions} from "../utils/constants";
 
 const CourseList: FC = () => {
+    const navigate = useNavigate();
     const [courses, setCourses] = useState([])
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [courseChapters, setCourseChapters] = useState([])
+    const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
+    const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
     const [modalCourseId, setModalCourseId] = useState(null)
-    const [modalReceiveTime, setModalReceiveTime] = useState('10:00')
+    const [timeModalReceiveTime, setTimeModalReceiveTime] = useState('10:00')
 
-    const showModal = (course_id) => {
+    const showTimeModal = (course_id) => {
         setModalCourseId(course_id)
-        setIsModalOpen(true);
+        setIsTimeModalOpen(true);
+    };
+
+    const showCourseModal = (coursechapters) => {
+        setCourseChapters(coursechapters)
+        setIsCourseModalOpen(true);
     };
 
     const handleTimeChange = (value) => {
-        setModalReceiveTime(value)
+        setTimeModalReceiveTime(value)
     }
 
     const handleCancel = () => {
-        setIsModalOpen(false);
+        setIsTimeModalOpen(false);
+        setIsCourseModalOpen(false);
     };
 
     const [fetchCourses, isLoading, error] = useFetching(async () => {
@@ -32,12 +41,13 @@ const CourseList: FC = () => {
     })
 
     const [updateReceiveTime, TimeIsLoading, TimeError] = useFetching(async () => {
-        await CourseService.set_receive_time(modalCourseId, modalReceiveTime)
+        await CourseService.set_receive_time(modalCourseId, timeModalReceiveTime)
     })
 
     const handleOk = () => {
         updateReceiveTime()
-        setIsModalOpen(false);
+        setTimeModalReceiveTime('10:00');
+        setIsTimeModalOpen(false);
         setTimeout(fetchCourses, 100);
     };
 
@@ -49,32 +59,37 @@ const CourseList: FC = () => {
         <>
             {courses.map((course, index) =>
                 <>
-                    <Dropdown menu={{
-                        items:
-                            course.coursechapters.map((item) => {
-                                return {
-                                    key: item.id,
-                                    label: (
-                                        <Link to={`${RouteNames.COURSE_CHAT}/${item.id}`}>{item.name}</Link>
-                                    ),
-                                }
-                            })
-                    }} placement="top">
-                        <Button>Уровень</Button>
-                    </Dropdown>
                     <Button onClick={() => {
-                        showModal(course.id)
+                        showCourseModal(course.coursechapters)
+                    }}>
+                        Уровень
+                    </Button>
+                    <Button onClick={() => {
+                        showTimeModal(course.id)
                     }}>{course.receive_time}</Button>
                     <TextBlock key={course.id} big_text={course.name}/>
                     <Divider/>
                 </>
             )}
-            <Modal open={isModalOpen} onCancel={handleCancel} footer={[]}>
+            <Modal open={isTimeModalOpen} onCancel={handleCancel} footer={[]}>
                 <p className={'text-center'}>Во сколько Вам будет удобно получать обучающий материал?</p>
                 <div>
-                    <Select defaultValue="10:00" options={timeOptions} onChange={handleTimeChange}/>
+                    <Select value={timeModalReceiveTime} options={timeOptions} onChange={handleTimeChange}/>
                     <Button onClick={handleOk}>ОК</Button>
                 </div>
+            </Modal>
+            <Modal open={isCourseModalOpen} onCancel={handleCancel} footer={[]} width={'700px'}>
+                <p className={'text-center'}>Какой уровень Вас интересует</p>
+                <Row justify={'space-around'} align={'middle'}>
+                    {courseChapters.map((item) =>
+                        <Image key={item.id} src={'/base-level.svg'} preview={false} onClick={() => {
+                            navigate(`${RouteNames.COURSE_CHAT}/${item.id}`)
+                            handleCancel()
+                        }}/>
+                    )}
+                </Row>
+                <p className={'text-center'}>Изучить структуру обучения</p>
+
             </Modal>
         </>
     )

@@ -5,7 +5,6 @@ import {Divider, Image, List, Row, Skeleton} from "antd";
 import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
 import Message from "./Message";
-import {format_datetime} from "../utils/utils";
 import TextBlock from "./UI/TextBlock";
 
 const Chat = ({course_chapter_id = null, show_lizbet = false}) => {
@@ -43,7 +42,7 @@ const Chat = ({course_chapter_id = null, show_lizbet = false}) => {
     }
 
     return (
-        <div className={"h-full"}>
+        <div style={{height: "90%"}}>
             <div
                 id="scrollableDiv"
                 className={`${className} pt-5 overflow-auto flex flex-col-reverse h-full`}

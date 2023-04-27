@@ -1,20 +1,23 @@
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from db.exceptions import NotFoundException
-from db.models import Video
-from db.services.base import BaseService
+from backend.db.exceptions import NotFoundException
+from backend.db.models import Video as VideoDB
+from backend.db.services.base import BaseService
+from backend.models import Video
 
 
 class VideoService(BaseService):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
-        self.model = Video
+        self.model = VideoDB
+        self.pydantic_model = Video
 
     async def retrieve(self, id: str) -> Video:
         statement = select(self.model).where(self.model.id == id)
-        results = await self.session.exec(statement)
-        result = results.first()
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
         if not result:
             raise NotFoundException()
-        return result
+        return self.pydantic_model.from_orm(result)

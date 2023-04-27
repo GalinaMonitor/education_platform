@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
-from sqlmodel import SQLModel
+from pydantic import BaseModel
 
 
-class Error(SQLModel):
+class Error(BaseModel):
     code: int
     message: str
 

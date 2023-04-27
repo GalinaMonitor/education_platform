@@ -2,20 +2,20 @@ from datetime import datetime
 from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from auth import get_current_active_user
-from db.config import get_session
-from db.models import CourseChapter, User
-from db.services.course import CourseService
-from models import CourseRead, ShortCourseRead, Time
+from backend.auth import get_current_active_user
+from backend.db.config import get_session
+from backend.db.services.course import CourseService
+from backend.models import Course, CourseChapterThemes, CourseRead, Time, User
 
 router = APIRouter()
 
 
 @router.get("")
 async def get_courses(
-    current_user: Annotated[User, Depends(get_current_active_user)], session: AsyncSession = Depends(get_session)
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    session: AsyncSession = Depends(get_session),
 ) -> List[CourseRead]:
     return await CourseService(session).list(user_id=current_user.id)
 
@@ -24,12 +24,14 @@ async def get_courses(
 async def get_course(
     id: int,
     session: AsyncSession = Depends(get_session),
-) -> ShortCourseRead:
+) -> Course:
     return await CourseService(session).retrieve(id=id)
 
 
 @router.get("/{id}/course_chapters")
-async def get_course_chapters(id: int, session: AsyncSession = Depends(get_session)) -> List[CourseChapter]:
+async def get_course_chapters(
+    id: int, session: AsyncSession = Depends(get_session)
+) -> List[CourseChapterThemes]:
     return await CourseService(session).course_chapters(id)
 
 
@@ -41,5 +43,7 @@ async def change_receive_time(
     session: AsyncSession = Depends(get_session),
 ):
     time = datetime.strptime(time.time, "%H:%M").time()
-    await CourseService(session).change_receive_time(id=id, user_id=current_user.id, receive_time=time)
+    await CourseService(session).change_receive_time(
+        id=id, user_id=current_user.id, receive_time=time
+    )
     return "Success"

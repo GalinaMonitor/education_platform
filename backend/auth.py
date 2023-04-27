@@ -6,13 +6,13 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlmodel.ext.asyncio.session import AsyncSession
 
-from db.config import engine
-from db.models import User
-from db.services.user import UserService
-from settings import settings
+from backend.db.config import engine
+from backend.db.models import User
+from backend.db.services.user import UserService
+from backend.settings import settings
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -75,7 +75,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     except JWTError:
         raise UnauthorizedException
     async_session = sessionmaker(
-        bind=engine, class_=AsyncSession, autocommit=False, autoflush=False, expire_on_commit=False
+        bind=engine,
+        class_=AsyncSession,
+        autocommit=False,
+        autoflush=False,
+        expire_on_commit=False,
     )
     async with async_session() as session:
         user = await UserService(session).get_by_email(username)
@@ -84,5 +88,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)]
+):
     return current_user

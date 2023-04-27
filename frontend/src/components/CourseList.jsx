@@ -7,6 +7,10 @@ import {Link, useNavigate} from "react-router-dom";
 import {RouteNames} from "../router";
 import {timeOptions} from "../utils/constants";
 import {format_time} from "../utils/utils";
+import BaseLevelSvg from "./UI/BaseLevelSVG";
+import MediumLevelSVG from "./UI/MediumLevelSVG";
+import MediumLevelSvg from "./UI/MediumLevelSVG";
+import ExpertLevelSvg from "./UI/ExpertLevelSVG";
 
 const CourseList: FC = () => {
     const navigate = useNavigate();
@@ -53,9 +57,9 @@ const CourseList: FC = () => {
     };
 
     const previewImages = [
-        {level: "Базовый", image: "/base-level.svg"},
-        {level: "Продвинутый", image: "/medium-level.svg"},
-        {level: "Эксперт", image: "/expert-level.svg"},
+        {level: "Базовый", image: BaseLevelSvg},
+        {level: "Продвинутый", image: MediumLevelSvg},
+        {level: "Эксперт", image: ExpertLevelSvg},
     ]
 
     useEffect(() => {
@@ -88,11 +92,15 @@ const CourseList: FC = () => {
             <Modal open={isCourseModalOpen} onCancel={handleCancel} footer={[]} width={'700px'}>
                 <p className={'text-center'}>Какой уровень Вас интересует</p>
                 <Row justify={'space-around'} align={'middle'}>
-                    {courseChapters.map((item, index) =>
-                        <Image key={item.id} src={previewImages[index].image} preview={false} onClick={() => {
-                            navigate(`${RouteNames.COURSE_CHAT}/${item.id}`)
-                            handleCancel()
-                        }}/>
+                    {courseChapters.map((item, index) => {
+                            let Elem = previewImages[index].image;
+                            return <div key={item.id} onClick={() => {
+                                navigate(`${RouteNames.COURSE_CHAT}/${item.id}`)
+                                handleCancel()
+                            }}>
+                                <Elem color={item.color}/>
+                            </div>
+                        }
                     )}
                 </Row>
                 <Link to={"/"}><p className={'text-center'}>Изучить структуру обучения</p></Link>

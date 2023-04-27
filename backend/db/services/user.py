@@ -1,23 +1,26 @@
 import secrets
 
 from fastapi_mail import FastMail, MessageSchema, MessageType
-from sqlmodel import select
-from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlalchemy import select
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from db.exceptions import NotFoundException
-from db.models import Chat, User
-from db.services.base import BaseService
-from models import CreateUser
+from backend.db.exceptions import NotFoundException
+from backend.db.models import Chat as ChatDB
+from backend.db.models import User as UserDB
+from backend.db.services.base import BaseService
+from backend.models import Chat, ChatMessages, CreateUser, User
 
 
 class UserService(BaseService):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
-        self.model = User
+        self.model = UserDB
+        self.pydantic_model = User
 
     async def create(self, data: CreateUser) -> User:
-        from auth import pwd_context
-        from main import email_conf
+        from backend.auth import pwd_context
+        from backend.main import email_conf
 
         if not data.password:
             password = secrets.token_urlsafe(32)
@@ -31,23 +34,25 @@ class UserService(BaseService):
             await fm.send_message(message)
         else:
             password = data.password
-        new_model = User(email=data.email, hashed_password=pwd_context.hash(password))
+        new_model = UserDB(email=data.email, hashed_password=pwd_context.hash(password))
         self.session.add(new_model)
         await self.session.commit()
-        return new_model
+        return self.pydantic_model.from_orm(new_model)
 
     async def get_by_email(self, email: str) -> User:
         statement = select(self.model).where(self.model.email == email)
-        results = await self.session.exec(statement)
-        result = results.first()
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
         if not result:
             raise NotFoundException()
-        return result
+        return self.pydantic_model.from_orm(result)
 
-    async def get_base_chat(self, id: int) -> Chat:
-        statement = select(Chat).where(Chat.user_id == id and Chat.coursechapter_id is None)
-        results = await self.session.exec(statement)
-        result = results.first()
+    async def get_base_chat(self, id: int) -> ChatMessages:
+        statement = select(ChatDB).where(
+            ChatDB.user_id == id, ChatDB.coursechapter_id == None
+        )
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
         if not result:
             raise NotFoundException()
-        return result
+        return Chat.from_orm(result)

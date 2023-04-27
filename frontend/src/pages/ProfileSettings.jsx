@@ -19,7 +19,7 @@ const ProfileSettings: FC = () => {
 
                 <Col span={8}>
                     <div className={"relative"}>
-                        <div className={"absolute z-10 right-5 top-5"}>
+                        <div className={"absolute z-10 right-7 top-5"}>
                             <Link to={RouteNames.MAIN}><Image preview={false} src={"/close.svg"}></Image></Link>
                         </div>
                         <Card style={{height: '600px'}} className={'ml-10 mr-2.5 mt-5 mb-5'}

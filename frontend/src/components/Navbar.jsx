@@ -20,11 +20,20 @@ const Navbar: FC = ({className}) => {
                 <TextBlock small_text={'Фамилия и имя'} big_text={user.fullname}/>
             </Row>
             <TextBlock small_text={'Статус'} big_text={'Изучаю всё'}/>
-            <TextBlock small_text={'Период подписки'} big_text={user.end_of_subscription}/>
+            {
+                user.end_of_subscription ?
+                    <TextBlock small_text={'Период подписки'} big_text={user.end_of_subscription}/>
+                    :
+                    <TextBlock small_text={'Период подписки'} big_text={"Нет подписки"}/>
+
+            }
             <Row justify={'space-around'} align={'middle'}>
                 <Link to={RouteNames.SETTINGS} style={{marginRight: '25px'}}><Button>Настройки</Button></Link>
-                <Button type={"primary"} style={{marginRight: '25px'}}>Оплатить подписку</Button >
-                <Button type={"primary"} icon={<LogoutOutlined/>} onClick={() => {logout()}}/>
+                <Link to={RouteNames.SUBSCRIBE}><Button type={"primary"} style={{marginRight: '25px'}}>Оплатить
+                    подписку</Button></Link>
+                <Button type={"primary"} icon={<LogoutOutlined/>} onClick={() => {
+                    logout()
+                }}/>
             </Row>
         </Row>
     );

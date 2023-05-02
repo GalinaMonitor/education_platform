@@ -1,7 +1,6 @@
-from typing import Annotated, List
+from typing import Annotated, List, Optional
 
-from fastapi import APIRouter, Depends
-from fastapi_pagination import LimitOffsetPage, Page, paginate
+from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from backend.auth import get_current_active_user
@@ -14,20 +13,20 @@ router = APIRouter()
 
 
 @router.get("/{id}/themes")
-async def get_themes(
-    id: int, session: AsyncSession = Depends(get_session)
-) -> List[ThemeVideos]:
+async def get_themes(id: int, session: AsyncSession = Depends(get_session)) -> List[ThemeVideos]:
     return await CourseChapterService(session).themes(id)
 
 
-@router.get("/{id}/messages", response_model=LimitOffsetPage[Message])
+@router.get("/{id}/messages", response_model=List[Message])
 async def get_messages(
     id: int,
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    before: Optional[int] = None,
+    after: Optional[int] = None,
+    limit: Optional[int] = None,
+    theme: Optional[str] = None,
+    current_user: Annotated[User, Depends(get_current_active_user)] = None,
     session: AsyncSession = Depends(get_session),
 ) -> List[Message]:
     service = ChatService(session)
-    chat = await service.get_from_user_and_chapter(
-        user_id=current_user.id, coursechapter_id=id
-    )
-    return paginate(await service.messages(chat.id))
+    chat = await service.get_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
+    return await service.messages(chat.id, before=before, after=after, limit=limit, theme=theme)

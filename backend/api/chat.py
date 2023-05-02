@@ -12,7 +12,5 @@ router = APIRouter()
 
 
 @router.get("/{id}/messages", response_model=Page[Message])
-async def get_messages(
-    id: int, session: AsyncSession = Depends(get_session)
-) -> List[Message]:
+async def get_messages(id: int, session: AsyncSession = Depends(get_session)) -> List[Message]:
     return paginate(await ChatService(session).messages(id))

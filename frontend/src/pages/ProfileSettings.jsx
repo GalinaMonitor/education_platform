@@ -3,11 +3,11 @@ import Navbar from "../components/Navbar";
 import {Button, Col, Image, Row} from "antd";
 import '../App.css'
 import Card from '../components/UI/Card';
-import Chat from "../components/Chat";
+import CourseChat from "../components/CourseChat";
 import Settings from "../components/Settings";
 import {Link} from "react-router-dom";
 import {RouteNames} from "../router";
-import {CloseOutlined} from "@ant-design/icons";
+import BaseChat from "../components/BaseChat";
 
 const ProfileSettings: FC = () => {
     return (
@@ -30,7 +30,7 @@ const ProfileSettings: FC = () => {
                 </Col>
                 <Col span={16}>
                     <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'} text={'ЧАТ С ПЛАТФОРМОЙ'}>
-                        <Chat show_lizbet={true}/>
+                        <BaseChat/>
                     </Card>
                 </Col>
             </Row>

@@ -20,20 +20,20 @@ from backend.models import (
 )
 
 
-async def create_message(course_id, coursechapter_id, message_id, chat_id):
+async def create_message(course_id, coursechapter_id, message_id, chat_id, theme_id):
     async with async_session() as session:
         await MessageService(session).create(
             Message(
                 datetime=datetime.now(),
-                content=f"Course {course_id} Course Chapter {coursechapter_id} {message_id}",
+                content=f"Course {course_id} Theme {theme_id} ID {message_id}",
                 content_type=0,
                 chat_id=chat_id,
-                theme_id=0,
+                theme_id=theme_id,
             )
         )
 
 
-async def create_theme(theme_id, course_id, coursechapter_id):
+async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
     async with async_session() as session:
         theme = await ThemeService(session).create(
             ThemeVideos(
@@ -42,6 +42,8 @@ async def create_theme(theme_id, course_id, coursechapter_id):
                 coursechapter_id=coursechapter_id,
             )
         )
+        for i in range(10):
+            await create_message(course_id, coursechapter_id, i, chat_id, theme.id)
 
 
 async def create_course_chapter(course_id, coursechapter_id, user_id):
@@ -55,23 +57,16 @@ async def create_course_chapter(course_id, coursechapter_id, user_id):
                 color=colors[course_id],
             )
         )
-        async with asyncio.TaskGroup() as tg:
-            tg.create_task(create_theme(0, course_id, course_chapter.id))
-            tg.create_task(create_theme(1, course_id, course_chapter.id))
-            tg.create_task(create_theme(2, course_id, course_chapter.id))
-        chat = await ChatService(session).create(
-            ChatMessages(user_id=user_id, coursechapter_id=course_chapter.id)
-        )
-        async with asyncio.TaskGroup() as tg:
-            for i in range(10):
-                tg.create_task(create_message(course_id, course_chapter.id, i, chat.id))
+        chat = await ChatService(session).create(ChatMessages(user_id=user_id, coursechapter_id=course_chapter.id))
+        await create_theme(0, course_id, course_chapter.id, chat.id)
+        await create_theme(1, course_id, course_chapter.id, chat.id)
+        await create_theme(2, course_id, course_chapter.id, chat.id)
         message = await MessageService(session).create(
             Message(
                 datetime=datetime.now(),
                 content="https://kinescope.io/202555445",
                 content_type=1,
                 chat_id=chat.id,
-                theme_id=0,
             )
         )
 
@@ -90,9 +85,7 @@ async def create_course(course_id, user_id):
 async def init_data():
     t0 = perf_counter()
     async with async_session() as session:
-        user = await UserService(session).create(
-            CreateUser(email="test@test.com", password="secret")
-        )
+        user = await UserService(session).create(CreateUser(email="test@test.com", password="secret"))
         user = await UserService(session).update(
             id=user.id,
             data=UpdateUser(
@@ -112,6 +105,7 @@ async def init_data():
                 content="Test base text content",
                 content_type=0,
                 chat_id=chat.id,
+                theme_id=None,
             )
         )
         async with asyncio.TaskGroup() as tg:

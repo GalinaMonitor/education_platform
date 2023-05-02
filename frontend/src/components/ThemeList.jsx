@@ -4,7 +4,7 @@ import {Divider} from "antd";
 import TextBlock from "./UI/TextBlock";
 import ThemeService from "../services/ThemeService";
 
-const ThemeList = ({course_chapter_id}) => {
+const ThemeList = ({course_chapter_id, setThemeId}) => {
     const [themes, setThemes] = useState([])
 
     const [fetchThemes, isLoading, error] = useFetching(async () => {
@@ -19,10 +19,10 @@ const ThemeList = ({course_chapter_id}) => {
     return (
         <>
             {themes.map((theme, index) =>
-                <>
+                <div key={theme.id} onClick={() => setThemeId(theme.id)}>
                     <TextBlock key={theme.id} big_text={theme.name} small_text={`Задача №${index + 1}`}/>
                     <Divider/>
-                </>
+                </div>
             )}
         </>
     )

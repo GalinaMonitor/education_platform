@@ -4,7 +4,7 @@ import {Col, Row} from "antd";
 import ProgramList from "../components/CourseList";
 import '../App.css'
 import Card from '../components/UI/Card';
-import Chat from "../components/Chat";
+import BaseChat from "../components/BaseChat";
 
 const Main: FC = () => {
     return (
@@ -21,7 +21,7 @@ const Main: FC = () => {
                 </Col>
                 <Col span={18}>
                     <Card className={'mt-5 mr-10 mb-5v h-full'} text={'ЧАТ С ПЛАТФОРМОЙ'}>
-                        <Chat show_lizbet={true}/>
+                        <BaseChat/>
                     </Card>
                 </Col>
             </Row>

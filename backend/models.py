@@ -106,10 +106,11 @@ class UpdateUser(BaseModel):
 
 class Message(BaseModel):
     id: Optional[int]
-    datetime: date
+    datetime: datetime
     content: str
     content_type: DataType
     chat_id: int
+    theme_id: Optional[str]
 
     class Config:
         orm_mode = True

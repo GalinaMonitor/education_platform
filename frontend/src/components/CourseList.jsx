@@ -69,7 +69,7 @@ const CourseList: FC = () => {
     return (
         <>
             {courses.map((course, index) =>
-                <>
+                <div key={course.id}>
                     <Button className={'mr-2'} shape={"round"} onClick={() =>
                         showTimeModal(course.id)
                     }>{format_time(course.receive_time)}</Button>
@@ -80,7 +80,7 @@ const CourseList: FC = () => {
                     </Button>
                     <TextBlock key={course.id} big_text={course.name}/>
                     <Divider/>
-                </>
+                </div>
             )}
             <Modal open={isTimeModalOpen} onCancel={handleCancel} footer={[]}>
                 <p className={'text-center'}>Во сколько Вам будет удобно получать обучающий материал?</p>

@@ -47,8 +47,6 @@ async def update_avatar(
     AWSClient().upload_file(photo.file, filename)
     await UserService(session).update(
         id=current_user.id,
-        data=UpdateUser(
-            avatar=f"{settings.aws_host}/{settings.aws_bucket_name}/{filename}"
-        ),
+        data=UpdateUser(avatar=f"{settings.aws_host}/{settings.aws_bucket_name}/{filename}"),
     )
     return f"{settings.aws_host}/{settings.aws_bucket_name}/{filename}"

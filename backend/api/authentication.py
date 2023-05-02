@@ -34,16 +34,12 @@ async def form_login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
-    )
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.post("/token", response_model=Token)
-async def login_for_access_token(
-    user: CreateUser, session: AsyncSession = Depends(get_session)
-):
+async def login_for_access_token(user: CreateUser, session: AsyncSession = Depends(get_session)):
     user = await authenticate_user(session, user.email, user.password)
     if not user:
         raise HTTPException(
@@ -52,16 +48,12 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
-    )
+    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/users/me", response_model=User)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
     return current_user
 
 
@@ -70,7 +62,5 @@ async def create_user(user: CreateUser, session: AsyncSession = Depends(get_sess
     user = await UserService(session).create(user)
     course_chapters = await CourseChapterService(session).list()
     for course_chapter in course_chapters:
-        await ChatService(session).create(
-            ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id)
-        )
+        await ChatService(session).create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
     return user

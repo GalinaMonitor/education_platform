@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, Date, Enum, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy.orm import DeclarativeBase, backref, relationship
 
@@ -17,9 +17,7 @@ class Chat(Base):
     user_id = Column(Integer, ForeignKey("user.id"), nullable=True, default=None)
     receive_time = Column(TIME, default=datetime.strptime("10:00", "%H:%M"))
     last_video = Column(Integer, default=0)
-    coursechapter_id = Column(
-        Integer, ForeignKey("coursechapter.id"), nullable=True, default=None
-    )
+    coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     messages = relationship("Message", backref=backref("chat"))
 
 
@@ -58,21 +56,22 @@ class Theme(Base):
     __tablename__ = "theme"
 
     id = Column(Text, primary_key=True)
-    coursechapter_id = Column(
-        Integer, ForeignKey("coursechapter.id"), nullable=True, default=None
-    )
+    coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     name = Column(Text, default="")
     videos = relationship("Video", back_populates="theme")
+    messages = relationship("Message", back_populates="theme")
 
 
 class Message(Base):
     __tablename__ = "message"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
-    datetime = Column(Date)
+    datetime = Column(DateTime)
     content = Column(Text, default="")
     content_type = Column(Enum(DataType))
     chat_id = Column(Integer, ForeignKey("chat.id"), nullable=True, default=None)
+    theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
+    theme = relationship(Theme, back_populates="messages")
 
 
 class Course(Base):
@@ -91,8 +90,6 @@ class Video(Base):
     order = Column(Integer, default="")
     name = Column(Text, default="")
     link = Column(Text, default="")
-    coursechapter_id = Column(
-        Integer, ForeignKey("coursechapter.id"), nullable=True, default=None
-    )
+    coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="videos")

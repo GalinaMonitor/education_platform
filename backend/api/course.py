@@ -29,9 +29,7 @@ async def get_course(
 
 
 @router.get("/{id}/course_chapters")
-async def get_course_chapters(
-    id: int, session: AsyncSession = Depends(get_session)
-) -> List[CourseChapterThemes]:
+async def get_course_chapters(id: int, session: AsyncSession = Depends(get_session)) -> List[CourseChapterThemes]:
     return await CourseService(session).course_chapters(id)
 
 
@@ -43,7 +41,5 @@ async def change_receive_time(
     session: AsyncSession = Depends(get_session),
 ):
     time = datetime.strptime(time.time, "%H:%M").time()
-    await CourseService(session).change_receive_time(
-        id=id, user_id=current_user.id, receive_time=time
-    )
+    await CourseService(session).change_receive_time(id=id, user_id=current_user.id, receive_time=time)
     return "Success"

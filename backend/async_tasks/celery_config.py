@@ -35,18 +35,14 @@ async def sync_kinescope():
     async with async_session() as session:
         course_chapters = await CourseChapterService(session).list()
         for course_chapter in course_chapters:
-            video_list = KinescopeClient().get_project_video_list(
-                course_chapter.kinescope_project_id
-            )
+            video_list = KinescopeClient().get_project_video_list(course_chapter.kinescope_project_id)
             for video in video_list:
                 try:
                     await VideoService(session).retrieve(id=video.id)
                 except NotFoundException:
                     if video.folder_id:
                         try:
-                            theme = await ThemeService(session).retrieve(
-                                id=video.folder_id
-                            )
+                            theme = await ThemeService(session).retrieve(id=video.folder_id)
                         except NotFoundException:
                             theme = await ThemeService(session).create(
                                 data=Theme(
@@ -92,11 +88,10 @@ async def send_video():
                     content=new_video.link,
                     content_type=DataType.VIDEO,
                     chat_id=chat.id,
+                    theme_id=new_video.theme_id,
                 )
             )
-            await ChatService(session).update(
-                id=chat.id, data=Chat(last_video=chat.last_video + 1)
-            )
+            await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
 
 
 @celery_app.task
@@ -107,10 +102,10 @@ def send_video_task():
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(hour="*", minute="*", day_of_week="*"),
+        crontab(hour="0", minute="30", day_of_week="*"),
         sync_kinescope_task,
     )
     sender.add_periodic_task(
-        crontab(hour="*", minute="*", day_of_week="1-5"),
+        crontab(hour="*", minute="0", day_of_week="1-5"),
         send_video_task,
     )

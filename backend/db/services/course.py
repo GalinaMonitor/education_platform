@@ -38,10 +38,7 @@ class CourseService(BaseService):
         results = results.all()
         parsed_results = []
         for result in results:
-            parsed_result = CourseRead(
-                **(CourseCourseChapters.from_orm(result[0]).dict()),
-                receive_time=result[1]
-            )
+            parsed_result = CourseRead(**(CourseCourseChapters.from_orm(result[0]).dict()), receive_time=result[1])
             parsed_results.append(parsed_result)
         return parsed_results
 
@@ -49,9 +46,7 @@ class CourseService(BaseService):
         statement = select(CourseChapterDB).where(CourseChapterDB.course_id == id)
         results = await self.session.execute(statement)
         result = results.all()
-        return [
-            parse_obj_as(CourseChapterThemes, coursechapter) for coursechapter in result
-        ]
+        return [parse_obj_as(CourseChapterThemes, coursechapter) for coursechapter in result]
 
     async def change_receive_time(self, id: int, user_id, receive_time: time):
         statement = (

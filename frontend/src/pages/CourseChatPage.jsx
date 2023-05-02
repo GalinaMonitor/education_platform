@@ -5,20 +5,21 @@ import ProgramList from "../components/CourseList";
 import '../App.css'
 import Card from '../components/UI/Card';
 import {Link, useParams} from "react-router-dom";
-import Chat from "../components/Chat";
 import ThemeList from "../components/ThemeList";
 import {RouteNames} from "../router";
 import TextBlock from "../components/UI/TextBlock";
 import {useFetching} from "../hooks/useFetching";
 import CourseService from "../services/CourseService";
+import CourseChat from "../components/CourseChat";
 
-const CourseChat: FC = () => {
+const CourseChatPage: FC = () => {
     const {id} = useParams();
     const [course, setCourse] = useState({})
     const [fetchCourse, isLoading, error] = useFetching(async () => {
         const response = await CourseService.retrieve(id)
         setCourse(response.data)
     })
+    const [themeId, setThemeId] = useState(null)
     useEffect(() => {
         fetchCourse()
     }, [])
@@ -45,13 +46,13 @@ const CourseChat: FC = () => {
                 </Col>
                 <Col span={6}>
                     <Card style={{height: '600px'}} className={'mr-2.5 mt-5 mb-5'} text={'СТРУКТУРА ОБУЧЕНИЯ'}>
-                        <ThemeList course_chapter_id={id}/>
+                        <ThemeList course_chapter_id={id} setThemeId={setThemeId}/>
                     </Card>
                 </Col>
                 <Col span={12}>
                     <Card style={{height: '600px'}} className={'mt-5 mr-10 mb-5'}
                           text={`ЧАТ С НАСТАВНИКОМ ${course.name}`}>
-                        <Chat course_chapter_id={id}/>
+                        <CourseChat course_chapter_id={id} theme_id={themeId}/>
                     </Card>
                 </Col>
             </Row>
@@ -59,4 +60,4 @@ const CourseChat: FC = () => {
     );
 };
 
-export default CourseChat;
+export default CourseChatPage;

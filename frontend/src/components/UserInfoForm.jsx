@@ -16,19 +16,18 @@ const UserInfoForm: FC = ({handleFormData, onSubmit = null}) => {
     const [job, setJob] = useState('')
 
     const [patchUser, userIsLoading, userError] = useFetching(async (data) => {
-        const response = await UserService.patch(data)
+        await UserService.patch(data)
+        await checkAuth()
     })
 
     const submit = () => {
         patchUser({fullname, company, job, passed_welcome_page: true})
-        checkAuth()
-        navigate(RouteNames.MAIN)
+        setTimeout(navigate, 500, RouteNames.MAIN)
     }
 
     const rejection = () => {
         patchUser({passed_welcome_page: true})
-        checkAuth()
-        navigate(RouteNames.MAIN)
+        setTimeout(navigate, 500, RouteNames.MAIN)
     }
 
     return (
@@ -58,11 +57,9 @@ const UserInfoForm: FC = ({handleFormData, onSubmit = null}) => {
                     </Button>
                 </Form.Item>
             </Form>
-            <Link to="/register">
-                <Button className={"big-button"} style={{width: "100%"}} type={"default"} htmlType={'submit'} loading={isLoading} onClick={rejection}>
-                    <p className={"font-semibold"}>НЕ ХОЧУ</p>
-                </Button>
-            </Link>
+            <Button className={"big-button"} style={{width: "100%"}} type={"default"} htmlType={'submit'} loading={isLoading} onClick={rejection}>
+                <p className={"font-semibold"}>НЕ ХОЧУ</p>
+            </Button>
         </div>
     );
 };

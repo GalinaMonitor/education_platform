@@ -1,9 +1,14 @@
 from datetime import date, datetime, time
 from typing import List, Optional, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel as PydanticBaseModel
 
 from db.models import DataType
+
+
+class BaseModel(PydanticBaseModel):
+    class Config:
+        orm_mode = True
 
 
 class Video(BaseModel):
@@ -14,24 +19,15 @@ class Video(BaseModel):
     coursechapter_id: int
     theme_id: Optional[str]
 
-    class Config:
-        orm_mode = True
-
 
 class Theme(BaseModel):
     id: Optional[str]
     coursechapter_id: int
     name: str
 
-    class Config:
-        orm_mode = True
-
 
 class ThemeVideos(Theme):
     videos: List[Video] = []
-
-    class Config:
-        orm_mode = True
 
 
 class CourseChapter(BaseModel):
@@ -42,15 +38,9 @@ class CourseChapter(BaseModel):
     kinescope_project_id: str
     course_id: int
 
-    class Config:
-        orm_mode = True
-
 
 class CourseChapterThemes(CourseChapter):
     themes: List[ThemeVideos] = []
-
-    class Config:
-        orm_mode = True
 
 
 class Course(BaseModel):
@@ -58,15 +48,9 @@ class Course(BaseModel):
     description: Optional[str]
     name: Optional[str]
 
-    class Config:
-        orm_mode = True
-
 
 class CourseCourseChapters(Course):
     coursechapters: List[CourseChapter] = []
-
-    class Config:
-        orm_mode = True
 
 
 class CourseRead(Course):
@@ -85,9 +69,6 @@ class User(BaseModel):
     hashed_password: str
     has_subscription: bool
     end_of_subscription: Optional[date]
-
-    class Config:
-        orm_mode = True
 
 
 class AuthUser(BaseModel):
@@ -111,9 +92,6 @@ class Message(BaseModel):
     chat_id: int
     theme_id: Optional[str]
 
-    class Config:
-        orm_mode = True
-
 
 class Chat(BaseModel):
     id: Optional[int]
@@ -122,15 +100,9 @@ class Chat(BaseModel):
     last_video: Optional[int]
     coursechapter_id: Optional[int]
 
-    class Config:
-        orm_mode = True
-
 
 class ChatMessages(Chat):
     messages: List[Message] = []
-
-    class Config:
-        orm_mode = True
 
 
 class UpdateChat(BaseModel):

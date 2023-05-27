@@ -7,7 +7,7 @@ from auth import get_current_active_user
 from db.config import get_session
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
-from models import Message, ThemeVideos, User
+from models import CourseChapter, Message, ThemeVideos, User
 
 router = APIRouter()
 
@@ -15,6 +15,11 @@ router = APIRouter()
 @router.get("/{id}/themes")
 async def get_themes(id: int, session: AsyncSession = Depends(get_session)) -> List[ThemeVideos]:
     return await CourseChapterService(session).themes(id)
+
+
+@router.get("/{id}")
+async def get_course_chapter(id: int, session: AsyncSession = Depends(get_session)) -> CourseChapter:
+    return await CourseChapterService(session).retrieve(id)
 
 
 @router.get("/{id}/messages", response_model=List[Message])

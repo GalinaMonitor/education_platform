@@ -2,42 +2,36 @@ import React, {FC, useEffect, useState} from 'react';
 import TextBlock from "./UI/TextBlock";
 import CourseService from "../services/CourseService";
 import {useFetching} from "../hooks/useFetching";
-import {Button, Divider, Image, Modal, Row, Select} from "antd";
-import {Link, useNavigate} from "react-router-dom";
-import {RouteNames} from "../router";
-import {timeOptions} from "../utils/constants";
+import {Button, Divider} from "antd";
 import {format_time} from "../utils/utils";
-import BaseLevelSvg from "./UI/BaseLevelSVG";
-import MediumLevelSVG from "./UI/MediumLevelSVG";
-import MediumLevelSvg from "./UI/MediumLevelSVG";
-import ExpertLevelSvg from "./UI/ExpertLevelSVG";
+import VectorSVG from "./UI/VectorSVG";
+import Card from "./UI/Card";
+import ChooseLevel from "./Modals/ChooseLevel";
+import ChooseTime from "./Modals/ChooseTime";
+import CourseChapterService from "../services/CourseChapterService";
 
-const CourseList: FC = () => {
-    const navigate = useNavigate();
+const CourseList: FC = ({course_chapter_id = null}) => {
     const [courses, setCourses] = useState([])
-    const [courseChapters, setCourseChapters] = useState([])
+    const [course, setCourse] = useState(null)
+    const [courseChapter, setCourseChapter] = useState({})
     const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
     const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
     const [modalCourseId, setModalCourseId] = useState(null)
-    const [timeModalReceiveTime, setTimeModalReceiveTime] = useState('10:00')
 
-    const showTimeModal = (course_id) => {
+    const showTimeModal = (course_id, time) => {
         setModalCourseId(course_id)
-        setIsTimeModalOpen(true);
+        setIsTimeModalOpen(true)
     };
 
-    const showCourseModal = (coursechapters) => {
-        setCourseChapters(coursechapters)
+    const showCourseModal = (course) => {
+        setCourse(course)
         setIsCourseModalOpen(true);
     };
 
-    const handleTimeChange = (value) => {
-        setTimeModalReceiveTime(value)
-    }
-
-    const handleCancel = () => {
+    const handleCancel = async () => {
         setIsTimeModalOpen(false);
         setIsCourseModalOpen(false);
+        await fetchCourses()
     };
 
     const [fetchCourses, isLoading, error] = useFetching(async () => {
@@ -45,67 +39,40 @@ const CourseList: FC = () => {
         setCourses([...response.data])
     })
 
-    const [updateReceiveTime, TimeIsLoading, TimeError] = useFetching(async () => {
-        await CourseService.set_receive_time(modalCourseId, timeModalReceiveTime)
+    const [fetchCourseChapter] = useFetching(async (course_chapter_id) => {
+        const response = await CourseChapterService.retrieve({id: course_chapter_id})
+        setCourseChapter(response.data)
     })
-
-    const handleOk = () => {
-        updateReceiveTime()
-        setTimeModalReceiveTime('10:00');
-        setIsTimeModalOpen(false);
-        setTimeout(fetchCourses, 100);
-    };
-
-    const previewImages = [
-        {level: "Базовый", image: BaseLevelSvg},
-        {level: "Продвинутый", image: MediumLevelSvg},
-        {level: "Эксперт", image: ExpertLevelSvg},
-    ]
 
     useEffect(() => {
         fetchCourses()
+        if (course_chapter_id) {
+            fetchCourseChapter(course_chapter_id)
+        }
     }, [])
 
     return (
-        <>
-            {courses.map((course, index) =>
-                <div key={course.id}>
-                    <Button className={'mr-2'} shape={"round"} onClick={() =>
-                        showTimeModal(course.id)
-                    }>{format_time(course.receive_time)}</Button>
-                    <Button shape={"round"} onClick={() => {
-                        showCourseModal(course.coursechapters)
+        <Card text={'ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ'}>
+            {courses.map((course, index) => {
+                return <div key={course.id}>
+                    <Button className={"mr-1.5 p-0 small-button"} shape={"round"} onClick={() => {
+                        showCourseModal(course)
                     }}>
-                        Уровень
+                        {courseChapter.course_id === course.id ? courseChapter.name : "Уровень"}
                     </Button>
-                    <TextBlock key={course.id} big_text={course.name}/>
+                    <Button className={"p-0 small-button"} shape={"round"} onClick={() =>
+                        showTimeModal(course.id, format_time(course.receive_time))
+                    }>{format_time(course.receive_time)}</Button>
+                    <div className={"flex flex-row items-center"}>
+                        <VectorSVG color={course.color}/>
+                        <TextBlock className={"ml-1.5"} key={course.id} big_text={course.name}/>
+                    </div>
                     <Divider/>
                 </div>
-            )}
-            <Modal open={isTimeModalOpen} onCancel={handleCancel} footer={[]}>
-                <p className={'text-center'}>Во сколько Вам будет удобно получать обучающий материал?</p>
-                <div>
-                    <Select value={timeModalReceiveTime} options={timeOptions} onChange={handleTimeChange}/>
-                    <Button onClick={handleOk}>ОК</Button>
-                </div>
-            </Modal>
-            <Modal open={isCourseModalOpen} onCancel={handleCancel} footer={[]} width={'700px'}>
-                <p className={'text-center'}>Какой уровень Вас интересует</p>
-                <Row justify={'space-around'} align={'middle'}>
-                    {courseChapters.map((item, index) => {
-                            let Elem = previewImages[index].image;
-                            return <div key={item.id} onClick={() => {
-                                navigate(`${RouteNames.COURSE_CHAT}/${item.id}`)
-                                handleCancel()
-                            }}>
-                                <Elem color={item.color}/>
-                            </div>
-                        }
-                    )}
-                </Row>
-                <Link to={"/"}><p className={'text-center'}>Изучить структуру обучения</p></Link>
-            </Modal>
-        </>
+            })}
+            <ChooseTime isModalOpen={isTimeModalOpen} handleCancel={handleCancel} modalCourseId={modalCourseId}/>
+            <ChooseLevel isModalOpen={isCourseModalOpen} course={course} handleCancel={handleCancel}/>
+        </Card>
     )
 }
 

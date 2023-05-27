@@ -3,7 +3,7 @@ import {ConfigProvider, Layout} from "antd";
 import AppRouter from "./components/AppRouter";
 import {BrowserRouter} from "react-router-dom";
 import {useEffect} from "react";
-import useUserStore from "./store";
+import useUserStore from "./store/useUserStore";
 
 const App = () => {
     const {checkAuth} = useUserStore()
@@ -22,6 +22,7 @@ const App = () => {
                         fontFamily: 'Manrope',
                         borderRadius: 10,
                         fontSize: 14,
+                        controlHeight: 40,
                         colorLink: '#FF7D1F',
                         colorLinkActive: '#FF7D1F',
                         colorLinkHover: '#FF7D1F',

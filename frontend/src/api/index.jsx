@@ -1,5 +1,5 @@
 import axios from "axios";
-import useUserStore from "../store";
+import useUserStore from "../store/useUserStore";
 
 export const API_URL=process.env.REACT_APP_API_URL
 

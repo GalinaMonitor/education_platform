@@ -12,7 +12,6 @@ const useScroll = (reverse?: boolean) => {
     if (!container) return;
 
     if (reverse) {
-      console.log("reverse", container.scrollTop, container.clientHeight, container.scrollHeight)
       if (container.scrollTop === 0) {
         setIsBottom(true);
       } else {
@@ -27,7 +26,6 @@ const useScroll = (reverse?: boolean) => {
         setIsTop(false);
       }
     } else {
-      console.log("not reverse", container.scrollTop, container.clientHeight, container.scrollHeight)
       if (
         container.scrollHeight - container.clientHeight - container.scrollTop <= 20
       ) {

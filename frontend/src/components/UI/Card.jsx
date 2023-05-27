@@ -6,7 +6,7 @@ const Card = ({children, className, text, style}) => {
         <div className={`${className} card`} style={style}>
             {
                 text ?
-                    <p className={'text-gray-400 text-xs mb-3'}>{text}</p>
+                    <p className={'text-sm mb-3 whitespace-nowrap'}>{text}</p>
                     :
                     <></>
             }

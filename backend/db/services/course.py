@@ -21,7 +21,10 @@ class CourseService(BaseService):
 
     async def list(self, user_id: int) -> List[CourseRead]:
         time_subquery = (
-            select(CourseDB.id, func.max(ChatDB.receive_time).label("receive_time"))
+            select(
+                CourseDB.id,
+                func.max(ChatDB.receive_time).label("receive_time"),
+            )
             .join(CourseChapterDB, CourseChapterDB.course_id == CourseDB.id)
             .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
             .where(ChatDB.user_id == user_id)

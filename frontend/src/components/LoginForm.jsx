@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react';
 import {Button, Form, Input, theme} from "antd";
 import {rules} from "../utils/rules";
-import useUserStore from "../store";
+import useUserStore from "../store/useUserStore";
 import {Link} from "react-router-dom";
 
 const LoginForm: FC = () => {

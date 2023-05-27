@@ -43,7 +43,6 @@ class CourseChapter(Base):
     description = Column(Text, default="")
     name = Column(Text, default="")
     kinescope_project_id = Column(Text, default="")
-    color = Column(Text, default="#ff7d1f")
     course_id = Column(Integer, ForeignKey("course.id"), nullable=True, default=None)
     themes = relationship("Theme", backref=backref("coursechapter"))
 
@@ -81,6 +80,7 @@ class Course(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     description = Column(Text, default="")
     name = Column(Text, default="")
+    color = Column(Text, default="#ff7d1f")
     coursechapters = relationship(CourseChapter, backref=backref("course"))
 
 

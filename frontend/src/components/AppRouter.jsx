@@ -1,6 +1,6 @@
 import {Navigate, Route, Routes} from "react-router-dom";
 import {privateRoutes, publicRoutes, RouteNames} from "../router";
-import useUserStore from "../store";
+import useUserStore from "../store/useUserStore";
 
 
 const AppRouter = () => {

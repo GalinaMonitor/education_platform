@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Avatar, Divider, Input, message, theme, Upload} from "antd";
-import useUserStore from "../store";
+import {Avatar, Divider, message, Upload} from "antd";
+import useUserStore from "../store/useUserStore";
 import {useFetching} from "../hooks/useFetching";
 import UserService from "../services/UserService";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons";
 import Paragraph from "antd/lib/typography/Paragraph";
 import EditableStringSvg from "./UI/EditableStringSVG";
+import Card from "./UI/Card";
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
@@ -29,8 +30,6 @@ const Settings = () => {
     const {user, checkAuth} = useUserStore()
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(user.avatar);
-    const {useToken} = theme;
-    const {token} = useToken();
 
 
     const handleChange = (info) => {
@@ -75,7 +74,7 @@ const Settings = () => {
     }
 
     return (
-        <div>
+        <Card text={"Профиль"}>
             <Upload
                 name="avatar"
                 listType="picture-circle"
@@ -107,15 +106,10 @@ const Settings = () => {
                 <Paragraph editable={{onChange: changeCompany, icon: <EditableStringSvg/>}}>{user.company}</Paragraph>
                 <Divider/>
                 <p className={'text-xs m-1 text-gray-400'}>Должность</p>
-                <Paragraph style={{
-                    colorLink: '#FF7D1F',
-                    colorLinkActive: '#FF7D1F',
-                    colorLinkHover: '#FF7D1F',
-                    colorPrimaryHover: '#FF7D1F',
-                }} editable={{onChange: changeJob, icon: <EditableStringSvg/>,}}>{user.joby}</Paragraph>
+                <Paragraph editable={{onChange: changeJob, icon: <EditableStringSvg/>,}}>{user.joby}</Paragraph>
                 <Divider/>
             </div>
-        </div>
+        </Card>
     );
 };
 

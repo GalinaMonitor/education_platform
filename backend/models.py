@@ -34,7 +34,6 @@ class CourseChapter(BaseModel):
     id: Optional[int]
     description: Optional[str]
     name: Optional[str]
-    color: Optional[str]
     kinescope_project_id: str
     course_id: int
 
@@ -47,6 +46,7 @@ class Course(BaseModel):
     id: Optional[int]
     description: Optional[str]
     name: Optional[str]
+    color: Optional[str]
 
 
 class CourseCourseChapters(Course):
@@ -55,7 +55,7 @@ class CourseCourseChapters(Course):
 
 class CourseRead(Course):
     coursechapters: List[CourseChapterThemes]
-    receive_time: time
+    receive_time: Optional[time]
 
 
 class User(BaseModel):

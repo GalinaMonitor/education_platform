@@ -2,7 +2,7 @@ import React from 'react';
 import {Button, Card, Image} from "antd";
 import {Link} from "react-router-dom";
 import {RouteNames} from "../router";
-import useUserStore from "../store";
+import useUserStore from "../store/useUserStore";
 
 const Subscription = () => {
     const {user} = useUserStore()

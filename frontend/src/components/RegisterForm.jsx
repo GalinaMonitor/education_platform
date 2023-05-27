@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import useUserStore from "../store";
+import useUserStore from "../store/useUserStore";
 import {Button, Checkbox, Form, Input} from "antd";
 import {rules} from "../utils/rules";
 import {Link} from "react-router-dom";

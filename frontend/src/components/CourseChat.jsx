@@ -5,8 +5,9 @@ import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
 import Message from "./Message";
 import InfiniteScroll from "./UI/InfiniteScroll";
+import Card from "./UI/Card";
 
-const CourseChat = ({course_chapter_id = null, theme_id = null}) => {
+const CourseChat = ({course_name, course_chapter_id = null, theme_id = null}) => {
     const [messages, setMessages] = useState([])
     const [limit, setLimit] = useState(10);
     const [lastNext, setLastNext] = useState(0);
@@ -69,7 +70,7 @@ const CourseChat = ({course_chapter_id = null, theme_id = null}) => {
 
     })
     return (
-        <div style={{height: "90%"}}>
+        <Card text={`ЧАТ С НАСТАВНИКОМ ${course_name}`} style={{height: "90%"}}>
             <div
                 className={`h-full`}
             >
@@ -96,7 +97,7 @@ const CourseChat = ({course_chapter_id = null, theme_id = null}) => {
                     ))}
                 </InfiniteScroll>
             </div>
-        </div>
+        </Card>
 
     );
 };

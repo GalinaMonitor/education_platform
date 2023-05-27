@@ -48,14 +48,12 @@ async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
 
 
 async def create_course_chapter(course_id, coursechapter_id, user_id):
-    colors = ["#FF4343", "#10B10D", "#50D9FF"]
     async with async_session() as session:
         course_chapter = await CourseChapterService(session).create(
             CourseChapterThemes(
                 name=f"Test Course {course_id} Chapter {coursechapter_id}",
                 course_id=course_id,
                 kinescope_project_id="b0cc85b3-63b1-4a9d-abfc-5c1e02a70daf",
-                color=colors[course_id],
             )
         )
         chat = await ChatService(session).create(ChatMessages(user_id=user_id, coursechapter_id=course_chapter.id))
@@ -73,9 +71,14 @@ async def create_course_chapter(course_id, coursechapter_id, user_id):
 
 
 async def create_course(course_id, user_id):
+    colors = ["#FF4343", "#10B10D", "#50D9FF"]
     async with async_session() as session:
         course = await CourseService(session).create(
-            CourseCourseChapters(id=course_id, name=f"Test Course {course_id}")
+            CourseCourseChapters(
+                id=course_id,
+                name=f"Test Course {course_id}",
+                color=colors[course_id],
+            )
         )
         async with asyncio.TaskGroup() as tg:
             tg.create_task(create_course_chapter(course.id, 0, user_id))

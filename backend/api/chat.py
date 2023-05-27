@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends
 from fastapi_pagination import Page, paginate
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.config import get_session
-from backend.db.services.chat import ChatService
-from backend.models import Message
+from db.config import get_session
+from db.services.chat import ChatService
+from models import Message
 
 router = APIRouter()
 

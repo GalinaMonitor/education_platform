@@ -57,7 +57,7 @@ const BaseChat = () => {
                             active
                         />
                     }
-                    endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
+                    endMessage={<Divider plain><p className={"text-gray-400"}>Начало переписки</p></Divider>}
                     scrollableTarget="scrollableDiv"
                 >
                     <List

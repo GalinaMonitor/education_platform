@@ -9,10 +9,10 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
-from backend.db.config import engine
-from backend.db.models import User
-from backend.db.services.user import UserService
-from backend.settings import settings
+from db.config import engine
+from db.models import User
+from db.services.user import UserService
+from settings import settings
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30

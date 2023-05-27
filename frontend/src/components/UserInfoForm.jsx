@@ -1,58 +1,69 @@
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import {Button, Form, Input} from "antd";
 import {rules} from "../utils/rules";
 import useUserStore from "../store";
+import {useFetching} from "../hooks/useFetching";
+import UserService from "../services/UserService";
+import {Link, useNavigate} from "react-router-dom";
+import {RouteNames} from "../router";
 
 const UserInfoForm: FC = ({handleFormData, onSubmit = null}) => {
-    const {isLoading, error} = useUserStore()
+    const {isLoading, checkAuth} = useUserStore()
+    const {user} = useUserStore()
+    const navigate = useNavigate();
+    const [fullname, setFullname] = useState('')
+    const [company, setCompany] = useState('')
+    const [job, setJob] = useState('')
 
-    const submit = (values) => {
-        handleFormData(values)
-        if (onSubmit) {
-            onSubmit()
-        }
+    const [patchUser, userIsLoading, userError] = useFetching(async (data) => {
+        const response = await UserService.patch(data)
+    })
+
+    const submit = () => {
+        patchUser({fullname, company, job, passed_welcome_page: true})
+        checkAuth()
+        navigate(RouteNames.MAIN)
     }
+
+    const rejection = () => {
+        patchUser({passed_welcome_page: true})
+        checkAuth()
+        navigate(RouteNames.MAIN)
+    }
+
     return (
-        <Form
-            onFinish={submit}
-            layout="vertical"
-        >
-            {error && <div style={{color: 'red'}}>
-                {error}
-            </div>}
-            <Form.Item
-                label='Имя'
-                name='fullname'
-                rules={[
-                    rules.required('Введите email')
-                ]}
+        <div className={"w-96"}>
+            <Form
+                onFinish={submit}
+                layout="vertical"
             >
-                <Input/>
-            </Form.Item>
-            <Form.Item
-                label='Компания'
-                name='company'
-                rules={[
-                    rules.required('Введите компанию')
-                ]}
-            >
-                <Input/>
-            </Form.Item>
-            <Form.Item
-                label='Должность'
-                name='job'
-                rules={[
-                    rules.required('Введите должность')
-                ]}
-            >
-                <Input/>
-            </Form.Item>
-            <Form.Item className={"mb-2"}>
-                <Button style={{width: "100%"}} htmlType='submit' loading={isLoading}>
-                    Отправить
+                <Form.Item
+                    name='fullname'
+                >
+                    <Input className={"big-button"} style={{width: "100%"}} placeholder={"Как вас зовут?"}/>
+                </Form.Item>
+                <Form.Item
+                    name='company'
+                >
+                    <Input className={"big-button"} style={{width: "100%"}} placeholder={"В какой компании вы работаете?"}/>
+                </Form.Item>
+                <Form.Item
+                    name='job'
+                >
+                    <Input className={"big-button"} style={{width: "100%"}} placeholder={"Кем вы работаете?"}/>
+                </Form.Item>
+                <Form.Item className={"mb-2"}>
+                    <Button className={"big-button"} style={{width: "100%"}} type={"primary"} htmlType={'submit'} loading={isLoading}>
+                        <p className={"font-semibold"}>ПОЗНАКОМИТЬСЯ</p>
+                    </Button>
+                </Form.Item>
+            </Form>
+            <Link to="/register">
+                <Button className={"big-button"} style={{width: "100%"}} type={"default"} htmlType={'submit'} loading={isLoading} onClick={rejection}>
+                    <p className={"font-semibold"}>НЕ ХОЧУ</p>
                 </Button>
-            </Form.Item>
-        </Form>
+            </Link>
+        </div>
     );
 };
 

@@ -4,11 +4,11 @@ from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.exceptions import NotFoundException
-from backend.db.models import Chat as ChatDB
-from backend.db.models import Message as MessageDB
-from backend.db.services.base import BaseService
-from backend.models import Chat, ChatMessages, Message
+from db.exceptions import NotFoundException
+from db.models import Chat as ChatDB
+from db.models import Message as MessageDB
+from db.services.base import BaseService
+from models import Chat, ChatMessages, Message
 
 
 class ChatService(BaseService):

@@ -1,15 +1,18 @@
 import React, {useState} from 'react';
-import {Avatar, Divider, Input, message, Upload} from "antd";
+import {Avatar, Divider, Input, message, theme, Upload} from "antd";
 import useUserStore from "../store";
 import {useFetching} from "../hooks/useFetching";
 import UserService from "../services/UserService";
 import {LoadingOutlined, PlusOutlined} from "@ant-design/icons";
+import Paragraph from "antd/lib/typography/Paragraph";
+import EditableStringSvg from "./UI/EditableStringSVG";
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
 };
+
 const beforeUpload = (file) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
@@ -26,13 +29,16 @@ const Settings = () => {
     const {user, checkAuth} = useUserStore()
     const [loading, setLoading] = useState(false);
     const [imageUrl, setImageUrl] = useState(user.avatar);
+    const {useToken} = theme;
+    const {token} = useToken();
+
+
     const handleChange = (info) => {
         if (info.file.status === 'uploading') {
             setLoading(true);
             return;
         }
         if (info.file.status === 'done') {
-            // Get this url from response in real world.
             getBase64(info.file.originFileObj, (url) => {
                 setLoading(false);
                 setImageUrl(url);
@@ -43,6 +49,7 @@ const Settings = () => {
     const [uploadPhoto, photoIsLoading, photoError] = useFetching(async (photo) => {
         const response = await UserService.update_avatar(photo)
         setImageUrl(response.data)
+        await checkAuth()
     })
 
     const [patchUser, isLoading, error] = useFetching(async (data) => {
@@ -55,17 +62,16 @@ const Settings = () => {
         uploadPhoto(formData)
     }
 
-    const changeFullname = (e) => {
-        patchUser({fullname: e.target.value})
-        checkAuth()
+    const changeFullname = (value) => {
+        patchUser({fullname: value})
     }
 
-    const changeCompany = (e) => {
-        patchUser({company: e.target.value})
+    const changeCompany = (value) => {
+        patchUser({company: value})
     }
 
-    const changeJob = (e) => {
-        patchUser({job: e.target.value})
+    const changeJob = (value) => {
+        patchUser({job: value})
     }
 
     return (
@@ -94,14 +100,19 @@ const Settings = () => {
                 )}
             </Upload>
             <div className={'mt-3 mb-3'}>
-                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Имя</p>
-                <Input defaultValue={user.fullname} onPressEnter={changeFullname}/>
+                <p className={'text-xs m-1 text-gray-400'}>Имя</p>
+                <Paragraph editable={{onChange: changeFullname, icon: <EditableStringSvg/>}}>{user.fullname}</Paragraph>
                 <Divider/>
-                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Компания</p>
-                <Input defaultValue={user.company} onPressEnter={changeCompany}/>
+                <p className={'text-xs m-1 text-gray-400'}>Компания</p>
+                <Paragraph editable={{onChange: changeCompany, icon: <EditableStringSvg/>}}>{user.company}</Paragraph>
                 <Divider/>
-                <p className={'text-xs m-0.5'} style={{'color': 'grey'}}>Должность</p>
-                <Input defaultValue={user.job} onPressEnter={changeJob}/>
+                <p className={'text-xs m-1 text-gray-400'}>Должность</p>
+                <Paragraph style={{
+                    colorLink: '#FF7D1F',
+                    colorLinkActive: '#FF7D1F',
+                    colorLinkHover: '#FF7D1F',
+                    colorPrimaryHover: '#FF7D1F',
+                }} editable={{onChange: changeJob, icon: <EditableStringSvg/>,}}>{user.joby}</Paragraph>
                 <Divider/>
             </div>
         </div>

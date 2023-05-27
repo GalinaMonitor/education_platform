@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {Button, Form, Input} from "antd";
+import {Button, Form, Input, theme} from "antd";
 import {rules} from "../utils/rules";
 import useUserStore from "../store";
 import {Link} from "react-router-dom";
@@ -14,37 +14,41 @@ const LoginForm: FC = () => {
     }
 
     return (
-        <Form
-            onFinish={submit}
-            layout="vertical"
-        >
-            {error && <div style={{color: 'red'}}>
-                {error}
-            </div>}
-            <Form.Item
-                label='Ваша почта'
-                name='email'
-                rules={[
-                    rules.required('Введите email')
-                ]}
+        <div className={"w-96"}>
+            <Form
+                onFinish={submit}
+                layout="vertical"
             >
-                <Input value={email} onChange={e => setEmail(e.target.value)}/>
-            </Form.Item>
-            <Form.Item
-                label='Пароль'
-                name='password'
-                rules={[
-                    rules.required('Введите пароль')
-                ]}
-            >
-                <Input type='password' value={password} onChange={e => setPassword(e.target.value)}/>
-            </Form.Item>
-            <Form.Item className={"mb-2"}>
-                <Button style={{width: "100%"}} type={"primary"} htmlType='submit' loading={isLoading}>
-                    Войти
+                <Form.Item
+                    label={<p className={"text-md font-semibold"}>ВАША ПОЧТА</p>}
+                    name='email'
+                    rules={[
+                        rules.required('Введите email')
+                    ]}
+                >
+                    <Input className={"big-button"} style={{width: "100%"}} value={email} onChange={e => setEmail(e.target.value)}/>
+                </Form.Item>
+                <Form.Item
+                    label={<p className={"text-md font-semibold"}>ПАРОЛЬ</p>}
+                    name='password'
+                    rules={[
+                        rules.required('Введите пароль')
+                    ]}
+                >
+                    <Input.Password className={"big-button"} style={{width: "100%"}} value={password} onChange={e => setPassword(e.target.value)}/>
+                </Form.Item>
+                <Form.Item className={"mb-2"}>
+                    <Button className={"big-button"} style={{width: "100%"}} type={"primary"} htmlType='submit' loading={isLoading}>
+                        <p className={"font-semibold"}>ВОЙТИ</p>
+                    </Button>
+                </Form.Item>
+            </Form>
+            <Link to="/register">
+                <Button className={"big-button"} style={{width: "100%"}} type={"default"} htmlType='submit' loading={isLoading}>
+                    <p className={"font-semibold"}>ЗАРЕГИСТРИРОВАТЬСЯ</p>
                 </Button>
-            </Form.Item>
-        </Form>
+            </Link>
+        </div>
     );
 };
 

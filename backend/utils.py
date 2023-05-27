@@ -2,21 +2,22 @@ import asyncio
 from datetime import datetime
 from time import perf_counter
 
-from backend.db.config import async_session
-from backend.db.services.chat import ChatService
-from backend.db.services.course import CourseService
-from backend.db.services.course_chapter import CourseChapterService
-from backend.db.services.message import MessageService
-from backend.db.services.theme import ThemeService
-from backend.db.services.user import UserService
-from backend.models import (
+from db.config import async_session
+from db.services.chat import ChatService
+from db.services.course import CourseService
+from db.services.course_chapter import CourseChapterService
+from db.services.message import MessageService
+from db.services.theme import ThemeService
+from db.services.user import UserService
+from models import (
+    AuthUser,
     ChatMessages,
     CourseChapterThemes,
     CourseCourseChapters,
-    CreateUser,
     Message,
     ThemeVideos,
     UpdateUser,
+    User,
 )
 
 
@@ -82,10 +83,40 @@ async def create_course(course_id, user_id):
             tg.create_task(create_course_chapter(course.id, 2, user_id))
 
 
+async def init_user(user: User):
+    async with async_session() as session:
+        chat = await ChatService(session).create(
+            ChatMessages(
+                user_id=user.id,
+            )
+        )
+        await MessageService(session).create(
+            Message(
+                datetime=datetime.now(),
+                content=f"{user.fullname if user.fullname else 'Здравствуйте'}, мне очень приятно познакомиться с вами! ",
+                content_type=0,
+                chat_id=chat.id,
+                theme_id=None,
+            )
+        )
+        await MessageService(session).create(
+            Message(
+                datetime=datetime.now(),
+                content="Позвольте мне рассказать вам дальнейшие действия. Посмотрите на левую часть экрана, именно там расположены программы, которые вы можете изучить. Просто кликните на нужный вам инструмент и выберете уровень сложности! Удачи, надеюсь вам у нас понравиться!",
+                content_type=0,
+                chat_id=chat.id,
+                theme_id=None,
+            )
+        )
+        course_chapters = await CourseChapterService(session).list()
+        for course_chapter in course_chapters:
+            await ChatService(session).create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
+
+
 async def init_data():
     t0 = perf_counter()
     async with async_session() as session:
-        user = await UserService(session).create(CreateUser(email="test@test.com", password="secret"))
+        user = await UserService(session).create(AuthUser(email="test@test.com", password="secret"))
         user = await UserService(session).update(
             id=user.id,
             data=UpdateUser(

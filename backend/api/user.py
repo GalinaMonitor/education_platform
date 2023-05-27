@@ -4,13 +4,13 @@ from fastapi import APIRouter, Depends, UploadFile
 from fastapi_pagination import Page, paginate
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.auth import get_current_active_user
-from backend.db.config import get_session
-from backend.db.services.chat import ChatService
-from backend.db.services.user import UserService
-from backend.models import Message, UpdateUser, User
-from backend.s3.api import AWSClient
-from backend.settings import settings
+from auth import get_current_active_user
+from db.config import get_session
+from db.services.chat import ChatService
+from db.services.user import UserService
+from models import Message, UpdateUser, User
+from s3.api import AWSClient
+from settings import settings
 
 router = APIRouter()
 

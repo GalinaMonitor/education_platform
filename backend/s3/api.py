@@ -3,7 +3,7 @@ import io
 import boto3
 from botocore.client import Config
 
-from backend.settings import settings
+from settings import settings
 
 
 class AWSClient:

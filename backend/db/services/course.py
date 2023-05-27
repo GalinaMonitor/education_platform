@@ -6,11 +6,11 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from backend.db.models import Chat as ChatDB
-from backend.db.models import Course as CourseDB
-from backend.db.models import CourseChapter as CourseChapterDB
-from backend.db.services.base import BaseService
-from backend.models import Course, CourseChapterThemes, CourseCourseChapters, CourseRead
+from db.models import Chat as ChatDB
+from db.models import Course as CourseDB
+from db.models import CourseChapter as CourseChapterDB
+from db.services.base import BaseService
+from models import Course, CourseChapterThemes, CourseCourseChapters, CourseRead
 
 
 class CourseService(BaseService):

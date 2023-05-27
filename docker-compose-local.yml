@@ -13,7 +13,8 @@ services:
       network:
         ipv4_address: 11.1.0.11
     build:
-      dockerfile: backend/Dockerfile
+      context: backend
+      dockerfile: Dockerfile
     env_file:
       - .env
     ports:
@@ -24,20 +25,6 @@ services:
           condition: service_healthy
         redis:
           condition: service_healthy
-
-  admin:
-    networks:
-      network:
-        ipv4_address: 11.1.0.13
-    image: education_platform-backend
-    env_file:
-      - .env
-    ports:
-      - "7000:7000"
-    container_name: admin
-    entrypoint: [ "gunicorn", "--workers", "4", "--bind", "0.0.0.0:7000", "-m", "007", "admin.wsgi:app" ]
-    depends_on:
-      - backend
 
   redis:
     networks:
@@ -65,7 +52,7 @@ services:
     container_name: celery_beat
     depends_on:
       - backend
-    entrypoint: [ "celery", "-A", "backend.async_tasks.celery_config", "beat", "--loglevel=INFO" ]
+    entrypoint: [ "celery", "-A", "async_tasks.celery_config", "beat", "--loglevel=INFO" ]
 
   celery_worker:
     networks:

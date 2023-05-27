@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.exceptions import NotFoundException
+from db.exceptions import NotFoundException
 
 
 class BaseService:

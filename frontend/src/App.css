@@ -164,3 +164,56 @@
     margin-top: 3px;
     margin-bottom: 0px;
 }
+
+.text-sm {
+    font-size: 14px;
+}
+
+.text-md {
+    font-size: 18px;
+}
+
+.text-lg {
+    font-size: 24px;
+}
+
+.text-xl {
+    font-size: 48px;
+}
+
+.ant-checkbox .ant-checkbox-inner {
+    height: 15px;
+    width: 15px;
+}
+
+.ant-input {
+    border-color: #d9d9d9 !important
+}
+
+.ant-input:hover {
+    border-color: #FF7D1F !important
+}
+
+input.ant-checkbox-input {
+    height: 10px;
+    width: 10px;
+    margin: 0;
+}
+
+.ant-checkbox-wrapper.ant-checkbox-wrapper-in-form-item {
+    height: 10px;
+    width: 10px;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner:after {
+    height: 8px;
+    width: 6px;
+}
+
+.ant-form-item .ant-form-item-control-input {
+    min-height: 0;
+}
+
+.big-button {
+    height: 60px
+}

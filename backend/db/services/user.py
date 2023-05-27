@@ -5,11 +5,11 @@ from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.exceptions import NotFoundException
-from backend.db.models import Chat as ChatDB
-from backend.db.models import User as UserDB
-from backend.db.services.base import BaseService
-from backend.models import Chat, ChatMessages, CreateUser, User
+from db.exceptions import NotFoundException
+from db.models import Chat as ChatDB
+from db.models import User as UserDB
+from db.services.base import BaseService
+from models import AuthUser, Chat, ChatMessages, User
 
 
 class UserService(BaseService):
@@ -18,22 +18,10 @@ class UserService(BaseService):
         self.model = UserDB
         self.pydantic_model = User
 
-    async def create(self, data: CreateUser) -> User:
-        from backend.auth import pwd_context
-        from backend.main import email_conf
+    async def create(self, data: AuthUser) -> User:
+        from auth import pwd_context
 
-        if not data.password:
-            password = secrets.token_urlsafe(32)
-            message = MessageSchema(
-                subject="Registration",
-                recipients=[data.email],
-                body=f"Here is your password {password}",
-                subtype=MessageType.plain,
-            )
-            fm = FastMail(email_conf)
-            await fm.send_message(message)
-        else:
-            password = data.password
+        password = data.password
         new_model = UserDB(email=data.email, hashed_password=pwd_context.hash(password))
         self.session.add(new_model)
         await self.session.commit()

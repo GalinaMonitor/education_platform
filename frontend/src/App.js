@@ -21,7 +21,13 @@ const App = () => {
                         colorInfo: '#FF7D1F',
                         fontFamily: 'Manrope',
                         borderRadius: 10,
+                        fontSize: 14,
+                        colorLink: '#FF7D1F',
+                        colorLinkActive: '#FF7D1F',
+                        colorLinkHover: '#FF7D1F',
+                        colorPrimaryHover: '#FF7D1F',
                     },
+
                 }}
             >
                 <Layout className={'h-full'}>

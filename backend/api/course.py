@@ -4,10 +4,10 @@ from typing import Annotated, List
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.auth import get_current_active_user
-from backend.db.config import get_session
-from backend.db.services.course import CourseService
-from backend.models import Course, CourseChapterThemes, CourseRead, Time, User
+from auth import get_current_active_user
+from db.config import get_session
+from db.services.course import CourseService
+from models import Course, CourseChapterThemes, CourseRead, Time, User
 
 router = APIRouter()
 

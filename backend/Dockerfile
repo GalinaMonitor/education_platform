@@ -26,7 +26,7 @@ RUN curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VE
 
 # Install main dependencies
 WORKDIR $PYSETUP_PATH
-COPY ./backend/poetry.lock ./backend/pyproject.toml ./
+COPY ./poetry.lock ./pyproject.toml ./
 
 RUN poetry install --only main
 
@@ -37,4 +37,4 @@ FROM python-base as production
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .
 
-CMD ["uvicorn", "backend.main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"]
+CMD ["uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"]

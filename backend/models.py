@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel
 
-from backend.db.models import DataType
+from db.models import DataType
 
 
 class Video(BaseModel):
@@ -76,6 +76,7 @@ class CourseRead(Course):
 
 class User(BaseModel):
     id: int
+    passed_welcome_page: bool
     avatar: str
     fullname: str
     company: str
@@ -89,18 +90,16 @@ class User(BaseModel):
         orm_mode = True
 
 
-class CreateUser(BaseModel):
+class AuthUser(BaseModel):
     email: str
     password: Optional[str]
-    fullname: Optional[str]
-    company: Optional[str]
-    job: Optional[str]
 
 
 class UpdateUser(BaseModel):
     fullname: Optional[str]
     company: Optional[str]
     job: Optional[str]
+    passed_welcome_page: Optional[bool]
     avatar: Optional[str]
 
 

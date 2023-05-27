@@ -1,12 +1,19 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import Navbar from "../components/Navbar";
 import {Col, Row} from "antd";
 import ProgramList from "../components/CourseList";
 import '../App.css'
 import Card from '../components/UI/Card';
 import BaseChat from "../components/BaseChat";
+import {RouteNames} from "../router";
+import {useNavigate} from "react-router-dom";
+import useUserStore from "../store";
 
 const Main: FC = () => {
+    const {user} = useUserStore()
+
+    const navigate = useNavigate();
+    useEffect(() => !user.passed_welcome_page ? navigate(RouteNames.WELCOME) : undefined, [])
     return (
         <div className={'h-full'}>
             <Card className={'ml-10 mt-10 mr-10'} text={''}>

@@ -2,18 +2,29 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_mail import ConnectionConfig
 from fastapi_pagination import add_pagination
+from starlette_admin.contrib.sqla import Admin, ModelView
 
-from backend.api.authentication import router as authentication_router
-from backend.api.chat import router as chat_router
-from backend.api.course import router as course_router
-from backend.api.course_chapter import router as course_chapter_router
-from backend.api.user import router as user_router
-from backend.db.config import engine
-from backend.db.models import Base
-from backend.settings import settings
-from backend.utils import init_data
+from api.authentication import router as authentication_router
+from api.chat import router as chat_router
+from api.course import router as course_router
+from api.course_chapter import router as course_chapter_router
+from api.user import router as user_router
+from db.config import engine
+from db.models import Base, Chat, Course, CourseChapter, Message, Theme, User, Video
+from settings import settings
+from utils import init_data
 
 app = FastAPI()
+admin = Admin(engine, title="Example: SQLAlchemy")
+admin.add_view(ModelView(Course))
+admin.add_view(ModelView(User))
+admin.add_view(ModelView(Chat))
+admin.add_view(ModelView(CourseChapter))
+admin.add_view(ModelView(Theme))
+admin.add_view(ModelView(Message))
+admin.add_view(ModelView(Video))
+
+admin.mount_to(app)
 
 app.add_middleware(
     CORSMiddleware,

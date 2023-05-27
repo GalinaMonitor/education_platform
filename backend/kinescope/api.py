@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel, parse_obj_as
 from requests import Session
 
-from backend.settings import settings
+from settings import settings
 
 
 class VideoAsset(BaseModel):

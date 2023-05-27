@@ -4,7 +4,8 @@ import TextBlock from "./UI/TextBlock";
 import useUserStore from "../store";
 import {Link} from "react-router-dom";
 import {RouteNames} from "../router";
-import {LogoutOutlined} from "@ant-design/icons";
+import {LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import DefaultIconSvg from "./UI/DefaultIconSVG";
 
 const Navbar: FC = ({className}) => {
     const {user, logout} = useUserStore()
@@ -16,8 +17,8 @@ const Navbar: FC = ({className}) => {
                 <p className={"pl-8 mt-0 mb-0 ant-btn-primary"} style={{color: '#FF7D1F'}}>Платформа</p>
             </div>
             <Row justify={'space-around'} align={'middle'}>
-                <Avatar size={64} src={user.avatar} style={{marginRight: '25px'}}/>
-                <TextBlock small_text={'Фамилия и имя'} big_text={user.fullname}/>
+                <Avatar icon={<DefaultIconSvg />} size={90} src={user.avatar} style={{marginRight: '25px'}}/>
+                <TextBlock small_text={'Фамилия и имя'} big_text={user.fullname ? user.fullname : "Пользователь"}/>
             </Row>
             <TextBlock small_text={'Статус'} big_text={'Изучаю всё'}/>
             {

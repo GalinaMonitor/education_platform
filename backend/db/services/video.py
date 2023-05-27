@@ -2,10 +2,10 @@ from sqlalchemy import select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.exceptions import NotFoundException
-from backend.db.models import Video as VideoDB
-from backend.db.services.base import BaseService
-from backend.models import Video
+from db.exceptions import NotFoundException
+from db.models import Video as VideoDB
+from db.services.base import BaseService
+from models import Video
 
 
 class VideoService(BaseService):

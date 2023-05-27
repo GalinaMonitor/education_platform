@@ -3,11 +3,11 @@ from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.auth import get_current_active_user
-from backend.db.config import get_session
-from backend.db.services.chat import ChatService
-from backend.db.services.course_chapter import CourseChapterService
-from backend.models import Message, ThemeVideos, User
+from auth import get_current_active_user
+from db.config import get_session
+from db.services.chat import ChatService
+from db.services.course_chapter import CourseChapterService
+from models import Message, ThemeVideos, User
 
 router = APIRouter()
 

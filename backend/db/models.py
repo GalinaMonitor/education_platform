@@ -25,6 +25,7 @@ class User(Base):
     __tablename__ = "user"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
+    passed_welcome_page = Column(Boolean, default=False)
     avatar = Column(Text, default="")
     fullname = Column(Text, default="")
     company = Column(Text, default="")

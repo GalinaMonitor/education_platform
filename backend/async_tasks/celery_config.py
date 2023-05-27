@@ -4,17 +4,17 @@ from datetime import datetime
 from celery import Celery
 from celery.schedules import crontab
 
-from backend.db.config import async_session
-from backend.db.exceptions import NotFoundException
-from backend.db.models import DataType
-from backend.db.services.chat import ChatService
-from backend.db.services.course_chapter import CourseChapterService
-from backend.db.services.message import MessageService
-from backend.db.services.theme import ThemeService
-from backend.db.services.video import VideoService
-from backend.kinescope.api import KinescopeClient
-from backend.models import Chat, Message, Theme, Video
-from backend.settings import settings
+from db.config import async_session
+from db.exceptions import NotFoundException
+from db.models import DataType
+from db.services.chat import ChatService
+from db.services.course_chapter import CourseChapterService
+from db.services.message import MessageService
+from db.services.theme import ThemeService
+from db.services.video import VideoService
+from kinescope.api import KinescopeClient
+from models import Chat, Message, Theme, Video
+from settings import settings
 
 celery_app = Celery(
     broker=settings.redis_url,

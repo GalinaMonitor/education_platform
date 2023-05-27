@@ -1,11 +1,11 @@
 import {create} from "zustand";
 import {devtools, persist} from "zustand/middleware";
 import AuthService from "../services/AuthService";
+import {error, success} from "../messages";
 
 
 const useUserStore = create(persist(devtools((set) => ({
     isAuth: false,
-    error: '',
     isLoading: false,
     user: {},
     token: '',
@@ -30,15 +30,16 @@ const useUserStore = create(persist(devtools((set) => ({
         set({user: {}});
         set({isAuth: false})
     },
-    register: async (values) => {
+    register: async (email, password) => {
         set({isLoading: true})
         try {
-            const register_response = await AuthService.register(values);
+            const register_response = await AuthService.register(email, password);
             if (register_response.status !== 200) {
-                set({error: 'Неудачная регистрация'})
+                error("Ошибка при регистрации")
             }
+            success("Регистрация прошла успешно")
         } catch (e) {
-            set({error: 'Неудачная регистрация'})
+            error("Ошибка при регистрации")
         }
 
         set({isLoading: false})
@@ -51,7 +52,6 @@ const useUserStore = create(persist(devtools((set) => ({
             set({isAuth: true})
         } catch (e) {
             set({isAuth: false})
-            set({error: 'Неудачная авторизация'})
         }
     },
     setIsAuth: (isAuth: boolean) => set((state) => ({

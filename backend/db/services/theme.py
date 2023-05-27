@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.models import Theme as ThemeDB
-from backend.db.services.base import BaseService
-from backend.models import Theme
+from db.models import Theme as ThemeDB
+from db.services.base import BaseService
+from models import Theme
 
 
 class ThemeService(BaseService):

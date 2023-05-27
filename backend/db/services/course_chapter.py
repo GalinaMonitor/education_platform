@@ -4,10 +4,10 @@ from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from backend.db.models import CourseChapter as CourseChapterDB
-from backend.db.models import Theme as ThemeDB
-from backend.db.services.base import BaseService
-from backend.models import CourseChapter, CourseChapterThemes, Theme
+from db.models import CourseChapter as CourseChapterDB
+from db.models import Theme as ThemeDB
+from db.services.base import BaseService
+from models import CourseChapter, CourseChapterThemes, Theme
 
 
 class CourseChapterService(BaseService):

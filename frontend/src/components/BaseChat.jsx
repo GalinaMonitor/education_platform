@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {useFetching} from "../hooks/useFetching";
 import InfiniteScroll from "react-infinite-scroll-component";
-import {Divider, Image, List, Row, Skeleton} from "antd";
+import {Image, List, Row, Skeleton} from "antd";
+import Divider from "./UI/Divider";
 import UserService from "../services/UserService";
 import Message from "./Message";
 import TextBlock from "./UI/TextBlock";
@@ -34,7 +35,7 @@ const BaseChat = () => {
     }, [limit, page])
 
     return (
-        <Card style={{height: "90%"}} text={'ЧАТ С ПЛАТФОРМОЙ'}>
+        <Card style={{height: "90%"}} className={"relative"} text={'ЧАТ С ПЛАТФОРМОЙ'}>
             <div
                 id="scrollableDiv"
                 className={`w-4/5 pt-5 overflow-auto flex flex-col-reverse h-full`}
@@ -70,7 +71,7 @@ const BaseChat = () => {
                     />
                 </InfiniteScroll>
             </div>
-            <div className={'absolute bottom-10 right-24 text-right'}>
+            <div className={'absolute bottom-5 right-10 text-right'}>
                 <Row>
                     <TextBlock big_text={"Елизавета"} small_text={"Куратор"}/>
                     <Image className={'ml-5'} width={"100px"} src={"/lizbet.svg"} preview={false}/>

@@ -12,21 +12,22 @@ import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutThreeBlocks from "../components/UI/LayoutThreeBlocks";
 import LizbetCard from "../components/LizbetCard";
+import CourseChapterService from "../services/CourseChapterService";
 
 const CourseChatPage: FC = () => {
     const {id} = useParams();
     const [course, setCourse] = useState({})
     const [fetchCourse, isLoading, error] = useFetching(async () => {
-        const response = await CourseService.retrieve(id)
-        console.log(response.data)
-        setCourse(response.data)
+        const courseChapterResponse = await CourseChapterService.retrieve(id)
+        const courseResponse = await CourseService.retrieve(courseChapterResponse.data.course_id)
+        setCourse(courseResponse.data)
     })
     const [themeId, setThemeId] = useState(null)
     const {isOpenSettings} = useInterfaceStore()
 
     useEffect(() => {
         fetchCourse()
-    }, [])
+    }, [id])
 
     return (
         <LayoutThreeBlocks>

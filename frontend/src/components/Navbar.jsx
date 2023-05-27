@@ -1,5 +1,5 @@
 import {Avatar, Button, Row, Image} from 'antd';
-import React, {FC} from 'react';
+import React, {FC, useState} from 'react';
 import TextBlock from "./UI/TextBlock";
 import useUserStore from "../store/useUserStore";
 import {Link} from "react-router-dom";
@@ -8,10 +8,16 @@ import {LogoutOutlined, UserOutlined} from "@ant-design/icons";
 import DefaultIconSvg from "./UI/DefaultIconSVG";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Card from "./UI/Card";
+import SubscriptionModal from "./Modals/SubscriptionModal";
 
 const Navbar: FC = ({className}) => {
     const {user, logout} = useUserStore()
     const {openCloseSettings} = useInterfaceStore()
+    const [isSubscriptionModalOpen, setIsSubscriptionModalOpen] = useState(false);
+
+    const handleCancel = async () => {
+        setIsSubscriptionModalOpen(false);
+    };
 
     return (
         <Card className={className}>
@@ -33,14 +39,13 @@ const Navbar: FC = ({className}) => {
                 }
                 <Row justify={'space-around'} align={'middle'}>
                     <Button className={"medium-button mr-5"} onClick={openCloseSettings}>Настройки</Button>
-                    <Link to={RouteNames.SUBSCRIBE} className={"mr-5"}><Button className={"medium-button"}
-                                                                               type={"primary"}>
-                        Подписка</Button></Link>
+                    <Button className={"medium-button mr-5"} type={"primary"} onClick={() => {setIsSubscriptionModalOpen(true)}}>Подписка</Button>
                     <Button type={"primary"} icon={<LogoutOutlined/>} onClick={() => {
                         logout()
                     }}/>
                 </Row>
             </Row>
+            <SubscriptionModal isModalOpen={isSubscriptionModalOpen} handleCancel={handleCancel}/>
         </Card>
     );
 };

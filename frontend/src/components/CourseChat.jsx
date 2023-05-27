@@ -35,7 +35,7 @@ const CourseChat = ({course_name, course_chapter_id = null, theme_id = null}) =>
 
     useEffect(() => {
         fetchThemeMessages()
-    }, [theme_id])
+    }, [theme_id, course_chapter_id])
 
     const [fetchMessagesNext, isLoadingNext, errorNext] = useFetching(async () => {
         let response;

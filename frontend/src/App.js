@@ -4,6 +4,8 @@ import AppRouter from "./components/AppRouter";
 import {BrowserRouter} from "react-router-dom";
 import {useEffect} from "react";
 import useUserStore from "./store/useUserStore";
+import UsersNumber from "./components/UsersNumber";
+import ShareLink from "./components/ShareLink";
 
 const App = () => {
     const {checkAuth} = useUserStore()
@@ -31,8 +33,10 @@ const App = () => {
 
                 }}
             >
-                <Layout className={'h-full'}>
+                <Layout className={'h-full relative'}>
                     <AppRouter/>
+                    <UsersNumber className={"absolute bottom-5 right-16"}/>
+                    <ShareLink className={"absolute bottom-5 left-16"}/>
                 </Layout>
             </ConfigProvider>
         </BrowserRouter>

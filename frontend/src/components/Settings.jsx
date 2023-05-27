@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {Avatar, Divider, message, Upload} from "antd";
+import {Avatar, message, Upload} from "antd";
+import Divider from "./UI/Divider";
 import useUserStore from "../store/useUserStore";
 import {useFetching} from "../hooks/useFetching";
 import UserService from "../services/UserService";

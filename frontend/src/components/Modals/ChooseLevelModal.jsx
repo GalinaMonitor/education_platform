@@ -6,9 +6,9 @@ import BaseLevelSvg from "../UI/BaseLevelSVG";
 import MediumLevelSvg from "../UI/MediumLevelSVG";
 import ExpertLevelSvg from "../UI/ExpertLevelSVG";
 
-const ChooseLevel = ({isModalOpen, handleCancel, course}) => {
+const ChooseLevelModal = ({isModalOpen, handleCancel, course}) => {
     const navigate = useNavigate();
-        const previewImages = [
+    const previewImages = [
         {level: "БАЗОВЫЙ", image: BaseLevelSvg},
         {level: "ПРОДВИНУТЫЙ", image: MediumLevelSvg},
         {level: "ЭКСПЕРТ", image: ExpertLevelSvg},
@@ -32,7 +32,7 @@ const ChooseLevel = ({isModalOpen, handleCancel, course}) => {
                         }
                     ) : null}
                 </Row>
-                <Link to={""} onClick={handleCancel} className={'text-center'}>
+                <Link to={""} onClick={handleCancel} className={'text-center absolute bottom-5'}>
                     <Image width={"30px"} src={"/arrow.svg"} preview={false}/>
                     <p className={'mt-5'}>ВЕРНУТЬСЯ НАЗАД</p>
                 </Link>
@@ -41,4 +41,4 @@ const ChooseLevel = ({isModalOpen, handleCancel, course}) => {
     );
 };
 
-export default ChooseLevel;
+export default ChooseLevelModal;

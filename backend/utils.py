@@ -39,7 +39,7 @@ async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
         theme = await ThemeService(session).create(
             ThemeVideos(
                 id=f"Test Theme {theme_id} Course {course_id} Course Chapter {coursechapter_id}",
-                name=f"Test Theme {theme_id} Course {course_id} Course Chapter {coursechapter_id}",
+                name=f"Test Theme {theme_id}",
                 coursechapter_id=coursechapter_id,
             )
         )

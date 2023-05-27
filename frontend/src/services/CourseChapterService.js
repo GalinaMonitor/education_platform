@@ -1,7 +1,7 @@
 import $api from "../api";
 
 export default class CourseChapterService {
-    static async retrieve({id}) {
+    static async retrieve(id) {
         return $api.get(`/course_chapter/${id}`)
     }
 

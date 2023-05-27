@@ -2,10 +2,10 @@ import React from 'react';
 
 const Divider = ({color = null}) => {
     if (!color) {
-        color = "#d9d9d9"
+        color = "#F2F2F2"
     }
     return (
-        <hr style={{borderTop: `1px solid ${color}`, borderRadius: 5}}/>
+        <hr style={{borderTop: `1px solid ${color}`, borderRadius: 5, margin: 0}}/>
     );
 };
 

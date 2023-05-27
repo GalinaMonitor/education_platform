@@ -2,12 +2,13 @@ import React, {FC, useEffect, useState} from 'react';
 import TextBlock from "./UI/TextBlock";
 import CourseService from "../services/CourseService";
 import {useFetching} from "../hooks/useFetching";
-import {Button, Divider} from "antd";
+import {Button} from "antd";
+import Divider from "./UI/Divider";
 import {format_time} from "../utils/utils";
 import VectorSVG from "./UI/VectorSVG";
 import Card from "./UI/Card";
-import ChooseLevel from "./Modals/ChooseLevel";
-import ChooseTime from "./Modals/ChooseTime";
+import ChooseLevelModal from "./Modals/ChooseLevelModal";
+import ChooseTimeModal from "./Modals/ChooseTimeModal";
 import CourseChapterService from "../services/CourseChapterService";
 
 const CourseList: FC = ({course_chapter_id = null}) => {
@@ -40,7 +41,7 @@ const CourseList: FC = ({course_chapter_id = null}) => {
     })
 
     const [fetchCourseChapter] = useFetching(async (course_chapter_id) => {
-        const response = await CourseChapterService.retrieve({id: course_chapter_id})
+        const response = await CourseChapterService.retrieve(course_chapter_id)
         setCourseChapter(response.data)
     })
 
@@ -49,12 +50,11 @@ const CourseList: FC = ({course_chapter_id = null}) => {
         if (course_chapter_id) {
             fetchCourseChapter(course_chapter_id)
         }
-    }, [])
+    }, [course_chapter_id])
 
     return (
         <Card text={'ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ'}>
-            {courses.map((course, index) => {
-                return <div key={course.id}>
+            {courses.map((course, index) => <div key={course.id} className={"mb-5"}>
                     <Button className={"mr-1.5 p-0 small-button"} shape={"round"} onClick={() => {
                         showCourseModal(course)
                     }}>
@@ -69,9 +69,9 @@ const CourseList: FC = ({course_chapter_id = null}) => {
                     </div>
                     <Divider/>
                 </div>
-            })}
-            <ChooseTime isModalOpen={isTimeModalOpen} handleCancel={handleCancel} modalCourseId={modalCourseId}/>
-            <ChooseLevel isModalOpen={isCourseModalOpen} course={course} handleCancel={handleCancel}/>
+            )}
+            <ChooseTimeModal isModalOpen={isTimeModalOpen} handleCancel={handleCancel} modalCourseId={modalCourseId}/>
+            <ChooseLevelModal isModalOpen={isCourseModalOpen} course={course} handleCancel={handleCancel}/>
         </Card>
     )
 }

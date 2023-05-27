@@ -6,7 +6,7 @@ import {useFetching} from "../../hooks/useFetching";
 import CourseService from "../../services/CourseService";
 import {Link} from "react-router-dom";
 
-const ChooseTime = ({isModalOpen, handleCancel, modalCourseId}) => {
+const ChooseTimeModal = ({isModalOpen, handleCancel, modalCourseId}) => {
     const [updateReceiveTime, isLoading, error] = useFetching(async (time) => {
         await CourseService.set_receive_time(modalCourseId, time)
     })
@@ -45,7 +45,7 @@ const ChooseTime = ({isModalOpen, handleCancel, modalCourseId}) => {
                         </Button>
                     </Form.Item>
                 </Form>
-                <Link to={""} onClick={handleCancel} className={'text-center'}>
+                <Link to={""} onClick={handleCancel} className={'text-center absolute bottom-5'}>
                     <Image width={"30px"} src={"/arrow.svg"} preview={false}/>
                     <p className={'mt-5'}>ВЕРНУТЬСЯ НАЗАД</p>
                 </Link>
@@ -54,4 +54,4 @@ const ChooseTime = ({isModalOpen, handleCancel, modalCourseId}) => {
     );
 };
 
-export default ChooseTime;
+export default ChooseTimeModal;

@@ -14,8 +14,8 @@ const Navbar: FC = ({className}) => {
     const {openCloseSettings} = useInterfaceStore()
 
     return (
-        <Card>
-            <Row className={`${className}`} justify={'space-around'} align={'middle'}>
+        <Card className={className}>
+            <Row justify={'space-around'} align={'middle'}>
                 <div>
                     <Image src={'/ku-logo.svg'} preview={false} width={'250px'}/>
                 </div>

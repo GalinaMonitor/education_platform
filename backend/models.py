@@ -56,6 +56,7 @@ class CourseCourseChapters(Course):
 class CourseRead(Course):
     coursechapters: List[CourseChapterThemes]
     receive_time: Optional[time]
+    is_active: bool
 
 
 class User(BaseModel):

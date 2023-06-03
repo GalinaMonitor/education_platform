@@ -6,22 +6,22 @@ import CourseChatPage from "../pages/CourseChatPage";
 import Welcome from "../pages/Welcome";
 
 export const RouteNames = {
-    LOGIN: '/login',
-    REGISTER: '/register',
-    MAIN: '/',
-    WELCOME: '/welcome',
-    COURSE_CHAT: '/chat',
-    SUBSCRIBE: '/subscribe'
-}
+  LOGIN: "/login",
+  REGISTER: "/register",
+  MAIN: "/",
+  WELCOME: "/welcome",
+  COURSE_CHAT: "/chat",
+  SUBSCRIBE: "/subscribe",
+};
 
 export const publicRoutes = [
-    {path: RouteNames.LOGIN, component: Login},
-    {path: RouteNames.REGISTER, component: Register},
-]
+  { path: RouteNames.LOGIN, component: Login },
+  { path: RouteNames.REGISTER, component: Register },
+];
 
 export const privateRoutes = [
-    {path: RouteNames.MAIN, component: Main},
-    {path: RouteNames.WELCOME, component: Welcome},
-    {path: `${RouteNames.COURSE_CHAT}/:id`, component: CourseChatPage},
-    {path: RouteNames.SUBSCRIBE, component: Subscription}
-]
+  { path: RouteNames.MAIN, component: Main },
+  { path: RouteNames.WELCOME, component: Welcome },
+  { path: `${RouteNames.COURSE_CHAT}/:id`, component: CourseChatPage },
+  { path: RouteNames.SUBSCRIBE, component: Subscription },
+];

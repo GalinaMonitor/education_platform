@@ -20,10 +20,11 @@ class CourseService(BaseService):
         self.pydantic_model = Course
 
     async def list(self, user_id: int) -> List[CourseRead]:
-        time_subquery = (
+        chat_subquery = (
             select(
                 CourseDB.id,
                 func.max(ChatDB.receive_time).label("receive_time"),
+                func.bool_or(ChatDB.is_active).label("is_active"),
             )
             .join(CourseChapterDB, CourseChapterDB.course_id == CourseDB.id)
             .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
@@ -32,8 +33,8 @@ class CourseService(BaseService):
             .subquery()
         )
         statement = (
-            select(CourseDB, time_subquery.c.receive_time)
-            .outerjoin(time_subquery, CourseDB.id == time_subquery.c.id)
+            select(CourseDB, chat_subquery.c.receive_time, chat_subquery.c.is_active)
+            .outerjoin(chat_subquery, CourseDB.id == chat_subquery.c.id)
             .options(selectinload(self.model.coursechapters))
         )
 
@@ -41,7 +42,9 @@ class CourseService(BaseService):
         results = results.all()
         parsed_results = []
         for result in results:
-            parsed_result = CourseRead(**(CourseCourseChapters.from_orm(result[0]).dict()), receive_time=result[1])
+            parsed_result = CourseRead(
+                **(CourseCourseChapters.from_orm(result[0]).dict()), receive_time=result[1], is_active=result[2]
+            )
             parsed_results.append(parsed_result)
         return parsed_results
 

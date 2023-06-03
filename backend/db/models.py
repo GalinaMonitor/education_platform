@@ -16,6 +16,7 @@ class Chat(Base):
     id = Column(Integer, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=True, default=None)
     receive_time = Column(TIME, default=datetime.strptime("10:00", "%H:%M"))
+    is_active = Column(Boolean, default=False)
     last_video = Column(Integer, default=0)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     messages = relationship("Message", backref=backref("chat"))

@@ -1,21 +1,31 @@
 import $api from "../api";
 
 export default class CourseChapterService {
-    static async retrieve(id) {
-        return $api.get(`/course_chapter/${id}`)
-    }
+  static async retrieve(id) {
+    return $api.get(`/course_chapter/${id}`);
+  }
 
-    static async get_messages({id, limit, lastNext = null, lastPrevious = null, theme_id = null}) {
-        let request_url = `/course_chapter/${id}/messages?limit=${limit}`
-        if (lastNext) {
-            request_url += `&after=${lastNext}`
-        }
-        if (lastPrevious) {
-            request_url += `&before=${lastPrevious}`
-        }
-        if (theme_id) {
-            request_url += `&theme=${theme_id}`
-        }
-        return $api.get(request_url)
+  static async get_messages({
+    id,
+    limit,
+    lastNext = null,
+    lastPrevious = null,
+    themeId = null,
+  }) {
+    let requestUrl = `/course_chapter/${id}/messages?limit=${limit}`;
+    if (lastNext) {
+      requestUrl += `&after=${lastNext}`;
     }
+    if (lastPrevious) {
+      requestUrl += `&before=${lastPrevious}`;
+    }
+    if (themeId) {
+      requestUrl += `&theme=${themeId}`;
+    }
+    return $api.get(requestUrl);
+  }
+
+  static async activate({ id }) {
+    return $api.post(`/course_chapter/${id}/activate`);
+  }
 }

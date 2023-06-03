@@ -1,15 +1,20 @@
-import {create} from "zustand";
-import {devtools, persist} from "zustand/middleware";
+import { create } from "zustand";
+import { devtools, persist } from "zustand/middleware";
 
-const useInterfaceStore = create(persist(devtools((set, get) => ({
-    isOpenSettings: false,
-    openCloseSettings: async () => {
+const useInterfaceStore = create(
+  persist(
+    devtools((set, get) => ({
+      isOpenSettings: false,
+      openCloseSettings: async () => {
         if (get().isOpenSettings) {
-            set({isOpenSettings: false})
+          set({ isOpenSettings: false });
         } else {
-            set({isOpenSettings: true})
+          set({ isOpenSettings: true });
         }
-    }
-})), {name: 'useUserStore'}))
+      },
+    })),
+    { name: "useUserStore" }
+  )
+);
 
 export default useInterfaceStore;

@@ -43,3 +43,11 @@ class ChatService(BaseService):
         results = await self.session.execute(statement)
         results = results.scalars().all()
         return [parse_obj_as(Message, message) for message in results]
+
+    async def activate(self, id: int):
+        statement = select(ChatDB).where(ChatDB.id == id)
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
+        result.is_active = True
+        self.session.add(result)
+        await self.session.commit()

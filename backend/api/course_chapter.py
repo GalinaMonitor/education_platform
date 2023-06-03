@@ -35,3 +35,14 @@ async def get_messages(
     service = ChatService(session)
     chat = await service.get_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
     return await service.messages(chat.id, before=before, after=after, limit=limit, theme=theme)
+
+
+@router.post("/{id}/activate")
+async def activate_course_chapter(
+    id: int,
+    current_user: Annotated[User, Depends(get_current_active_user)] = None,
+    session: AsyncSession = Depends(get_session),
+):
+    service = ChatService(session)
+    chat = await service.get_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
+    return await service.activate(id=chat.id)

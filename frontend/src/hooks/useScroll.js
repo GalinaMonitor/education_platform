@@ -2,7 +2,7 @@ import { throttle } from "lodash";
 import { useEffect, useRef, useState } from "react";
 
 // reverse should be set to true if the DOM element is `flex-col-reverse`
-const useScroll = (reverse?: boolean) => {
+const useScroll = (reverse) => {
   const containerRef = useRef(null);
   const [isBottom, setIsBottom] = useState(false);
   const [isTop, setIsTop] = useState(false);
@@ -19,7 +19,8 @@ const useScroll = (reverse?: boolean) => {
       }
 
       if (
-        container.scrollTop - container.clientHeight + container.scrollHeight <= 20
+        container.scrollTop - container.clientHeight + container.scrollHeight <=
+        20
       ) {
         setIsTop(true);
       } else {
@@ -27,7 +28,8 @@ const useScroll = (reverse?: boolean) => {
       }
     } else {
       if (
-        container.scrollHeight - container.clientHeight - container.scrollTop <= 20
+        container.scrollHeight - container.clientHeight - container.scrollTop <=
+        20
       ) {
         setIsBottom(true);
       } else {

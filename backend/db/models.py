@@ -27,6 +27,7 @@ class User(Base):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     passed_welcome_page = Column(Boolean, default=False)
+    time_on_platform = Column(Integer, default=0)
     avatar = Column(Text, default="")
     fullname = Column(Text, default="")
     company = Column(Text, default="")

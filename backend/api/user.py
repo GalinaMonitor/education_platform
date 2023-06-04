@@ -15,6 +15,11 @@ from settings import settings
 router = APIRouter()
 
 
+@router.get("/total_users")
+async def get_total_users(session: AsyncSession = Depends(get_session)):
+    return await UserService(session).get_total_users()
+
+
 @router.get("/messages", response_model=Page[Message])
 async def get_messages(
     current_user: Annotated[User, Depends(get_current_active_user)],

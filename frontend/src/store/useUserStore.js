@@ -10,6 +10,7 @@ const useUserStore = create(
       isLoading: false,
       user: {},
       token: "",
+      timeOnPlatform: 0,
       login: async (email, password) => {
         set({ isLoading: true });
         try {
@@ -20,6 +21,9 @@ const useUserStore = create(
           set({ user: userResponse.data });
 
           set({ isAuth: true });
+          set({
+            timeOnPlatform: userResponse.data.time_on_platform,
+          });
         } catch (e) {
           set({ error: "Неудачная авторизация" });
         }
@@ -58,6 +62,10 @@ const useUserStore = create(
       setIsAuth: (isAuth) =>
         set((state) => ({
           isAuth: isAuth,
+        })),
+      setTimeOnPlatform: (minutes) =>
+        set((state) => ({
+          timeOnPlatform: minutes,
         })),
     })),
     { name: "useUserStore" }

@@ -2,13 +2,28 @@ import "./App.css";
 import { ConfigProvider, Layout } from "antd";
 import AppRouter from "./components/AppRouter";
 import { BrowserRouter } from "react-router-dom";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useUserStore from "./store/useUserStore";
 import UsersNumber from "./components/UsersNumber";
 import ShareLink from "./components/ShareLink";
+import UserService from "./services/UserService";
 
 const App = () => {
-  const { checkAuth } = useUserStore();
+  const { checkAuth, setTimeOnPlatform, timeOnPlatform } = useUserStore();
+
+  const [delay, setDelay] = useState(timeOnPlatform);
+
+  useEffect(() => {
+    const timer = setInterval(async () => {
+      setDelay(delay + 1);
+      setTimeOnPlatform(delay);
+      await UserService.patch({ time_on_platform: delay });
+    }, 60000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  });
 
   useEffect(() => {
     checkAuth();

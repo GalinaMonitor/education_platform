@@ -62,6 +62,7 @@ class CourseRead(Course):
 class User(BaseModel):
     id: int
     passed_welcome_page: bool
+    time_on_platform: int
     avatar: str
     fullname: str
     company: str
@@ -82,6 +83,7 @@ class UpdateUser(BaseModel):
     company: Optional[str]
     job: Optional[str]
     passed_welcome_page: Optional[bool]
+    time_on_platform: Optional[int]
     avatar: Optional[str]
 
 

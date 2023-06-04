@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button } from "antd";
 import { formatTime } from "../utils/utils";
 import VectorSVG from "./UI/VectorSVG";
@@ -17,7 +17,7 @@ const CourseCard = ({ course, courseChapter = null }) => {
     setIsTimeModalOpen(true);
   };
 
-  const showCourseModal = (course) => {
+  const showCourseModal = () => {
     setIsCourseModalOpen(true);
   };
 

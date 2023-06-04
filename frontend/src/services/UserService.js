@@ -12,4 +12,8 @@ export default class UserService {
   static async update_avatar(photo) {
     return $api.post(`/user/avatar`, photo);
   }
+
+  static async get_total_users() {
+    return $api.get("/user/total_users");
+  }
 }

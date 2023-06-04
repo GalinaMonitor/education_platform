@@ -1,7 +1,7 @@
 import secrets
 
 from fastapi_mail import FastMail, MessageSchema, MessageType
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
@@ -42,3 +42,9 @@ class UserService(BaseService):
         if not result:
             raise NotFoundException()
         return Chat.from_orm(result)
+
+    async def get_total_users(self) -> int:
+        statement = select(func.max(UserDB.id).label("receive_time"))
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
+        return result

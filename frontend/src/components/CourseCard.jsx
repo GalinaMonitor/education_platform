@@ -25,7 +25,9 @@ const CourseCard = ({ course, refresh }) => {
   });
 
   useEffect(() => {
-    fetchCourseChapter();
+    if (course.course_chapter_id) {
+      fetchCourseChapter();
+    }
   }, [course]);
 
   const showTimeModal = () => {

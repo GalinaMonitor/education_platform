@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime
-from time import perf_counter
 
 from db.config import async_session
 from db.services.chat import ChatService
@@ -109,15 +108,12 @@ async def init_user(user: User):
 
 
 async def init_data():
-    t0 = perf_counter()
     async with async_session() as session:
         user = await UserService(session).create(AuthUser(email="test@test.com", password="secret"))
         user = await UserService(session).update(
             id=user.id,
             data=UpdateUser(
                 fullname="Test test",
-                has_subscription=True,
-                end_of_subscription=datetime.now().date(),
             ),
         )
         chat = await ChatService(session).create(
@@ -138,4 +134,3 @@ async def init_data():
             tg.create_task(create_course(0, user.id))
             tg.create_task(create_course(1, user.id))
             tg.create_task(create_course(2, user.id))
-    print(f"Time {perf_counter() - t0}")

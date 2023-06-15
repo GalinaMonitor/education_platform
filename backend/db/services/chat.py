@@ -4,11 +4,11 @@ from pydantic import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from db.exceptions import NotFoundException
 from db.models import Chat as ChatDB
 from db.models import CourseChapter as CourseChapterDB
 from db.models import Message as MessageDB
 from db.services.base import BaseService
+from exceptions import NotFoundException
 from models import Chat, ChatMessages, Message
 
 
@@ -32,7 +32,7 @@ class ChatService(BaseService):
     async def get_from_user_and_course(self, user_id: int, course_id: int) -> List[ChatMessages]:
         statement = (
             select(self.model)
-            .join(CourseChapterDB, ChatDB.coursechapter_id == CourseChapterDB.id)
+            .join(CourseChapterDB, self.model.coursechapter_id == CourseChapterDB.id)
             .where(CourseChapterDB.course_id == course_id)
             .where(
                 self.model.user_id == user_id,
@@ -60,7 +60,7 @@ class ChatService(BaseService):
         return [parse_obj_as(Message, message) for message in results]
 
     async def activate(self, id: int):
-        statement = select(ChatDB).where(ChatDB.id == id)
+        statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
         result.is_active = True
@@ -68,7 +68,7 @@ class ChatService(BaseService):
         await self.session.commit()
 
     async def deactivate(self, id: int):
-        statement = select(ChatDB).where(ChatDB.id == id)
+        statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
         result.is_active = False

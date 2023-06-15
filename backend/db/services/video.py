@@ -1,10 +1,9 @@
 from sqlalchemy import select
-from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from db.exceptions import NotFoundException
 from db.models import Video as VideoDB
 from db.services.base import BaseService
+from exceptions import NotFoundException
 from models import Video
 
 

@@ -26,6 +26,7 @@ const useUserStore = create(
           });
         } catch (e) {
           set({ error: "Неудачная авторизация" });
+          error("Пароль/логин не верные");
         }
 
         set({ isLoading: false });

@@ -91,6 +91,8 @@ class UpdateUser(BaseModel):
     passed_welcome_page: Optional[bool]
     time_on_platform: Optional[int]
     avatar: Optional[str]
+    has_subscription: Optional[bool]
+    end_of_subscription: Optional[date]
 
 
 class Message(BaseModel):

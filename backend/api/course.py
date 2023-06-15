@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 from auth import get_current_active_user
 from db.config import get_session
 from db.services.course import CourseService
+from exceptions import HasNoSubscriptionException
 from models import Course, CourseChapterThemes, CourseRead, Time, User
 
 router = APIRouter()
@@ -40,6 +41,7 @@ async def change_receive_time(
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: AsyncSession = Depends(get_session),
 ):
+    if not current_user.has_subscription:
+        raise HasNoSubscriptionException
     time = datetime.strptime(time.time, "%H:%M").time()
-    await CourseService(session).change_receive_time(id=id, user_id=current_user.id, receive_time=time)
-    return "Success"
+    return await CourseService(session).change_receive_time(id=id, user_id=current_user.id, receive_time=time)

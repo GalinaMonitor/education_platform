@@ -22,26 +22,26 @@ class CourseService(BaseService):
     async def list(self, user_id: int) -> List[CourseRead]:
         chat_subquery = (
             select(
-                CourseDB.id,
+                self.model.id,
                 func.max(CourseChapterDB.id).label("course_chapter_id"),
                 func.max(ChatDB.receive_time).label("receive_time"),
                 func.bool_or(ChatDB.is_active).label("is_active"),
             )
-            .join(CourseChapterDB, CourseChapterDB.course_id == CourseDB.id)
+            .join(CourseChapterDB, CourseChapterDB.course_id == self.model.id)
             .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
             .where(ChatDB.user_id == user_id)
             .where(ChatDB.is_active == True)
-            .group_by(CourseDB.id)
+            .group_by(self.model.id)
             .subquery()
         )
         statement = (
             select(
-                CourseDB,
+                self.model,
                 chat_subquery.c.course_chapter_id,
                 chat_subquery.c.receive_time,
                 chat_subquery.c.is_active,
             )
-            .outerjoin(chat_subquery, CourseDB.id == chat_subquery.c.id)
+            .outerjoin(chat_subquery, self.model.id == chat_subquery.c.id)
             .options(selectinload(self.model.coursechapters))
         )
 

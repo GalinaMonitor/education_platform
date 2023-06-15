@@ -5,15 +5,16 @@ from celery import Celery
 from celery.schedules import crontab
 
 from db.config import async_session
-from db.exceptions import NotFoundException
 from db.models import DataType
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
 from db.services.theme import ThemeService
+from db.services.user import UserService
 from db.services.video import VideoService
+from exceptions import NotFoundException
 from kinescope.api import KinescopeClient
-from models import Chat, Message, Theme, Video
+from models import Chat, Message, Theme, UpdateUser, User, Video
 from settings import settings
 
 celery_app = Celery(
@@ -103,6 +104,19 @@ def send_video_task():
     asyncio.run(send_video())
 
 
+async def check_subscription():
+    date = datetime.now().date()
+    async with async_session() as session:
+        users_without_subscription = await UserService(session).list(end_of_subscription=date, has_subscription=True)
+        for user in users_without_subscription:
+            await UserService(session).update(id=user.id, data=UpdateUser(has_subscription=False))
+
+
+@celery_app.task
+def check_subscription_task():
+    asyncio.run(check_subscription())
+
+
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
@@ -112,4 +126,8 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         crontab(hour="*", minute="0", day_of_week="1-5"),
         send_video_task,
+    )
+    sender.add_periodic_task(
+        crontab(hour="*", minute="*", day_of_month="*"),
+        check_subscription_task,
     )

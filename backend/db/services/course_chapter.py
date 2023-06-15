@@ -1,17 +1,15 @@
 from typing import List
 
-from pydantic import parse_obj_as
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
-from sqlalchemy.orm import selectinload
 
-from db.exceptions import NotFoundException
 from db.models import Chat as ChatDB
 from db.models import CourseChapter as CourseChapterDB
 from db.models import Theme as ThemeDB
 from db.models import Video as VideoDB
 from db.services.base import BaseService
-from models import CourseChapter, CourseChapterThemes, Theme, ThemeRead
+from exceptions import NotFoundException
+from models import CourseChapter, Theme, ThemeRead
 
 
 class CourseChapterService(BaseService):
@@ -23,11 +21,11 @@ class CourseChapterService(BaseService):
     async def retrieve_from_user_and_id(self, id: int, user_id: int) -> CourseChapter:
         statement = (
             select(
-                CourseChapterDB,
+                self.model,
             )
-            .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
+            .join(ChatDB, self.model.id == ChatDB.coursechapter_id)
             .where(ChatDB.user_id == user_id)
-            .where(CourseChapterDB.id == id)
+            .where(self.model.id == id)
         )
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
@@ -42,9 +40,9 @@ class CourseChapterService(BaseService):
                 func.count(VideoDB.id).label("video_amount"),
                 func.max(ChatDB.last_video).label("viewed_video_amount"),
             )
-            .join(CourseChapterDB, CourseChapterDB.id == ThemeDB.coursechapter_id)
-            .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
-            .join(VideoDB, CourseChapterDB.id == VideoDB.coursechapter_id)
+            .join(self.model, self.model.id == ThemeDB.coursechapter_id)
+            .join(ChatDB, self.model.id == ChatDB.coursechapter_id)
+            .join(VideoDB, self.model.id == VideoDB.coursechapter_id)
             .where(ChatDB.user_id == user_id)
             .group_by(ThemeDB.id)
             .subquery()

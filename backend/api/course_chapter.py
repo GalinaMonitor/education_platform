@@ -1,13 +1,14 @@
 from typing import Annotated, List, Optional
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from auth import get_current_active_user
 from db.config import get_session
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
-from models import CourseChapter, Message, ThemeRead, ThemeVideos, User
+from exceptions import HasNoSubscriptionException
+from models import CourseChapter, Message, ThemeRead, User
 
 router = APIRouter()
 
@@ -51,6 +52,8 @@ async def activate_course_chapter(
     current_user: Annotated[User, Depends(get_current_active_user)] = None,
     session: AsyncSession = Depends(get_session),
 ):
+    if not current_user.has_subscription:
+        raise HasNoSubscriptionException
     service = ChatService(session)
     course_chapter = await CourseChapterService(session).retrieve(id=id)
     chat = await service.get_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)

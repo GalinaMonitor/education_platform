@@ -37,8 +37,13 @@ const Navbar = ({ className }) => {
             bigText={user.fullname ? user.fullname : user.email}
           />
         </Row>
-        <TextBlock smallText={"CТАТУС"} bigText={"Изучаю всё"} />
-        {user.end_of_subscription ? (
+        {user.has_subscription ? (
+          <TextBlock smallText={"CТАТУС"} bigText={"Изучаю всё"} />
+        ) : (
+          <TextBlock smallText={"CТАТУС"} bigText={"Нет подписки"} />
+        )}
+
+        {user.has_subscription ? (
           <TextBlock
             smallText={"ПЕРИОД ПОДПИСКИ И ОБУЧЕНИЯ"}
             bigText={user.end_of_subscription}

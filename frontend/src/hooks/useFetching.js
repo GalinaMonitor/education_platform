@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { error as errorMessage } from "../messages";
 
 export const useFetching = (callback) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -9,7 +10,8 @@ export const useFetching = (callback) => {
       setIsLoading(true);
       await callback(...args);
     } catch (error) {
-      setError(error.message);
+      errorMessage(error.response?.data?.detail);
+      setError(error.response?.data?.detail);
     } finally {
       setIsLoading(false);
     }

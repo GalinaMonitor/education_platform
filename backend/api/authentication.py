@@ -1,7 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Annotated
 
-from asyncpg import UniqueViolationError
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import IntegrityError
@@ -15,12 +14,9 @@ from auth import (
     get_current_active_user,
 )
 from db.config import get_session
-from db.models import Message
-from db.services.chat import ChatService
-from db.services.course_chapter import CourseChapterService
-from db.services.message import MessageService
 from db.services.user import UserService
-from models import AuthUser, ChatMessages, User
+from exceptions import AlreadyRegisteredException, UnauthorizedException
+from models import AuthUser, User
 from utils import init_user
 
 router = APIRouter()
@@ -33,11 +29,7 @@ async def form_login_for_access_token(
 ):
     user = await authenticate_user(session, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise UnauthorizedException
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
@@ -47,10 +39,7 @@ async def form_login_for_access_token(
 async def login_for_access_token(user: AuthUser, session: AsyncSession = Depends(get_session)):
     user = await authenticate_user(session, user.email, user.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-        )
+        raise UnauthorizedException
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
     return {"access_token": access_token, "token_type": "bearer"}
@@ -66,9 +55,6 @@ async def create_user(user: AuthUser, session: AsyncSession = Depends(get_sessio
     try:
         user = await UserService(session).create(user)
     except IntegrityError:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User already registered",
-        )
+        raise AlreadyRegisteredException
     await init_user(user)
     return user

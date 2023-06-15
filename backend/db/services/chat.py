@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from db.exceptions import NotFoundException
 from db.models import Chat as ChatDB
+from db.models import CourseChapter as CourseChapterDB
 from db.models import Message as MessageDB
 from db.services.base import BaseService
 from models import Chat, ChatMessages, Message
@@ -28,6 +29,20 @@ class ChatService(BaseService):
             raise NotFoundException()
         return result
 
+    async def get_from_user_and_course(self, user_id: int, course_id: int) -> List[ChatMessages]:
+        statement = (
+            select(self.model)
+            .join(CourseChapterDB, ChatDB.coursechapter_id == CourseChapterDB.id)
+            .where(CourseChapterDB.course_id == course_id)
+            .where(
+                self.model.user_id == user_id,
+            )
+        )
+
+        results = await self.session.execute(statement)
+        results = results.scalars().all()
+        return [parse_obj_as(Chat, chat) for chat in results]
+
     async def messages(self, id: int, **kwargs) -> List[Message]:
         statement = select(MessageDB).where(MessageDB.chat_id == id)
         for key, value in kwargs.items():
@@ -49,5 +64,13 @@ class ChatService(BaseService):
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
         result.is_active = True
+        self.session.add(result)
+        await self.session.commit()
+
+    async def deactivate(self, id: int):
+        statement = select(ChatDB).where(ChatDB.id == id)
+        results = await self.session.execute(statement)
+        result = results.scalar_one_or_none()
+        result.is_active = False
         self.session.add(result)
         await self.session.commit()

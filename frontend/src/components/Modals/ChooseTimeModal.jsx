@@ -1,24 +1,18 @@
 import React from "react";
-import { Button, Form, Image, Input, Modal, Select } from "antd";
+import { Button, Form, Image, Modal, Select } from "antd";
 import { timeOptions } from "../../utils/constants";
 import { rules } from "../../utils/rules";
 import { useFetching } from "../../hooks/useFetching";
 import CourseService from "../../services/CourseService";
 import { Link } from "react-router-dom";
 
-const ChooseTimeModal = ({
-  isModalOpen,
-  handleCancel,
-  modalCourseId,
-  setTime,
-}) => {
+const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
   const [updateReceiveTime, isLoading, error] = useFetching(async (time) => {
     await CourseService.set_receive_time(modalCourseId, time);
   });
   const formRef = React.useRef(null);
   const submit = async (data) => {
     await updateReceiveTime(data.time);
-    setTime(data.time);
     formRef.current?.resetFields();
     handleCancel();
   };

@@ -7,19 +7,27 @@ from auth import get_current_active_user
 from db.config import get_session
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
-from models import CourseChapter, Message, ThemeVideos, User
+from models import CourseChapter, Message, ThemeRead, ThemeVideos, User
 
 router = APIRouter()
 
 
 @router.get("/{id}/themes")
-async def get_themes(id: int, session: AsyncSession = Depends(get_session)) -> List[ThemeVideos]:
-    return await CourseChapterService(session).themes(id)
+async def get_themes(
+    id: int,
+    session: AsyncSession = Depends(get_session),
+    current_user: Annotated[User, Depends(get_current_active_user)] = None,
+) -> List[ThemeRead]:
+    return await CourseChapterService(session).themes(id=id, user_id=current_user.id)
 
 
 @router.get("/{id}")
-async def get_course_chapter(id: int, session: AsyncSession = Depends(get_session)) -> CourseChapter:
-    return await CourseChapterService(session).retrieve(id)
+async def get_course_chapter(
+    id: int,
+    session: AsyncSession = Depends(get_session),
+    current_user: Annotated[User, Depends(get_current_active_user)] = None,
+) -> CourseChapter:
+    return await CourseChapterService(session).retrieve_from_user_and_id(id=id, user_id=current_user.id)
 
 
 @router.get("/{id}/messages", response_model=List[Message])
@@ -44,5 +52,9 @@ async def activate_course_chapter(
     session: AsyncSession = Depends(get_session),
 ):
     service = ChatService(session)
+    course_chapter = await CourseChapterService(session).retrieve(id=id)
     chat = await service.get_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
+    all_chats = await service.get_from_user_and_course(user_id=current_user.id, course_id=course_chapter.course_id)
+    for deactivate_chat in all_chats:
+        await service.deactivate(id=deactivate_chat.id)
     return await service.activate(id=chat.id)

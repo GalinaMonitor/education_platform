@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "./UI/Card";
-import { Image, Row } from "antd";
+import { Image } from "antd";
 import TextBlock from "./UI/TextBlock";
 import { Link } from "react-router-dom";
 import { RouteNames } from "../router";

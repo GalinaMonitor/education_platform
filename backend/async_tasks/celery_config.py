@@ -53,10 +53,14 @@ async def sync_kinescope():
                             )
                     else:
                         theme = None
+                    try:
+                        order = int(video.title.split(". ")[0])
+                    except Exception:
+                        continue
                     await VideoService(session).create(
                         data=Video(
                             id=video.id,
-                            order=int(video.title.split(". ")[0]),
+                            order=order,
                             name=video.title,
                             link=video.play_link,
                             coursechapter_id=course_chapter.id,

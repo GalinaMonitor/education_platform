@@ -1,11 +1,9 @@
 import React, {
   forwardRef,
-  ReactNode,
   useEffect,
   useLayoutEffect,
   useImperativeHandle,
   useState,
-  useRef,
 } from "react";
 import useScroll from "../../hooks/useScroll";
 

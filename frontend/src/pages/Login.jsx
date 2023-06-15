@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Layout, Row, theme } from "antd";
+import { Image, Layout, Row } from "antd";
 import LoginForm from "../components/LoginForm";
 
 const Login = () => {

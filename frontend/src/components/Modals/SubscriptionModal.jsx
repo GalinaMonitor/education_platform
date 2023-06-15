@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Card, Image, Modal, Row } from "antd";
 import { Link } from "react-router-dom";
-import { RouteNames } from "../../router";
 
 const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
   return (

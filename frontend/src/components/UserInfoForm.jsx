@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Button, Form, Input } from "antd";
-import { rules } from "../utils/rules";
 import useUserStore from "../store/useUserStore";
 import { useFetching } from "../hooks/useFetching";
 import UserService from "../services/UserService";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { RouteNames } from "../router";
 
-const UserInfoForm = ({ handleFormData, onSubmit = null }) => {
+const UserInfoForm = () => {
   const { isLoading, checkAuth } = useUserStore();
   const { user } = useUserStore();
   const navigate = useNavigate();

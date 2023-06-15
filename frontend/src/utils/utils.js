@@ -4,6 +4,9 @@ export const formatDatetime = (dateStr) => {
 };
 
 export const formatTime = (timeStr) => {
+  if (!timeStr) {
+    return "Не выбрано";
+  }
   const timeList = timeStr.split(":");
   if (timeList.length === 3) {
     timeList.pop();

@@ -1,15 +1,13 @@
 import React from "react";
 import { Image, Modal, Row } from "antd";
-import { RouteNames } from "../../router";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import BaseLevelSvg from "../UI/BaseLevelSVG";
 import MediumLevelSvg from "../UI/MediumLevelSVG";
 import ExpertLevelSvg from "../UI/ExpertLevelSVG";
 import { useFetching } from "../../hooks/useFetching";
 import CourseChapterService from "../../services/CourseChapterService";
 
-const ChooseLevelModal = ({ isModalOpen, handleCancel, course, setCourse }) => {
-  const navigate = useNavigate();
+const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
   const previewImages = [
     { level: "БАЗОВЫЙ", image: BaseLevelSvg },
     { level: "ПРОДВИНУТЫЙ", image: MediumLevelSvg },
@@ -18,7 +16,6 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course, setCourse }) => {
 
   const [updateActiveCourse, isLoading, error] = useFetching(async (id) => {
     await CourseChapterService.activate({ id });
-    setCourse({ ...course, is_active: true });
   });
 
   return (
@@ -51,7 +48,6 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course, setCourse }) => {
                     key={item.id}
                     onClick={() => {
                       updateActiveCourse(item.id);
-                      navigate(`${RouteNames.COURSE_CHAT}/${item.id}`);
                       handleCancel();
                     }}
                   >

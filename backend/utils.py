@@ -12,8 +12,8 @@ from db.services.user import UserService
 from models import (
     AuthUser,
     ChatMessages,
+    Course,
     CourseChapterThemes,
-    CourseCourseChapters,
     Message,
     ThemeVideos,
     UpdateUser,
@@ -26,7 +26,7 @@ async def create_message(course_id, coursechapter_id, message_id, chat_id, theme
         await MessageService(session).create(
             Message(
                 datetime=datetime.now(),
-                content=f"Course {course_id} Theme {theme_id} ID {message_id}",
+                content=f"Курс {course_id} Тема {theme_id} ID {message_id}",
                 content_type=0,
                 chat_id=chat_id,
                 theme_id=theme_id,
@@ -38,8 +38,8 @@ async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
     async with async_session() as session:
         theme = await ThemeService(session).create(
             ThemeVideos(
-                id=f"Test Theme {theme_id} Course {course_id} Course Chapter {coursechapter_id}",
-                name=f"Test Theme {theme_id}",
+                id=f"Тема {theme_id} Курс {course_id} Уровень {coursechapter_id}",
+                name=f"Тема {theme_id}",
                 coursechapter_id=coursechapter_id,
             )
         )
@@ -51,7 +51,7 @@ async def create_course_chapter(course_id, coursechapter_id, user_id):
     async with async_session() as session:
         course_chapter = await CourseChapterService(session).create(
             CourseChapterThemes(
-                name=f"Test Course {course_id} Chapter {coursechapter_id}",
+                name=f"Курс {course_id} Уровень {coursechapter_id}",
                 course_id=course_id,
                 kinescope_project_id="b0cc85b3-63b1-4a9d-abfc-5c1e02a70daf",
             )
@@ -60,23 +60,15 @@ async def create_course_chapter(course_id, coursechapter_id, user_id):
         await create_theme(0, course_id, course_chapter.id, chat.id)
         await create_theme(1, course_id, course_chapter.id, chat.id)
         await create_theme(2, course_id, course_chapter.id, chat.id)
-        message = await MessageService(session).create(
-            Message(
-                datetime=datetime.now(),
-                content="https://kinescope.io/202555445",
-                content_type=1,
-                chat_id=chat.id,
-            )
-        )
 
 
 async def create_course(course_id, user_id):
     colors = ["#FF4343", "#10B10D", "#50D9FF"]
     async with async_session() as session:
         course = await CourseService(session).create(
-            CourseCourseChapters(
+            Course(
                 id=course_id,
-                name=f"Test Course {course_id}",
+                name=f"Курс {course_id}",
                 color=colors[course_id],
             )
         )

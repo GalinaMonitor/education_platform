@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import TextBlock from "./UI/TextBlock";
 import useUserStore from "../store/useUserStore";
 import { Link } from "react-router-dom";
-import { LogoutOutlined, UserOutlined } from "@ant-design/icons";
+import { LogoutOutlined } from "@ant-design/icons";
 import DefaultIconSvg from "./UI/DefaultIconSVG";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Card from "./UI/Card";

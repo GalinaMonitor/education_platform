@@ -1,6 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
-import { Col, Row, Image } from "antd";
+import React, { useEffect, useState } from "react";
 import CourseList from "../components/CourseList";
 import "../App.css";
 import { useParams } from "react-router-dom";
@@ -37,7 +35,7 @@ const CourseChatPage = () => {
         <Settings />
       ) : (
         <>
-          <CourseList courseChapterId={id} />
+          <CourseList />
           <LizbetCard classname={"mt-5"} />
         </>
       )}

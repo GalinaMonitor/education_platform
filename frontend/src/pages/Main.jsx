@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import ProgramList from "../components/CourseList";
+import CourseList from "../components/CourseList";
 import "../App.css";
 import BaseChat from "../components/BaseChat";
 import { RouteNames } from "../router";
@@ -28,7 +28,7 @@ const Main = () => {
           <TimeOnPlatformCard className={"mt-5"} />
         </>
       ) : (
-        <ProgramList />
+        <CourseList />
       )}
       <BaseChat />
     </LayoutTwoBlocks>

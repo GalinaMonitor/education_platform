@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useFetching } from "../hooks/useFetching";
-import { Image, Row, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
 import Message from "./Message";

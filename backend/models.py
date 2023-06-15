@@ -30,6 +30,11 @@ class ThemeVideos(Theme):
     videos: List[Video] = []
 
 
+class ThemeRead(Theme):
+    video_amount: Optional[int]
+    viewed_video_amount: Optional[int]
+
+
 class CourseChapter(BaseModel):
     id: Optional[int]
     description: Optional[str]
@@ -54,9 +59,10 @@ class CourseCourseChapters(Course):
 
 
 class CourseRead(Course):
-    coursechapters: List[CourseChapterThemes]
+    coursechapters: List[CourseChapter] = []
+    course_chapter_id: Optional[int]
     receive_time: Optional[time]
-    is_active: bool
+    is_active: Optional[bool]
 
 
 class User(BaseModel):

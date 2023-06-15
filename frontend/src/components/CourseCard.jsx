@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 import { formatTime } from "../utils/utils";
 import VectorSVG from "./UI/VectorSVG";
@@ -6,12 +6,27 @@ import TextBlock from "./UI/TextBlock";
 import Divider from "./UI/Divider";
 import ChooseTimeModal from "./Modals/ChooseTimeModal";
 import ChooseLevelModal from "./Modals/ChooseLevelModal";
+import { RouteNames } from "../router";
+import { useNavigate } from "react-router-dom";
+import { useFetching } from "../hooks/useFetching";
+import CourseChapterService from "../services/CourseChapterService";
 
-const CourseCard = ({ course, courseChapter = null }) => {
+const CourseCard = ({ course, refresh }) => {
   const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
-  const [courseBase, setCourseBase] = useState(course);
-  const [time, setTime] = useState(course.receive_time);
+  const [courseChapter, setCourseChapter] = useState(null);
+  const navigate = useNavigate();
+
+  const [fetchCourseChapter, isLoading, error] = useFetching(async () => {
+    const response = await CourseChapterService.retrieve(
+      course.course_chapter_id
+    );
+    setCourseChapter(response.data);
+  });
+
+  useEffect(() => {
+    fetchCourseChapter();
+  }, [course]);
 
   const showTimeModal = () => {
     setIsTimeModalOpen(true);
@@ -23,90 +38,78 @@ const CourseCard = ({ course, courseChapter = null }) => {
 
   const handleCancelTimeModal = async () => {
     setIsTimeModalOpen(false);
+    setTimeout(refresh, 500);
   };
 
   const handleCancelCourseModal = async () => {
     setIsCourseModalOpen(false);
+    setTimeout(refresh, 500);
   };
 
   return (
     <div>
-      {courseBase.is_active ? (
-        <div key={courseBase.id} className={"mb-5"}>
-          <Button
-            className={"mr-1.5 p-0 small-button"}
-            shape={"round"}
-            onClick={() => {
-              showCourseModal();
-            }}
-          >
-            {courseChapter && courseChapter.course_id === course.id
-              ? courseChapter.name
-              : "Уровень"}
-          </Button>
-          <Button
-            className={"p-0 small-button"}
-            shape={"round"}
-            onClick={() => showTimeModal()}
-          >
-            {formatTime(time)}
-          </Button>
-          <div className={"flex flex-row items-center"}>
-            <VectorSVG color={courseBase.color} />
-            <TextBlock
-              className={"ml-1.5"}
-              key={courseBase.id}
-              bigText={courseBase.name}
-            />
-          </div>
-          <Divider />
-        </div>
-      ) : (
-        <div
-          key={courseBase.id}
-          className={"mb-5"}
-          style={{ cursor: "pointer" }}
+      <div key={courseChapter?.id} className={"mb-5"}>
+        <Button
+          className={"mr-1.5 p-0 small-button"}
+          disabled={!course.is_active}
+          shape={"round"}
           onClick={() => {
-            showTimeModal();
             showCourseModal();
           }}
         >
-          <Button
-            className={"mr-1.5 p-0 small-button"}
-            disabled={true}
-            shape={"round"}
+          {courseChapter ? courseChapter.name : "Уровень"}
+        </Button>
+        <Button
+          className={"p-0 small-button"}
+          disabled={!course.is_active}
+          shape={"round"}
+          onClick={() => showTimeModal()}
+        >
+          {formatTime(course.receive_time)}
+        </Button>
+        {course.is_active ? (
+          <div
+            className={"flex flex-row items-center"}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              navigate(`${RouteNames.COURSE_CHAT}/${courseChapter?.id}`);
+            }}
           >
-            Уровень
-          </Button>
-          <Button
-            className={"p-0 small-button"}
-            disabled={true}
-            shape={"round"}
-          >
-            {formatTime(time)}
-          </Button>
-          <div className={"flex flex-row items-center"}>
-            <VectorSVG color={courseBase.color} />
+            <VectorSVG color={course.color} />
             <TextBlock
               className={"ml-1.5"}
-              key={courseBase.id}
-              bigText={courseBase.name}
+              key={course.id}
+              bigText={course.name}
             />
           </div>
-          <Divider />
-        </div>
-      )}
+        ) : (
+          <div
+            className={"flex flex-row items-center"}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              showTimeModal();
+              showCourseModal();
+            }}
+          >
+            <VectorSVG color={course.color} />
+            <TextBlock
+              className={"ml-1.5"}
+              key={course.id}
+              bigText={course.name}
+            />
+          </div>
+        )}
+        <Divider />
+      </div>
       <ChooseTimeModal
         isModalOpen={isTimeModalOpen}
         handleCancel={handleCancelTimeModal}
-        modalCourseId={courseBase.id}
-        setTime={setTime}
+        modalCourseId={course.id}
       />
       <ChooseLevelModal
         isModalOpen={isCourseModalOpen}
-        course={courseBase}
+        course={course}
         handleCancel={handleCancelCourseModal}
-        setCourse={setCourseBase}
       />
     </div>
   );

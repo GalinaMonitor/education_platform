@@ -1,5 +1,5 @@
 # BASE
-FROM python:3.11-slim as python-base
+FROM python:3.11-slim AS python-base
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
@@ -15,7 +15,7 @@ ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
 
 
 # BUILDER
-FROM python-base as builder-base
+FROM python-base AS builder-base
 RUN apt-get update \
     && apt-get install --no-install-recommends -y curl git \
     && rm -rf /var/lib/apt/lists/*
@@ -31,10 +31,12 @@ COPY ./poetry.lock ./pyproject.toml ./
 RUN poetry install --only main
 
 # PRODUCTION
-FROM python-base as production
+FROM python-base AS production
 
 # Copying venv into image
+WORKDIR "backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .
 
+RUN alembic upgrade head
 CMD ["uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"]

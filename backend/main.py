@@ -10,10 +10,9 @@ from api.course import router as course_router
 from api.course_chapter import router as course_chapter_router
 from api.user import router as user_router
 from db.config import engine
-from db.models import Base, Chat, Course, CourseChapter, Message, Theme, User, Video
+from db.models import Chat, Course, CourseChapter, Message, Theme, User, Video
 from middlewares import LoggerMiddleware
 from settings import settings
-from utils import init_data
 
 app = FastAPI()
 admin = Admin(engine, title="Example: SQLAlchemy")
@@ -56,11 +55,3 @@ app.include_router(course_chapter_router, prefix="/course_chapter")
 app.include_router(user_router, prefix="/user")
 
 add_pagination(app)
-
-
-@app.on_event("startup")
-async def on_startup():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)
-    await init_data()

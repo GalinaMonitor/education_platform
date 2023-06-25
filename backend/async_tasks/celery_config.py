@@ -128,6 +128,6 @@ def setup_periodic_tasks(sender, **kwargs):
         send_video_task,
     )
     sender.add_periodic_task(
-        crontab(hour="*", minute="*", day_of_month="*"),
+        crontab(hour="0", minute="0", day_of_month="*"),
         check_subscription_task,
     )

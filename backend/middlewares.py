@@ -22,7 +22,12 @@ class LoggerMiddleware(BaseHTTPMiddleware):
         )
 
         # Make the request and receive a response
-        response = await call_next(request)
+        try:
+            response = await call_next(request)
+        except Exception as e:
+            structlog.contextvars.bind_contextvars(detail=e)
+            logger.error("Server error")
+            raise e
 
         # Bind the status code of the response
         structlog.contextvars.bind_contextvars(
@@ -35,8 +40,6 @@ class LoggerMiddleware(BaseHTTPMiddleware):
                 detail=detail.decode(),
             )
             logger.warn("Client error")
-        elif response.status_code >= 500:
-            logger.error("Server error")
         else:
             logger.info("OK")
 

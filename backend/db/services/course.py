@@ -6,31 +6,29 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from db.models import Chat as ChatDB
-from db.models import Course as CourseDB
-from db.models import CourseChapter as CourseChapterDB
+import models as pyd_models
+from db import models as db_models
 from db.services.base import BaseService
-from models import Course, CourseChapterThemes, CourseCourseChapters, CourseRead
 
 
 class CourseService(BaseService):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
-        self.model = CourseDB
-        self.pydantic_model = Course
+        self.model = db_models.Course
+        self.pydantic_model = pyd_models.Course
 
-    async def list(self, user_id: int) -> List[CourseRead]:
+    async def list(self, user_id: int) -> List[pyd_models.CourseRead]:
         chat_subquery = (
             select(
                 self.model.id,
-                func.max(CourseChapterDB.id).label("course_chapter_id"),
-                func.max(ChatDB.receive_time).label("receive_time"),
-                func.bool_or(ChatDB.is_active).label("is_active"),
+                func.max(db_models.CourseChapter.id).label("course_chapter_id"),
+                func.max(db_models.Chat.receive_time).label("receive_time"),
+                func.bool_or(db_models.Chat.is_active).label("is_active"),
             )
-            .join(CourseChapterDB, CourseChapterDB.course_id == self.model.id)
-            .join(ChatDB, CourseChapterDB.id == ChatDB.coursechapter_id)
-            .where(ChatDB.user_id == user_id)
-            .where(ChatDB.is_active == True)
+            .join(db_models.CourseChapter, db_models.CourseChapter.course_id == self.model.id)
+            .join(db_models.Chat, db_models.CourseChapter.id == db_models.Chat.coursechapter_id)
+            .where(db_models.Chat.user_id == user_id)
+            .where(db_models.Chat.is_active == True)
             .group_by(self.model.id)
             .subquery()
         )
@@ -49,8 +47,8 @@ class CourseService(BaseService):
         results = results.all()
         parsed_results = []
         for result in results:
-            parsed_result = CourseRead(
-                **(CourseCourseChapters.from_orm(result[0]).dict()),
+            parsed_result = pyd_models.CourseRead(
+                **(pyd_models.CourseCourseChapters.from_orm(result[0]).dict()),
                 course_chapter_id=result[1],
                 receive_time=result[2],
                 is_active=result[3],
@@ -58,18 +56,18 @@ class CourseService(BaseService):
             parsed_results.append(parsed_result)
         return parsed_results
 
-    async def course_chapters(self, id: int) -> List[CourseChapterThemes]:
-        statement = select(CourseChapterDB).where(CourseChapterDB.course_id == id)
+    async def course_chapters(self, id: int) -> List[pyd_models.CourseChapterThemes]:
+        statement = select(db_models.CourseChapter).where(db_models.CourseChapter.course_id == id)
         results = await self.session.execute(statement)
         result = results.all()
-        return [parse_obj_as(CourseChapterThemes, coursechapter) for coursechapter in result]
+        return [parse_obj_as(pyd_models.CourseChapterThemes, coursechapter) for coursechapter in result]
 
     async def change_receive_time(self, id: int, user_id, receive_time: time):
         statement = (
-            select(ChatDB)
-            .join(CourseChapterDB, ChatDB.coursechapter_id == CourseChapterDB.id)
-            .where(ChatDB.user_id == user_id)
-            .where(CourseChapterDB.course_id == id)
+            select(db_models.Chat)
+            .join(db_models.CourseChapter, db_models.Chat.coursechapter_id == db_models.CourseChapter.id)
+            .where(db_models.Chat.user_id == user_id)
+            .where(db_models.CourseChapter.course_id == id)
         )
         results = await self.session.execute(statement)
         results = results.scalars().all()

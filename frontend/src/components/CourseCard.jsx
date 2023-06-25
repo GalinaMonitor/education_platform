@@ -71,18 +71,26 @@ const CourseCard = ({ course, refresh }) => {
         </Button>
         {course.is_active ? (
           <div
-            className={"flex flex-row items-center"}
+            className={"flex flex-row items-center justify-between"}
             style={{ cursor: "pointer" }}
             onClick={() => {
               navigate(`${RouteNames.COURSE_CHAT}/${courseChapter?.id}`);
             }}
           >
-            <VectorSVG color={course.color} />
-            <TextBlock
-              className={"ml-1.5"}
-              key={course.id}
-              bigText={course.name}
-            />
+            <div className={"flex flex-row items-center"}>
+              <VectorSVG color={course.color} />
+              <TextBlock
+                className={"ml-1.5"}
+                key={course.id}
+                bigText={course.name}
+              />
+            </div>
+
+            <p className={"text-md"} style={{ color: course.color }}>
+              {courseChapter?.messages_amount
+                ? "+" + courseChapter.messages_amount
+                : ""}
+            </p>
           </div>
         ) : (
           <div

@@ -1,12 +1,12 @@
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
-from db.models import Theme as ThemeDB
+import models as pyd_models
+from db import models as db_models
 from db.services.base import BaseService
-from models import Theme
 
 
 class ThemeService(BaseService):
     def __init__(self, session: AsyncSession):
         super().__init__(session)
-        self.model = ThemeDB
-        self.pydantic_model = Theme
+        self.model = db_models.Theme
+        self.pydantic_model = pyd_models.Theme

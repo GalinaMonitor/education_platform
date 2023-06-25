@@ -43,6 +43,10 @@ class CourseChapter(BaseModel):
     course_id: int
 
 
+class CourseChapterRead(CourseChapter):
+    messages_amount: Optional[int]
+
+
 class CourseChapterThemes(CourseChapter):
     themes: List[ThemeVideos] = []
 
@@ -97,10 +101,11 @@ class UpdateUser(BaseModel):
 
 class Message(BaseModel):
     id: Optional[int]
-    datetime: datetime
-    content: str
-    content_type: DataType
-    chat_id: int
+    datetime: Optional[datetime]
+    content: Optional[str]
+    content_type: Optional[DataType]
+    chat_id: Optional[int]
+    is_read: Optional[bool]
     theme_id: Optional[str]
 
 

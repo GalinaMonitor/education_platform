@@ -49,9 +49,9 @@ class CourseChapter(Base):
     themes = relationship("Theme", backref=backref("coursechapter"))
 
 
-class DataType(int, enum.Enum):
-    TEXT = 0
-    VIDEO = 1
+class DataType(str, enum.Enum):
+    TEXT = "TEXT"
+    VIDEO = "VIDEO"
 
 
 class Theme(Base):
@@ -71,6 +71,7 @@ class Message(Base):
     datetime = Column(DateTime)
     content = Column(Text, default="")
     content_type = Column(Enum(DataType))
+    is_read = Column(Boolean, default=False)
     chat_id = Column(Integer, ForeignKey("chat.id"), nullable=True, default=None)
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="messages")

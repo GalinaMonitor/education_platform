@@ -38,5 +38,4 @@ WORKDIR "backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .
 
-RUN alembic upgrade head
 CMD ["uvicorn", "main:app", "--reload", "--port", "8000", "--host", "0.0.0.0"]

@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime
 
 from db.config import async_session
+from db.models import DataType
 from db.services.chat import ChatService
 from db.services.course import CourseService
 from db.services.course_chapter import CourseChapterService
@@ -26,7 +27,7 @@ async def create_message(course_id, coursechapter_id, message_id, chat_id, theme
             Message(
                 datetime=datetime.now(),
                 content=f"Курс {course_id} Тема {theme_id} ID {message_id}",
-                content_type=0,
+                content_type=DataType.TEXT,
                 chat_id=chat_id,
                 theme_id=theme_id,
             )
@@ -88,7 +89,7 @@ async def init_user(user: User):
             Message(
                 datetime=datetime.now(),
                 content=f"{user.fullname if user.fullname else 'Здравствуйте'}, мне очень приятно познакомиться с вами! ",
-                content_type=0,
+                content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,
             )
@@ -97,7 +98,7 @@ async def init_user(user: User):
             Message(
                 datetime=datetime.now(),
                 content="Позвольте мне рассказать вам дальнейшие действия. Посмотрите на левую часть экрана, именно там расположены программы, которые вы можете изучить. Просто кликните на нужный вам инструмент и выберете уровень сложности! Удачи, надеюсь вам у нас понравиться!",
-                content_type=0,
+                content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,
             )
@@ -125,7 +126,7 @@ async def init_data():
             Message(
                 datetime=datetime.now(),
                 content="Test base text content",
-                content_type=0,
+                content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,
             )

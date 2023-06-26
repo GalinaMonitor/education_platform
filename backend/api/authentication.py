@@ -37,7 +37,6 @@ async def form_login_for_access_token(
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(user: AuthUser, session: AsyncSession = Depends(get_session)):
-    dwedwe
     user = await authenticate_user(session, user.email, user.password)
     if not user:
         raise UnauthorizedException

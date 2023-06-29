@@ -36,7 +36,7 @@ const App = () => {
           token: {
             colorPrimary: "#FF7D1F",
             colorInfo: "#FF7D1F",
-            fontFamily: "Manrope",
+            fontFamily: "Unbounded",
             borderRadius: 10,
             fontSize: 14,
             controlHeight: 40,

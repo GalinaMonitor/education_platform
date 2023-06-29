@@ -5,10 +5,10 @@ import VideoMessage from "./messages/VideoMessage";
 const Message = ({ text, type, time, className }) => {
   let message;
   switch (type) {
-    case 0:
+    case "TEXT":
       message = <TextMessage text={text} time={time} />;
       break;
-    case 1:
+    case "VIDEO":
       message = <VideoMessage videoId={text} time={time} />;
       break;
     default:

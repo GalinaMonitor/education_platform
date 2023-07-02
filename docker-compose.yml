@@ -26,20 +26,6 @@ services:
         redis:
           condition: service_healthy
 
-  admin:
-    networks:
-      network:
-        ipv4_address: 11.1.0.13
-    image: gmonitor/education_platform-back:master
-    env_file:
-      - .env
-    ports:
-      - "7000:7000"
-    container_name: admin
-    entrypoint: [ "gunicorn", "--workers", "4", "--bind", "0.0.0.0:7000", "-m", "007", "admin.wsgi:app" ]
-    depends_on:
-      - backend
-
   redis:
     networks:
       network:

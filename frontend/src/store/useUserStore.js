@@ -42,10 +42,15 @@ const useUserStore = create(
           const registerResponse = await AuthService.register(email, password);
           if (registerResponse.status !== 200) {
             error("Ошибка при регистрации");
+          } else {
+            success("Регистрация прошла успешно");
           }
-          success("Регистрация прошла успешно");
         } catch (e) {
-          error("Ошибка при регистрации");
+          if (e.response?.data?.detail === "User already registered") {
+            error("Аккаунт с такой электронной почтой уже зарегистрирован");
+          } else {
+            error("Ошибка при регистрации");
+          }
         }
 
         set({ isLoading: false });

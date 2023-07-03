@@ -16,7 +16,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
       >
         <Image src={"/lizbet.svg"} width={120} preview={false} />
         <p className={"text-lg my-5"}>
-          НА КАКОЙ ПЕРИОД ВРЕМЕНИ ВЫ ХОТИТЕ
+          НА КАКОЙ ПЕРИОД ВЫ ХОТИТЕ
           <br />
           ПРИОБРЕСТИ ДОСТУП К ПЛАТФОРМЕ?
         </p>
@@ -46,7 +46,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
           <p>БЕЗНАЛИЧНЫЙ РАСЧЁТ</p>
         </Link>
         <Link
-          to={""}
+          to={"https://ku-pomogu.ru/ooo"}
           onClick={handleCancel}
           className={"text-center absolute bottom-5"}
         >

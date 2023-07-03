@@ -45,12 +45,12 @@ const Navbar = ({ className }) => {
 
         {user.has_subscription ? (
           <TextBlock
-            smallText={"ПЕРИОД ПОДПИСКИ И ОБУЧЕНИЯ"}
+            smallText={"ДАТА ОКОНЧАНИЯ ПОДПИСКИ"}
             bigText={user.end_of_subscription}
           />
         ) : (
           <TextBlock
-            smallText={"ПЕРИОД ПОДПИСКИ И ОБУЧЕНИЯ"}
+            smallText={"ДАТА ОКОНЧАНИЯ ПОДПИСКИ"}
             bigText={"Нет подписки"}
           />
         )}

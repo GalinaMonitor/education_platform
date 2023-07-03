@@ -32,11 +32,11 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
         <p className={"text-lg text-center mt-5 mb-10"}>
           ВО СКОЛЬКО ВАМ БУДЕТ УДОБНО ПОЛУЧАТЬ
           <br />
-          ОБУЧАЮЩИЙ МАТЕРИАЛ
+          ОБУЧАЮЩИЙ МАТЕРИАЛ?
         </p>
         <Form
           ref={formRef}
-          className={"w-96"}
+          style={{ width: 460 }}
           onFinish={submit}
           layout="vertical"
         >

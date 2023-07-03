@@ -14,7 +14,7 @@ const LoginForm = () => {
   };
 
   return (
-    <div className={"w-96"}>
+    <div style={{ width: 460 }}>
       <Form onFinish={submit} layout="vertical">
         <Form.Item
           label={<p className={"text-md font-semibold"}>ВАША ПОЧТА</p>}

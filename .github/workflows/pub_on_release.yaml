@@ -13,13 +13,51 @@ jobs:
       - name: Login to docker.io
         run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
       - uses: actions/checkout@master
+
+      - name: Build front base image
+        run: docker build
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from $LOGIN/$NAME-front-base
+          --target builder-base
+          --build-arg REACT_APP_API_URL=$REACT_APP_API_URL
+          -t $LOGIN/$NAME-front:${GITHUB_REF:11}
+          -f frontend/Dockerfile
+          frontend
+      - name: Push front image to docker.io
+        run: docker push $LOGIN/$NAME-front-base:${GITHUB_REF:11}
+
+      - name: Build back base image
+        run: docker build
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from $LOGIN/$NAME-back-base
+          --target builder-base
+          -t $LOGIN/$NAME-back:${GITHUB_REF:11}
+          -f frontend/Dockerfile
+          frontend
+      - name: Push front image to docker.io
+        run: docker push $LOGIN/$NAME-back-base:${GITHUB_REF:11}
+
       - name: Build front image
-        run: docker build --build-arg REACT_APP_API_URL=$REACT_APP_API_URL -t $LOGIN/$NAME-front:${GITHUB_REF:11} -f frontend/Dockerfile frontend
+        run: docker build
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from $LOGIN/$NAME-front-base
+          --cache-from $LOGIN/$NAME-front
+          --build-arg REACT_APP_API_URL=$REACT_APP_API_URL
+          -t $LOGIN/$NAME-front:${GITHUB_REF:11}
+          -f frontend/Dockerfile
+          frontend
       - name: Push front image to docker.io
         run: docker push $LOGIN/$NAME-front:${GITHUB_REF:11}
+
       - name: Build back image
-        run: docker build -t $LOGIN/$NAME-back:${GITHUB_REF:11} -f backend/Dockerfile backend
-      - name: Push back image to docker.io
+        run: docker build
+          --build-arg BUILDKIT_INLINE_CACHE=1
+          --cache-from $LOGIN/$NAME-back-base
+          --cache-from $LOGIN/$NAME-back
+          -t $LOGIN/$NAME-back:${GITHUB_REF:11}
+          -f frontend/Dockerfile
+          frontend
+      - name: Push front image to docker.io
         run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
 
   deploy:

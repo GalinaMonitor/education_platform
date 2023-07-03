@@ -33,7 +33,7 @@ jobs:
           --target builder-base
           -t $LOGIN/$NAME-back-base:${GITHUB_REF:11}
           -f backend/Dockerfile
-          frontend
+          backend
       - name: Push back base image to docker.io
         run: docker push $LOGIN/$NAME-back-base:${GITHUB_REF:11}
 
@@ -56,7 +56,7 @@ jobs:
           --cache-from $LOGIN/$NAME-back
           -t $LOGIN/$NAME-back:${GITHUB_REF:11}
           -f backend/Dockerfile
-          frontend
+          backend
       - name: Push back image to docker.io
         run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
 

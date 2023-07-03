@@ -17,7 +17,7 @@ jobs:
       - name: Build front base image
         run: docker build
           --build-arg BUILDKIT_INLINE_CACHE=1
-          --cache-from $LOGIN/$NAME-front-base
+          --cache-from $LOGIN/$NAME-front-base:${GITHUB_REF:11}
           --target builder-base
           --build-arg REACT_APP_API_URL=$REACT_APP_API_URL
           -t $LOGIN/$NAME-front-base:${GITHUB_REF:11}
@@ -29,7 +29,7 @@ jobs:
       - name: Build back base image
         run: docker build
           --build-arg BUILDKIT_INLINE_CACHE=1
-          --cache-from $LOGIN/$NAME-back-base
+          --cache-from $LOGIN/$NAME-back-base:${GITHUB_REF:11}
           --target builder-base
           -t $LOGIN/$NAME-back-base:${GITHUB_REF:11}
           -f backend/Dockerfile
@@ -40,8 +40,8 @@ jobs:
       - name: Build front image
         run: docker build
           --build-arg BUILDKIT_INLINE_CACHE=1
-          --cache-from $LOGIN/$NAME-front-base
-          --cache-from $LOGIN/$NAME-front
+          --cache-from $LOGIN/$NAME-front-base:${GITHUB_REF:11}
+          --cache-from $LOGIN/$NAME-front:${GITHUB_REF:11}
           --build-arg REACT_APP_API_URL=$REACT_APP_API_URL
           -t $LOGIN/$NAME-front:${GITHUB_REF:11}
           -f frontend/Dockerfile
@@ -52,8 +52,8 @@ jobs:
       - name: Build back image
         run: docker build
           --build-arg BUILDKIT_INLINE_CACHE=1
-          --cache-from $LOGIN/$NAME-back-base
-          --cache-from $LOGIN/$NAME-back
+          --cache-from $LOGIN/$NAME-back-base:${GITHUB_REF:11}
+          --cache-from $LOGIN/$NAME-back:${GITHUB_REF:11}
           -t $LOGIN/$NAME-back:${GITHUB_REF:11}
           -f backend/Dockerfile
           backend

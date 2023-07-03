@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Avatar, Button, message, Typography, Upload } from "antd";
+import { Avatar, Button, message, Typography, Upload, Image } from "antd";
 import Divider from "./UI/Divider";
 import useUserStore from "../store/useUserStore";
 import { useFetching } from "../hooks/useFetching";
@@ -7,6 +7,7 @@ import UserService from "../services/UserService";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import EditableStringSvg from "./UI/EditableStringSVG";
 import Card from "./UI/Card";
+import useInterfaceStore from "../store/useInterfaceStore";
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader();
@@ -33,6 +34,7 @@ const Settings = () => {
   const [fullname, setFullname] = useState(user.fullname);
   const [company, setCompany] = useState(user.company);
   const [job, setJob] = useState(user.job);
+  const { openCloseSettings } = useInterfaceStore();
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -82,7 +84,7 @@ const Settings = () => {
   };
 
   return (
-    <Card text={"Профиль"}>
+    <Card text={"ПРОФИЛЬ"}>
       <Upload
         name="avatar"
         listType="picture-circle"
@@ -155,6 +157,14 @@ const Settings = () => {
           </Typography.Text>
         </div>
         <Divider />
+      </div>
+      <div className={"absolute right-14 top-10 cursor-pointer"}>
+        <Image
+          width={20}
+          preview={false}
+          src={"close.svg"}
+          onClick={openCloseSettings}
+        />
       </div>
     </Card>
   );

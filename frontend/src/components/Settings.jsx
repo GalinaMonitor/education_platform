@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Avatar, message, Upload } from "antd";
+import { Avatar, Button, message, Typography, Upload } from "antd";
 import Divider from "./UI/Divider";
 import useUserStore from "../store/useUserStore";
 import { useFetching } from "../hooks/useFetching";
 import UserService from "../services/UserService";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import Paragraph from "antd/lib/typography/Paragraph";
 import EditableStringSvg from "./UI/EditableStringSVG";
 import Card from "./UI/Card";
 
@@ -31,6 +30,9 @@ const Settings = () => {
   const { user, checkAuth } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(user.avatar);
+  const [fullname, setFullname] = useState(user.fullname);
+  const [company, setCompany] = useState(user.company);
+  const [job, setJob] = useState(user.company);
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -64,14 +66,17 @@ const Settings = () => {
   };
 
   const changeFullname = (value) => {
+    setFullname(value);
     patchUser({ fullname: value });
   };
 
   const changeCompany = (value) => {
+    setCompany(value);
     patchUser({ company: value });
   };
 
   const changeJob = (value) => {
+    setJob(value);
     patchUser({ job: value });
   };
 
@@ -101,26 +106,53 @@ const Settings = () => {
         )}
       </Upload>
       <div className={"mt-3 mb-3"}>
-        <p className={"text-xs m-1 text-gray-400"}>Имя</p>
-        <Paragraph
-          editable={{ onChange: changeFullname, icon: <EditableStringSvg /> }}
+        <Button
+          disabled={true}
+          className={"p-0 small-button my-5"}
+          shape={"round"}
         >
-          {user.fullname}
-        </Paragraph>
+          Имя
+        </Button>
+        <div className={"mb-5"}>
+          <Typography.Text
+            editable={{ onChange: changeFullname, icon: <EditableStringSvg /> }}
+            className={"text-lg"}
+          >
+            {fullname}
+          </Typography.Text>
+        </div>
         <Divider />
-        <p className={"text-xs m-1 text-gray-400"}>Компания</p>
-        <Paragraph
-          editable={{ onChange: changeCompany, icon: <EditableStringSvg /> }}
+        <Button
+          disabled={true}
+          className={"p-0 small-button my-5"}
+          shape={"round"}
         >
-          {user.company}
-        </Paragraph>
+          Компания
+        </Button>
+        <div className={"mb-5"}>
+          <Typography.Text
+            editable={{ onChange: changeCompany, icon: <EditableStringSvg /> }}
+            className={"text-lg"}
+          >
+            {company}
+          </Typography.Text>
+        </div>
         <Divider />
-        <p className={"text-xs m-1 text-gray-400"}>Должность</p>
-        <Paragraph
-          editable={{ onChange: changeJob, icon: <EditableStringSvg /> }}
+        <Button
+          disabled={true}
+          className={"p-0 small-button my-5"}
+          shape={"round"}
         >
-          {user.joby}
-        </Paragraph>
+          Должность
+        </Button>
+        <div className={"mb-5"}>
+          <Typography.Text
+            editable={{ onChange: changeJob, icon: <EditableStringSvg /> }}
+            className={"text-lg"}
+          >
+            {job}
+          </Typography.Text>
+        </div>
         <Divider />
       </div>
     </Card>

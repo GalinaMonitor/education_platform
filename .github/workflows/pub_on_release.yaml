@@ -44,6 +44,10 @@ jobs:
       NAME: ${{ secrets.DOCKER_NAME }}
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
     steps:
+      - name: Login to docker.io
+        run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      - uses: actions/checkout@master
+
       - name: Build front image
         run: docker build
           --build-arg BUILDKIT_INLINE_CACHE=1

@@ -32,7 +32,7 @@ const Settings = () => {
   const [imageUrl, setImageUrl] = useState(user.avatar);
   const [fullname, setFullname] = useState(user.fullname);
   const [company, setCompany] = useState(user.company);
-  const [job, setJob] = useState(user.company);
+  const [job, setJob] = useState(user.job);
 
   const handleChange = (info) => {
     if (info.file.status === "uploading") {
@@ -57,6 +57,7 @@ const Settings = () => {
 
   const [patchUser, isLoading, error] = useFetching(async (data) => {
     const response = await UserService.patch(data);
+    await checkAuth();
   });
 
   const uploadPhotoFunc = (e) => {

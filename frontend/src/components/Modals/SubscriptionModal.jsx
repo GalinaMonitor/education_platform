@@ -42,11 +42,11 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             <Button type={"primary"}>Оплатить подписку</Button>
           </Card>
         </Row>
-        <Link to={"/"}>
+        <Link to={"https://ku-pomogu.ru/ooo"}>
           <p>БЕЗНАЛИЧНЫЙ РАСЧЁТ</p>
         </Link>
         <Link
-          to={"https://ku-pomogu.ru/ooo"}
+          to={""}
           onClick={handleCancel}
           className={"text-center absolute bottom-5"}
         >

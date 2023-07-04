@@ -90,6 +90,15 @@ async def send_video():
             await MessageService(session).create(
                 Message(
                     datetime=datetime.now(),
+                    content=new_video.name,
+                    content_type=DataType.TEXT,
+                    chat_id=chat.id,
+                    theme_id=new_video.theme_id,
+                )
+            )
+            await MessageService(session).create(
+                Message(
+                    datetime=datetime.now(),
                     content=new_video.link,
                     content_type=DataType.VIDEO,
                     chat_id=chat.id,

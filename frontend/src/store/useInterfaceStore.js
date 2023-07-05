@@ -13,7 +13,7 @@ const useInterfaceStore = create(
         }
       },
     })),
-    { name: "useUserStore" }
+    { name: "useInterfaceStore" }
   )
 );
 

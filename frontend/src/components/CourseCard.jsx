@@ -46,7 +46,7 @@ const CourseCard = ({ course, refresh }) => {
   const handleCancelCourseModal = async () => {
     setIsCourseModalOpen(false);
     setTimeout(refresh, 500);
-    navigate(`${RouteNames.MAIN}`);
+    setTimeout(navigate, 500, `${RouteNames.MAIN}`);
   };
 
   return (

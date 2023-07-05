@@ -16,7 +16,7 @@ from exceptions import UnauthorizedException
 from settings import settings
 
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 4320
 
 
 class Token(BaseModel):

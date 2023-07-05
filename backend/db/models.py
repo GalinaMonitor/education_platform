@@ -84,7 +84,7 @@ class Course(Base):
     description = Column(Text, default="")
     name = Column(Text, default="")
     color = Column(Text, default="#ff7d1f")
-    coursechapters = relationship(CourseChapter, backref=backref("course"))
+    coursechapters = relationship(CourseChapter, backref=backref("course"), order_by=CourseChapter.id)
 
 
 class Video(Base):

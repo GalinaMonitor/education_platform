@@ -78,7 +78,9 @@ def sync_kinescope_task():
 async def send_video():
     async with async_session() as session:
         time = datetime.strptime(str(datetime.now().hour), "%H").time()
-        chat_list = await ChatService(session).list(receive_time=time)
+        # TODO Delete after tests
+        # chat_list = await ChatService(session).list(receive_time=time)
+        chat_list = await ChatService(session).list()
         for chat in chat_list:
             new_video = await VideoService(session).list(
                 coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1

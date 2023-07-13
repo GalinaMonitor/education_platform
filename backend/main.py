@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_mail import ConnectionConfig
 from fastapi_pagination import add_pagination
+from starlette_admin import I18nConfig
 from starlette_admin.contrib.sqla import Admin, ModelView
 
 from api.authentication import router as authentication_router
@@ -15,14 +16,15 @@ from middlewares import LoggerMiddleware
 from settings import settings
 
 app = FastAPI()
-admin = Admin(engine, title="Example: SQLAlchemy")
-admin.add_view(ModelView(Course))
-admin.add_view(ModelView(User))
-admin.add_view(ModelView(Chat))
-admin.add_view(ModelView(CourseChapter))
-admin.add_view(ModelView(Theme))
-admin.add_view(ModelView(Message))
-admin.add_view(ModelView(Video))
+
+admin = Admin(engine, title="Ку-помогу", i18n_config=I18nConfig(default_locale="ru"))
+admin.add_view(ModelView(Course, label="Курс"))
+admin.add_view(ModelView(User, label="Пользователи"))
+admin.add_view(ModelView(Chat, label="Чаты"))
+admin.add_view(ModelView(CourseChapter, label="Уровни курсов"))
+admin.add_view(ModelView(Theme, label="Темы"))
+admin.add_view(ModelView(Message, label="Сообщения"))
+admin.add_view(ModelView(Video, label="Видео"))
 
 admin.mount_to(app)
 

@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy.orm import DeclarativeBase, backref, relationship
+from starlette.requests import Request
 
 
 class Base(DeclarativeBase):
@@ -20,6 +21,7 @@ class Chat(Base):
     last_video = Column(Integer, default=0)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     messages = relationship("Message", backref=backref("chat"))
+    coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
 
 class User(Base):
@@ -36,6 +38,10 @@ class User(Base):
     hashed_password = Column(Text)
     has_subscription = Column(Boolean, default=False)
     end_of_subscription = Column(Date, default=None)
+    chats = relationship(Chat, backref=backref("user"))
+
+    async def __admin_repr__(self, request: Request):
+        return self.email
 
 
 class CourseChapter(Base):
@@ -47,6 +53,9 @@ class CourseChapter(Base):
     kinescope_project_id = Column(Text, default="")
     course_id = Column(Integer, ForeignKey("course.id"), nullable=True, default=None)
     themes = relationship("Theme", backref=backref("coursechapter"))
+
+    async def __admin_repr__(self, request: Request):
+        return self.name
 
 
 class DataType(str, enum.Enum):
@@ -63,6 +72,9 @@ class Theme(Base):
     videos = relationship("Video", back_populates="theme")
     messages = relationship("Message", back_populates="theme")
 
+    async def __admin_repr__(self, request: Request):
+        return self.name
+
 
 class Message(Base):
     __tablename__ = "message"
@@ -76,6 +88,9 @@ class Message(Base):
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="messages")
 
+    async def __admin_repr__(self, request: Request):
+        return f"{self.content}"
+
 
 class Course(Base):
     __tablename__ = "course"
@@ -85,6 +100,9 @@ class Course(Base):
     name = Column(Text, default="")
     color = Column(Text, default="#ff7d1f")
     coursechapters = relationship(CourseChapter, backref=backref("course"), order_by=CourseChapter.id)
+
+    async def __admin_repr__(self, request: Request):
+        return self.name
 
 
 class Video(Base):

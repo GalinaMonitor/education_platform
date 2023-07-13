@@ -64,7 +64,7 @@ boto3 = "^1.26.102"
 fastapi-mail = "^1.2.6"
 gunicorn = "^20.1.0"
 psycopg2-binary = "^2.9.6"
-starlette-admin = "^0.9.0"
+starlette-admin = {extras = ["i18n"], version = "^0.10.0"}
 structlog = "^23.1.0"
 alembic = "^1.11.1"
 

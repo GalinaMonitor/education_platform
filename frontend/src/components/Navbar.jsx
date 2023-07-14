@@ -55,7 +55,7 @@ const Navbar = ({ className }) => {
           />
         )}
         <Row justify={"space-around"} align={"middle"}>
-          <Link to={"mailto:test@mail.com&subject=Поддержка"}>
+          <Link to={"mailto:support@ku-pomogu.ru&subject=Поддержка"}>
             <Button className={"medium-button mr-5"}>Поддержка</Button>
           </Link>
           <Button

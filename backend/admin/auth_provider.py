@@ -57,8 +57,10 @@ class MyAuthProvider(AuthProvider):
         return False
 
     def get_admin_user(self, request: Request) -> AdminUser:
-        user = request.state.user
-        return AdminUser(username=user["name"], photo_url=user["avatar"])
+        if hasattr(request.state, "user"):
+            user = request.state.user
+            return AdminUser(username=user["name"], photo_url=user["avatar"])
+        return None
 
     async def logout(self, request: Request, response: Response) -> Response:
         request.session.clear()

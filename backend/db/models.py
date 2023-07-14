@@ -3,8 +3,11 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, Text
 from sqlalchemy.dialects.postgresql import TIME
-from sqlalchemy.orm import DeclarativeBase, backref, relationship
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import DeclarativeBase, backref, relationship, sessionmaker
 from starlette.requests import Request
+
+from db.config import engine
 
 
 class Base(DeclarativeBase):
@@ -23,11 +26,31 @@ class Chat(Base):
     messages = relationship("Message", backref=backref("chat"))
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
+    async def __admin_repr__(self, request: Request):
+        async_session = sessionmaker(
+            bind=engine,
+            class_=AsyncSession,
+            autocommit=False,
+            autoflush=False,
+            expire_on_commit=False,
+        )
+        async with async_session() as session:
+            from db.services.course_chapter import CourseChapterService
+            from db.services.user import UserService
+
+            chat_repr = []
+            if self.coursechapter_id:
+                chat_repr.append((await CourseChapterService(session).retrieve(self.coursechapter_id)).name)
+            if self.user_id:
+                chat_repr.append((await UserService(session).retrieve(self.user_id)).email)
+            return " ".join(chat_repr)
+
 
 class User(Base):
     __tablename__ = "user"
 
     id = Column(Integer, autoincrement=True, primary_key=True)
+    is_admin = Column(Boolean, default=False)
     passed_welcome_page = Column(Boolean, default=False)
     time_on_platform = Column(Integer, default=0)
     avatar = Column(Text, default="")

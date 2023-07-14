@@ -38,4 +38,4 @@ WORKDIR "backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .
 
-CMD ["uvicorn", "main:app", "--proxy-headers", "--reload", "--port", "8000", "--host", "0.0.0.0"]
+ENTRYPOINT alembic upgrade head && uvicorn main:app --proxy-headers --reload --port 8000 --host 0.0.0.0

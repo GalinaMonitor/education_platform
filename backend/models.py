@@ -71,6 +71,7 @@ class CourseRead(Course):
 
 class User(BaseModel):
     id: int
+    is_admin: bool
     passed_welcome_page: bool
     time_on_platform: int
     avatar: str

@@ -17,6 +17,7 @@ services:
       - .env
     ports:
       - "8000:8000"
+    restart: always
     volumes:
       - ./backend/migrations:/backend/migrations
     container_name: backend
@@ -77,6 +78,7 @@ services:
       - .env
     ports:
       - '5432:5432'
+    restart: always
     volumes:
       - /data/postgresql/education_platform:/var/lib/postgresql/data
     healthcheck:
@@ -92,6 +94,7 @@ services:
     image: gmonitor/education_platform-front:master
     env_file:
       - .env
+    restart: always
     ports:
       - "3000:80"
     container_name: frontend

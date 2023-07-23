@@ -96,5 +96,5 @@ services:
       - .env
     restart: always
     ports:
-      - "3000:80"
+      - "4000:80"
     container_name: frontend

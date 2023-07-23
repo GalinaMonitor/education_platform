@@ -89,4 +89,4 @@ jobs:
             cd /opt/education_platform
             echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
             git pull
-            docker compose pull && docker compose up --build -d
+            make up

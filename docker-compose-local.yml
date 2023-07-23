@@ -21,6 +21,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend/migrations:/backend/migrations
+    user: "${UID}:${GID}"
     container_name: backend
     depends_on:
         postgres:

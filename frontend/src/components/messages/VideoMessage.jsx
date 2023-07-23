@@ -13,7 +13,7 @@ const VideoMessage = ({ videoId, time = null }) => {
       <div className={"top-0 left-0 text-left"}>{video}</div>
       {time ? (
         <div className={"absolute bottom-0 right-2 text-right text-gray-50"}>
-          <p>{formatDatetime(time)}</p>
+          <p className={"text-xs text-gray-400"}>{formatDatetime(time)}</p>
         </div>
       ) : (
         <></>

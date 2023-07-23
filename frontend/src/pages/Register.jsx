@@ -1,6 +1,7 @@
 import React from "react";
 import { Image, Layout, Row } from "antd";
 import RegisterForm from "../components/RegisterForm";
+import { Link } from "react-router-dom";
 
 const Register = () => {
   return (
@@ -11,6 +12,15 @@ const Register = () => {
       <Row justify="center" align="middle" className={"mt-32"}>
         <RegisterForm />
       </Row>
+      <div
+        className={
+          "bottom-5 absolute m-auto right-0 left-0 w-2/6 h-5 text-center"
+        }
+      >
+        <Link to={"mailto:support@ku-pomogu.ru&subject=Поддержка"}>
+          СВЯЗАТЬСЯ С ТЕХНИЧЕСКОЙ ПОДДЕРЖКОЙ
+        </Link>
+      </div>
     </Layout>
   );
 };

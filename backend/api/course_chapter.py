@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from auth import get_current_active_user
 from db.config import get_session
+from db.models import SubscriptionType
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
@@ -57,7 +58,7 @@ async def activate_course_chapter(
     current_user: Annotated[User, Depends(get_current_active_user)] = None,
     session: AsyncSession = Depends(get_session),
 ):
-    if not current_user.has_subscription:
+    if current_user.subscription_type == SubscriptionType.NO_SUBSCRIPTION:
         raise HasNoSubscriptionException
     service = ChatService(session)
     course_chapter = await CourseChapterService(session).retrieve(id=id)

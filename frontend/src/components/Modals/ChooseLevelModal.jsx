@@ -29,7 +29,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
       <div
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
-        <Image src={"/lizbet.svg"} width={120} preview={false} />
+        <Image src={"/tolya.svg"} width={120} preview={false} />
         <p className={"text-lg my-5"}>КАКОЙ УРОВЕНЬ ВАС ИНТЕРЕСУЕТ?</p>
         <Link to={"/"}>
           <p className={"mb-10"}>ИЗУЧИТЬ СТРУКТУРУ ОБУЧЕНИЯ</p>

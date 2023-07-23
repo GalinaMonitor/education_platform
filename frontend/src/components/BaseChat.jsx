@@ -84,11 +84,11 @@ const BaseChat = () => {
       </div>
       <div className={"absolute bottom-5 right-10 text-right"}>
         <Row>
-          <TextBlock bigText={"Елизавета"} smallText={"Куратор"} />
+          <TextBlock bigText={"Анатолий"} smallText={"Куратор"} />
           <Image
             className={"ml-5"}
             width={"100px"}
-            src={"/lizbet.svg"}
+            src={"/tolya.svg"}
             preview={false}
           />
         </Row>

@@ -46,6 +46,12 @@ class Chat(Base):
             return " ".join(chat_repr)
 
 
+class SubscriptionType(str, enum.Enum):
+    NO_SUBSCRIPTION = "Нет подписки"
+    DEMO = "Пробная"
+    LEARN_ALL = "Изучаю всё"
+
+
 class User(Base):
     __tablename__ = "user"
 
@@ -59,8 +65,8 @@ class User(Base):
     job = Column(Text, default="")
     email = Column(Text, default="", unique=True)
     hashed_password = Column(Text)
-    has_subscription = Column(Boolean, default=False)
     end_of_subscription = Column(Date, default=None)
+    subscription_type = Column(Enum(SubscriptionType))
     chats = relationship(Chat, backref=backref("user"))
 
     async def __admin_repr__(self, request: Request):

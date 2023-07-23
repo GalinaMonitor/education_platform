@@ -11,6 +11,8 @@ import Settings from "../components/Settings";
 import LayoutThreeBlocks from "../components/UI/LayoutThreeBlocks";
 import LizbetCard from "../components/LizbetCard";
 import CourseChapterService from "../services/CourseChapterService";
+import UsersNumber from "../components/UsersNumber";
+import ShareLink from "../components/ShareLink";
 
 const CourseChatPage = () => {
   const { id } = useParams();
@@ -30,26 +32,30 @@ const CourseChatPage = () => {
   }, [id]);
 
   return (
-    <LayoutThreeBlocks>
-      {isOpenSettings ? (
-        <Settings />
-      ) : (
-        <>
-          <CourseList />
-          <LizbetCard classname={"mt-5"} />
-        </>
-      )}
-      <ThemeList
-        courseChapterId={id}
-        setThemeId={setThemeId}
-        color={course.color}
-      />
-      <CourseChat
-        courseName={course.name}
-        courseChapterId={id}
-        themeId={themeId}
-      />
-    </LayoutThreeBlocks>
+    <>
+      <LayoutThreeBlocks>
+        {isOpenSettings ? (
+          <Settings />
+        ) : (
+          <>
+            <CourseList />
+            <LizbetCard classname={"mt-5"} />
+          </>
+        )}
+        <ThemeList
+          courseChapterId={id}
+          setThemeId={setThemeId}
+          color={course.color}
+        />
+        <CourseChat
+          courseName={course.name}
+          courseChapterId={id}
+          themeId={themeId}
+        />
+      </LayoutThreeBlocks>
+      <UsersNumber className={"absolute bottom-5 right-16"} />
+      <ShareLink className={"absolute bottom-5 left-16"} />
+    </>
   );
 };
 

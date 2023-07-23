@@ -5,7 +5,7 @@ from celery import Celery
 from celery.schedules import crontab
 
 from db.config import async_session
-from db.models import DataType
+from db.models import DataType, SubscriptionType
 from db.services.chat import ChatService
 from db.services.course_chapter import CourseChapterService
 from db.services.message import MessageService
@@ -118,9 +118,11 @@ def send_video_task():
 async def check_subscription():
     date = datetime.now().date()
     async with async_session() as session:
-        users_without_subscription = await UserService(session).list(end_of_subscription=date, has_subscription=True)
+        users_without_subscription = await UserService(session).list(end_of_subscription=date)
         for user in users_without_subscription:
-            await UserService(session).update(id=user.id, data=UpdateUser(has_subscription=False))
+            await UserService(session).update(
+                id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION)
+            )
 
 
 @celery_app.task

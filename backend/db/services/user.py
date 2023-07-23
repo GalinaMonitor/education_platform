@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 import models as pyd_models
 from db import models as db_models
+from db.models import SubscriptionType
 from db.services.base import BaseService
 from exceptions import NotFoundException
 
@@ -23,7 +24,7 @@ class UserService(BaseService):
         new_model = self.model(
             email=data.email,
             hashed_password=pwd_context.hash(password),
-            has_subscription=True,
+            subscription_type=SubscriptionType.DEMO,
             end_of_subscription=date + timedelta(days=60),
         )
         self.session.add(new_model)

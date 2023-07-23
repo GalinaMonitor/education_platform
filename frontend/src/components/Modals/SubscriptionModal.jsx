@@ -14,7 +14,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
       <div
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
-        <Image src={"/lizbet.svg"} width={120} preview={false} />
+        <Image src={"/tolya.svg"} width={120} preview={false} />
         <p className={"text-lg my-5"}>
           НА КАКОЙ ПЕРИОД ВЫ ХОТИТЕ
           <br />

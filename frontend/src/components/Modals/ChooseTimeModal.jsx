@@ -28,7 +28,7 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
       <div
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
-        <Image src={"/lizbet.svg"} width={120} preview={false} />
+        <Image src={"/tolya.svg"} width={120} preview={false} />
         <p className={"text-lg text-center mt-5 mb-10"}>
           ВО СКОЛЬКО ВАМ БУДЕТ УДОБНО ПОЛУЧАТЬ
           <br />

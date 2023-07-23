@@ -22,7 +22,7 @@ const Subscription = () => {
         }
       >
         <div style={{ height: "fit-content" }}>
-          <Image width={"100px"} src={"/lizbet-reversed.svg"} preview={false} />
+          <Image width={"100px"} src={"/tolya.svg"} preview={false} />
           <p
             className={"pt-5"}
           >{`${user.fullname}, на какой период времени`}</p>

@@ -10,7 +10,7 @@ const TextMessage = ({ text, time = null }) => {
       <div className={"top-0 left-0 text-left"}>{parsedText}</div>
       {time ? (
         <div className={"absolute bottom-0 right-2 text-right"}>
-          <p>{formatDatetime(time)}</p>
+          <p className={"text-xs text-gray-400"}>{formatDatetime(time)}</p>
         </div>
       ) : (
         <></>

@@ -8,6 +8,7 @@ import DefaultIconSvg from "./UI/DefaultIconSVG";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Card from "./UI/Card";
 import SubscriptionModal from "./Modals/SubscriptionModal";
+import { formatDate } from "../utils/utils";
 
 const Navbar = ({ className }) => {
   const { user, logout } = useUserStore();
@@ -33,25 +34,21 @@ const Navbar = ({ className }) => {
             style={{ marginRight: "25px", cursor: "pointer" }}
           />
           <TextBlock
-            smallText={"Фамилия и имя"}
+            smallText={"ФАМИЛИЯ И ИМЯ"}
             bigText={user.fullname ? user.fullname : user.email}
           />
         </Row>
-        {user.has_subscription ? (
-          <TextBlock smallText={"CТАТУС"} bigText={"Изучаю всё"} />
-        ) : (
-          <TextBlock smallText={"CТАТУС"} bigText={"Нет подписки"} />
-        )}
+        <TextBlock smallText={"ПОДПИСКА"} bigText={user.subscription_type} />
 
-        {user.has_subscription ? (
+        {user.subscription_type === "Нет подписки" ? (
           <TextBlock
             smallText={"ДАТА ОКОНЧАНИЯ ПОДПИСКИ"}
-            bigText={user.end_of_subscription}
+            bigText={"Нет подписки"}
           />
         ) : (
           <TextBlock
             smallText={"ДАТА ОКОНЧАНИЯ ПОДПИСКИ"}
-            bigText={"Нет подписки"}
+            bigText={formatDate(user.end_of_subscription)}
           />
         )}
         <Row justify={"space-around"} align={"middle"}>

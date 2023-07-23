@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel as PydanticBaseModel
 
-from db.models import DataType
+from db.models import DataType, SubscriptionType
 
 
 class BaseModel(PydanticBaseModel):
@@ -80,7 +80,7 @@ class User(BaseModel):
     job: str
     email: str
     hashed_password: str
-    has_subscription: bool
+    subscription_type: SubscriptionType
     end_of_subscription: Optional[date]
 
 
@@ -96,7 +96,7 @@ class UpdateUser(BaseModel):
     passed_welcome_page: Optional[bool]
     time_on_platform: Optional[int]
     avatar: Optional[str]
-    has_subscription: Optional[bool]
+    subscription_type: Optional[SubscriptionType]
     end_of_subscription: Optional[date]
 
 

@@ -4,8 +4,6 @@ import AppRouter from "./components/AppRouter";
 import { BrowserRouter } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import useUserStore from "./store/useUserStore";
-import UsersNumber from "./components/UsersNumber";
-import ShareLink from "./components/ShareLink";
 import UserService from "./services/UserService";
 
 const App = () => {
@@ -49,8 +47,6 @@ const App = () => {
       >
         <Layout className={"h-full relative"}>
           <AppRouter />
-          <UsersNumber className={"absolute bottom-5 right-16"} />
-          <ShareLink className={"absolute bottom-5 left-16"} />
         </Layout>
       </ConfigProvider>
     </BrowserRouter>

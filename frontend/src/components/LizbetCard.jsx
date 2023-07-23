@@ -12,10 +12,10 @@ const LizbetCard = ({ classname }) => {
         <TextBlock
           className={"mr-10"}
           smallText={"КУРАТОР"}
-          bigText={"Елизавета"}
+          bigText={"Анатолий"}
         />
         <Link to={RouteNames.MAIN}>
-          <Image width={111} src={"/lizbet.svg"} preview={false} />
+          <Image width={111} src={"/tolya.svg"} preview={false} />
         </Link>
       </div>
     </Card>

@@ -4,7 +4,7 @@ help:
 	make -pRrq  -f $(THIS_FILE) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -v -e '^[^[:alnum:]]' -e '^$@$$'
 up:
 	docker compose pull
-	docker compose up --remove-orphans -d
+	docker compose up --remove-orphans -d $(c)
 down:
 	docker compose -f docker-compose.yml down $(c)
 local_up:

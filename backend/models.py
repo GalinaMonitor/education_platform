@@ -1,5 +1,6 @@
 from datetime import date, datetime, time
 from typing import List, Optional, Union
+from uuid import UUID
 
 from pydantic import BaseModel as PydanticBaseModel
 
@@ -80,13 +81,16 @@ class User(BaseModel):
     job: str
     email: str
     hashed_password: str
+    service_uuid: Optional[UUID]
     subscription_type: SubscriptionType
     end_of_subscription: Optional[date]
 
 
 class AuthUser(BaseModel):
-    email: str
+    email: Optional[str]
     password: Optional[str]
+    hashed_password: Optional[str]
+    service_uuid: Optional[UUID]
 
 
 class UpdateUser(BaseModel):

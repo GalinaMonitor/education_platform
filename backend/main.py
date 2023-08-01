@@ -9,7 +9,8 @@ from api.chat import router as chat_router
 from api.course import router as course_router
 from api.course_chapter import router as course_chapter_router
 from api.user import router as user_router
-from middlewares import LoggerMiddleware
+
+# from middlewares import LoggerMiddleware
 from settings import settings
 
 app = FastAPI()
@@ -23,7 +24,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(LoggerMiddleware)
+# app.add_middleware(LoggerMiddleware)
 
 email_conf = ConnectionConfig(
     MAIL_USERNAME=settings.mail_username,

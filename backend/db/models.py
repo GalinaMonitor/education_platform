@@ -1,7 +1,18 @@
 import enum
+import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, Date, DateTime, Enum, ForeignKey, Integer, Text
+from sqlalchemy import (
+    UUID,
+    Boolean,
+    Column,
+    Date,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import DeclarativeBase, backref, relationship, sessionmaker
@@ -67,6 +78,7 @@ class User(Base):
     hashed_password = Column(Text)
     end_of_subscription = Column(Date, default=None)
     subscription_type = Column(Enum(SubscriptionType))
+    service_uuid = Column(UUID(as_uuid=True), default=uuid.uuid4)
     chats = relationship(Chat, backref=backref("user"))
 
     async def __admin_repr__(self, request: Request):

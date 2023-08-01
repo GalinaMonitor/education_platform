@@ -1,5 +1,6 @@
 from datetime import timedelta
 from typing import Annotated
+from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -12,6 +13,7 @@ from auth import (
     authenticate_user,
     create_access_token,
     get_current_active_user,
+    restore_password,
 )
 from db.config import get_session
 from db.services.user import UserService
@@ -58,3 +60,17 @@ async def create_user(user: AuthUser, session: AsyncSession = Depends(get_sessio
         raise AlreadyRegisteredException
     await init_user(user)
     return user
+
+
+@router.post("/users/prepare_restore_password")
+async def prepare_restore_password(user: AuthUser):
+    import auth
+
+    await auth.prepare_restore_password(user.email)
+
+
+@router.post("/users/restore_password/{email}/{user_uuid}")
+async def restore_password(email: str, user_uuid: UUID, password: AuthUser):
+    import auth
+
+    await auth.restore_password(email, user_uuid, password.password)

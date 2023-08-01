@@ -55,6 +55,40 @@ const useUserStore = create(
 
         set({ isLoading: false });
       },
+      prepareRestorePassword: async (email) => {
+        set({ isLoading: true });
+        try {
+          const registerResponse = await AuthService.prepare_restore_password(
+            email
+          );
+          if (registerResponse.status !== 200) {
+            error("Ошибка при восстановлении");
+          } else {
+            success("Ссылка на восстановление пароля отправлена вам на почту");
+          }
+        } catch (e) {
+          error("Ошибка при восстановлении");
+        }
+        set({ isLoading: false });
+      },
+      restorePassword: async (email, password, uuid) => {
+        set({ isLoading: true });
+        try {
+          const registerResponse = await AuthService.restore_password(
+            email,
+            password,
+            uuid
+          );
+          if (registerResponse.status !== 200) {
+            error("Ошибка при восстановлении");
+          } else {
+            success("Пароль обновлен");
+          }
+        } catch (e) {
+          error("Ошибка при восстановлении");
+        }
+        set({ isLoading: false });
+      },
       checkAuth: async () => {
         try {
           const userResponse = await AuthService.get_user();

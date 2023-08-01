@@ -13,7 +13,7 @@ from auth import (
     create_access_token,
     get_current_user,
 )
-from db.config import engine, get_session
+from db.config import engine
 from exceptions import UnauthorizedException
 
 

@@ -4,10 +4,14 @@ import Register from "../pages/Register";
 import Subscription from "../pages/Subscription";
 import CourseChatPage from "../pages/CourseChatPage";
 import Welcome from "../pages/Welcome";
+import PrepareRestorePassword from "../pages/PrepareRestorePassword";
+import RestorePassword from "../pages/RestorePassword";
 
 export const RouteNames = {
   LOGIN: "/login",
   REGISTER: "/register",
+  PREPARE_RESTORE_PASSWORD: "/prepare_restore_password",
+  RESTORE_PASSWORD: "/restore_password",
   MAIN: "/",
   WELCOME: "/welcome",
   COURSE_CHAT: "/chat",
@@ -17,6 +21,14 @@ export const RouteNames = {
 export const publicRoutes = [
   { path: RouteNames.LOGIN, component: Login },
   { path: RouteNames.REGISTER, component: Register },
+  {
+    path: RouteNames.PREPARE_RESTORE_PASSWORD,
+    component: PrepareRestorePassword,
+  },
+  {
+    path: `${RouteNames.RESTORE_PASSWORD}/:email/:uuid`,
+    component: RestorePassword,
+  },
 ];
 
 export const privateRoutes = [

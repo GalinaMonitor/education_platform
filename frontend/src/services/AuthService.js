@@ -9,6 +9,16 @@ export default class AuthService {
     return $api.post("/auth/users", { email, password });
   }
 
+  static async prepare_restore_password(email) {
+    return $api.post("/auth/users/prepare_restore_password", { email });
+  }
+
+  static async restore_password(email, password, uuid) {
+    return $api.post(`/auth/users/restore_password/${email}/${uuid}`, {
+      password,
+    });
+  }
+
   static async get_user() {
     return $api.get("/auth/users/me");
   }

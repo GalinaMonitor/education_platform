@@ -21,12 +21,12 @@ const UserInfoForm = () => {
 
   const submit = () => {
     patchUser({ fullname, company, job, passed_welcome_page: true });
-    setTimeout(navigate, 500, RouteNames.MAIN);
+    setTimeout(navigate, 1000, RouteNames.MAIN);
   };
 
   const rejection = () => {
     patchUser({ passed_welcome_page: true });
-    setTimeout(navigate, 500, RouteNames.MAIN);
+    setTimeout(navigate, 1000, RouteNames.MAIN);
   };
 
   return (
@@ -37,13 +37,17 @@ const UserInfoForm = () => {
             className={"big-button"}
             style={{ width: "100%" }}
             placeholder={"Как вас зовут?"}
+            value={fullname}
+            onChange={(e) => setFullname(e.target.value)}
           />
         </Form.Item>
         <Form.Item name="company">
           <Input
             className={"big-button"}
             style={{ width: "100%" }}
+            value={company}
             placeholder={"В какой компании вы работаете?"}
+            onChange={(e) => setCompany(e.target.value)}
           />
         </Form.Item>
         <Form.Item name="job">
@@ -51,6 +55,8 @@ const UserInfoForm = () => {
             className={"big-button"}
             style={{ width: "100%" }}
             placeholder={"Кем вы работаете?"}
+            value={job}
+            onChange={(e) => setJob(e.target.value)}
           />
         </Form.Item>
         <Form.Item className={"mb-2"}>

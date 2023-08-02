@@ -16,7 +16,7 @@ const PrepareRestorePasswordForm = () => {
     <div style={{ width: 460 }}>
       <Form onFinish={submit} layout="vertical">
         <Form.Item
-          label={<p className={"text-md font-semibold"}>ВАША ПОЧТА</p>}
+          label={<p className={"title-s font-semibold"}>ВАША ПОЧТА</p>}
           name="email"
           rules={[rules.required("Введите email")]}
         >

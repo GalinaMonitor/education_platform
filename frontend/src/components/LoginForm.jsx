@@ -18,7 +18,7 @@ const LoginForm = () => {
     <div style={{ width: 460 }}>
       <Form onFinish={submit} layout="vertical">
         <Form.Item
-          label={<p className={"text-md font-semibold"}>ВАША ПОЧТА</p>}
+          label={<p className={"title-s font-semibold"}>ВАША ПОЧТА</p>}
           name="email"
           rules={[rules.required("Введите email")]}
         >
@@ -30,7 +30,7 @@ const LoginForm = () => {
           />
         </Form.Item>
         <Form.Item
-          label={<p className={"text-md font-semibold"}>ПАРОЛЬ</p>}
+          label={<p className={"title-s font-semibold"}>ПАРОЛЬ</p>}
           name="password"
           rules={[rules.required("Введите пароль")]}
         >
@@ -42,7 +42,9 @@ const LoginForm = () => {
           />
         </Form.Item>
         <div className={"text-center"}>
-          <Link to={RouteNames.PREPARE_RESTORE_PASSWORD}>Забыл пароль</Link>
+          <Link className={"title-s"} to={RouteNames.PREPARE_RESTORE_PASSWORD}>
+            Забыл пароль
+          </Link>
         </div>
         <Form.Item className={"mb-2 mt-5"}>
           <Button

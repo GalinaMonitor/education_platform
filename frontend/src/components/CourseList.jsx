@@ -18,9 +18,11 @@ const CourseList = () => {
 
   return (
     <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"}>
-      {courses.map((course, index) => (
-        <CourseCard key={course.id} course={course} refresh={fetchCourses} />
-      ))}
+      <div className={"pt-5"}>
+        {courses.map((course, index) => (
+          <CourseCard key={course.id} course={course} refresh={fetchCourses} />
+        ))}
+      </div>
     </Card>
   );
 };

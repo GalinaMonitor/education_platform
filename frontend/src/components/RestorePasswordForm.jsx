@@ -16,7 +16,7 @@ const RestorePasswordForm = ({ email, uuid }) => {
     <div style={{ width: 460 }}>
       <Form onFinish={submit} layout="vertical">
         <Form.Item
-          label={<p className={"text-md font-semibold"}>ПАРОЛЬ</p>}
+          label={<p className={"title-s font-semibold"}>ПАРОЛЬ</p>}
           name="password"
           rules={[rules.required("Введите пароль")]}
         >

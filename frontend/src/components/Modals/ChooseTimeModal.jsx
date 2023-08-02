@@ -29,7 +29,7 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
-        <p className={"text-lg text-center mt-5 mb-10"}>
+        <p className={"title-l text-center mt-5 mb-10"}>
           ВО СКОЛЬКО ВАМ БУДЕТ УДОБНО ПОЛУЧАТЬ
           <br />
           ОБУЧАЮЩИЙ МАТЕРИАЛ?
@@ -41,7 +41,7 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
           layout="vertical"
         >
           <Form.Item
-            label={<p className={"font-semibold text-md"}>ВРЕМЯ</p>}
+            label={<p className={"title-l"}>ВРЕМЯ</p>}
             name="time"
             rules={[rules.required("Введите время")]}
           >
@@ -55,7 +55,7 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
               htmlType="submit"
               loading={isLoading}
             >
-              <p className={"font-semibold text-md"}>СТАРТ</p>
+              <p className={"title-l"}>СТАРТ</p>
             </Button>
           </Form.Item>
         </Form>

@@ -119,7 +119,7 @@ const Settings = () => {
         <div className={"mb-5"}>
           <Typography.Text
             editable={{ onChange: changeFullname, icon: <EditableStringSvg /> }}
-            className={"text-lg"}
+            className={"title-l"}
           >
             {fullname}
           </Typography.Text>
@@ -135,7 +135,7 @@ const Settings = () => {
         <div className={"mb-5"}>
           <Typography.Text
             editable={{ onChange: changeCompany, icon: <EditableStringSvg /> }}
-            className={"text-lg"}
+            className={"title-l"}
           >
             {company}
           </Typography.Text>
@@ -151,7 +151,7 @@ const Settings = () => {
         <div className={"mb-5"}>
           <Typography.Text
             editable={{ onChange: changeJob, icon: <EditableStringSvg /> }}
-            className={"text-lg"}
+            className={"title-l"}
           >
             {job}
           </Typography.Text>

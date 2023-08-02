@@ -30,7 +30,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
-        <p className={"text-lg my-5"}>КАКОЙ УРОВЕНЬ ВАС ИНТЕРЕСУЕТ?</p>
+        <p className={"title-l my-5"}>КАКОЙ УРОВЕНЬ ВАС ИНТЕРЕСУЕТ?</p>
         <Link to={"/"}>
           <p className={"mb-10"}>ИЗУЧИТЬ СТРУКТУРУ ОБУЧЕНИЯ</p>
         </Link>
@@ -52,7 +52,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
                     }}
                   >
                     <Elem color={course.color} />
-                    <p className={"mt-5 font-semibold text-lg"}>
+                    <p className={"mt-5 font-semibold title-l"}>
                       {previewImages[index].level}
                     </p>
                   </div>

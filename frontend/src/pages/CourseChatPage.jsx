@@ -9,7 +9,7 @@ import CourseChat from "../components/CourseChat";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutThreeBlocks from "../components/UI/LayoutThreeBlocks";
-import LizbetCard from "../components/LizbetCard";
+import TolyaCard from "../components/TolyaCard";
 import CourseChapterService from "../services/CourseChapterService";
 import UsersNumber from "../components/UsersNumber";
 import ShareLink from "../components/ShareLink";
@@ -39,7 +39,7 @@ const CourseChatPage = () => {
         ) : (
           <>
             <CourseList />
-            <LizbetCard classname={"mt-5"} />
+            <TolyaCard classname={"mt-5"} />
           </>
         )}
         <ThemeList

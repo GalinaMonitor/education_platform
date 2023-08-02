@@ -15,7 +15,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
-        <p className={"text-lg my-5 text-center"}>
+        <p className={"title-l my-5 text-center"}>
           НА КАКОЙ ПЕРИОД ВЫ ХОТИТЕ
           <br />
           ПРИОБРЕСТИ ДОСТУП К ПЛАТФОРМЕ?
@@ -30,16 +30,20 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             className={"text-center p-10 content m-5"}
           >
             <p className={"mb-2"}>1 МЕС.</p>
-            <p className={"text-3xl m-0 mb-5"}>5 000 р.</p>
-            <Button type={"primary"}>Оплатить подписку</Button>
+            <p className={"title-l m-0 mb-5"}>5 000 р.</p>
+            <Button type={"primary"} className={"big-button"}>
+              Оплатить подписку
+            </Button>
           </Card>
           <Card
             style={{ height: "fit-content" }}
             className={"text-center p-10 content m-5"}
           >
             <p className={"mb-2"}>3 МЕС.</p>
-            <p className={"text-3xl m-0 mb-5"}>12 000 р.</p>
-            <Button type={"primary"}>Оплатить подписку</Button>
+            <p className={"title-l m-0 mb-5"}>12 000 р.</p>
+            <Button type={"primary"} className={"big-button"}>
+              Оплатить подписку
+            </Button>
           </Card>
         </Row>
         <Link to={"https://ku-pomogu.ru/ooo"}>

@@ -17,7 +17,7 @@ const Login = () => {
           "bottom-5 absolute m-auto right-0 left-0 w-2/6 h-5 text-center"
         }
       >
-        <Link to={"mailto:support@ku-pomogu.ru&subject=Поддержка"}>
+        <Link to={"mailto:support@ku-pomogu.ru"}>
           СВЯЗАТЬСЯ С ТЕХНИЧЕСКОЙ ПОДДЕРЖКОЙ
         </Link>
       </div>

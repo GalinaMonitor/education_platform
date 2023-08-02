@@ -48,7 +48,7 @@ class UserService(BaseService):
         return pyd_models.Chat.from_orm(result)
 
     async def get_total_users(self) -> int:
-        statement = select(func.max(self.model.id).label("receive_time"))
+        statement = select(func.count(self.model.id))
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
         return result

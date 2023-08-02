@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "antd";
 import { formatTime } from "../utils/utils";
-import VectorSVG from "./UI/VectorSVG";
 import TextBlock from "./UI/TextBlock";
 import Divider from "./UI/Divider";
 import ChooseTimeModal from "./Modals/ChooseTimeModal";
@@ -79,7 +78,6 @@ const CourseCard = ({ course, refresh }) => {
             }}
           >
             <div className={"flex flex-row items-center"}>
-              <VectorSVG color={course.color} />
               <TextBlock
                 className={"ml-1.5"}
                 key={course.id}
@@ -87,7 +85,7 @@ const CourseCard = ({ course, refresh }) => {
               />
             </div>
 
-            <p className={"text-md"} style={{ color: course.color }}>
+            <p className={"title-md"} style={{ color: course.color }}>
               {courseChapter?.messages_amount
                 ? "+" + courseChapter.messages_amount
                 : ""}
@@ -102,7 +100,6 @@ const CourseCard = ({ course, refresh }) => {
               showCourseModal();
             }}
           >
-            <VectorSVG color={course.color} />
             <TextBlock
               className={"ml-1.5"}
               key={course.id}

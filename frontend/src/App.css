@@ -161,24 +161,43 @@
     margin-bottom: 0px;
 }
 
-.text-xs {
-    font-size: 10px;
+.title-s {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 150% */
+    text-transform: uppercase;
 }
 
-.text-sm {
-    font-size: 14px;
+.title-md {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px; /* 137.5% */
+    text-transform: uppercase;
+}
+
+.title-l {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 26px; /* 130% */
+    text-transform: uppercase;
 }
 
 .text-md {
-    font-size: 18px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px; /* 150% */
 }
 
-.text-lg {
-    font-size: 24px;
-}
-
-.text-xl {
-    font-size: 48px;
+.description-md {
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px; /* 160% */
+    color: #C4C7CF;
 }
 
 .ant-checkbox .ant-checkbox-inner {
@@ -215,15 +234,30 @@ input.ant-checkbox-input {
 }
 
 .big-button {
-    height: 60px
+    height: 60px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 26px; /* 130% */
+    text-transform: uppercase;
 }
 
 .medium-button {
-    height: 40px
+    height: 40px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 18px; /* 150% */
+    text-transform: uppercase;
 }
 
 .small-button {
     height: 24px;
+    font-size: 8px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 14px; /* 175% */
+    text-transform: uppercase;
 }
 
 .ant-modal {

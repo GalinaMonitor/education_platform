@@ -52,8 +52,8 @@ const Navbar = ({ className }) => {
           />
         )}
         <Row justify={"space-around"} align={"middle"}>
-          <Link to={"mailto:support@ku-pomogu.ru&subject=Поддержка"}>
-            <Button className={"medium-button mr-5"}>Поддержка</Button>
+          <Link to={"mailto:support@ku-pomogu.ru"}>
+            <Button className={"medium-button mr-5"}>ТЕХ.ПОДДЕРЖКА</Button>
           </Link>
           <Button
             className={"medium-button mr-5"}
@@ -62,9 +62,10 @@ const Navbar = ({ className }) => {
               setIsSubscriptionModalOpen(true);
             }}
           >
-            Подписка
+            ПОДПИСКА
           </Button>
           <Button
+            className={"medium-button"}
             type={"primary"}
             icon={<LogoutOutlined />}
             onClick={() => {

@@ -9,10 +9,10 @@ const Welcome = () => {
         <Image width={185} src={"/tolya-big.svg"} preview={false} />
       </Row>
       <Row justify="center">
-        <p className={"text-xl my-10"}>КУ!</p>
+        <p className={"title-l my-5"}>КУ!</p>
       </Row>
       <Row justify="center">
-        <p className={"text-md text-center"}>
+        <p className={"title-l text-center"}>
           МЕНЯ ЗОВУТ АНАТОЛИЙ, Я КУРАТОР
           <br />
           ПЛАТФОРМЫ КУ-ПОМОГУ

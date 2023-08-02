@@ -18,7 +18,7 @@ const RegisterForm = ({ handleFormData, onSubmit = null }) => {
     <div style={{ width: 460 }}>
       <Form onFinish={submit} layout="vertical">
         <Form.Item
-          label={<p className={"text-md font-semibold"}>ВВЕДИТЕ ПОЧТУ</p>}
+          label={<p className={"title-s font-semibold"}>ВВЕДИТЕ ПОЧТУ</p>}
           name="email"
           rules={[rules.required("Введите email")]}
         >
@@ -31,7 +31,7 @@ const RegisterForm = ({ handleFormData, onSubmit = null }) => {
         </Form.Item>
         <Form.Item
           name="password"
-          label={<p className={"text-md font-semibold"}>ПРИДУМАЙТЕ ПАРОЛЬ</p>}
+          label={<p className={"title-s font-semibold"}>ПРИДУМАЙТЕ ПАРОЛЬ</p>}
           rules={[
             {
               required: true,
@@ -44,7 +44,7 @@ const RegisterForm = ({ handleFormData, onSubmit = null }) => {
         </Form.Item>
         <Form.Item
           name="confirm"
-          label={<p className={"text-md font-semibold"}>ПОВТОРИТЕ ПАРОЛЬ</p>}
+          label={<p className={"title-s font-semibold"}>ПОВТОРИТЕ ПАРОЛЬ</p>}
           dependencies={["password"]}
           rules={[
             {

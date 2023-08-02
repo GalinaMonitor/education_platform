@@ -4,7 +4,7 @@ const Card = ({ children, className, text, style }) => {
   return (
     <div className={`${className} card`} style={style}>
       {text ? (
-        <p className={"text-sm mb-3 whitespace-nowrap"}>{text}</p>
+        <p className={"title-s mb-3 whitespace-nowrap"}>{text}</p>
       ) : (
         <></>
       )}

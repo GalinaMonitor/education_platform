@@ -36,7 +36,7 @@ const App = () => {
             colorInfo: "#FF7D1F",
             fontFamily: "Unbounded",
             borderRadius: 10,
-            fontSize: 14,
+            fontSize: 12,
             controlHeight: 40,
             colorLink: "#FF7D1F",
             colorLinkActive: "#FF7D1F",

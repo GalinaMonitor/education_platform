@@ -5,7 +5,7 @@ import TextBlock from "./UI/TextBlock";
 import { Link } from "react-router-dom";
 import { RouteNames } from "../router";
 
-const LizbetCard = ({ classname }) => {
+const TolyaCard = ({ classname }) => {
   return (
     <Card className={classname}>
       <div className={"flex flex-row h-full"}>
@@ -22,4 +22,4 @@ const LizbetCard = ({ classname }) => {
   );
 };
 
-export default LizbetCard;
+export default TolyaCard;

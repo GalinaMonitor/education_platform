@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     aws_host: str
     mail_username: str
     mail_password: str
+    mail_server: str
 
 
 settings = Settings()

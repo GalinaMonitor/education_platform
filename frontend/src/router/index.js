@@ -1,7 +1,6 @@
 import Login from "../pages/Login";
 import Main from "../pages/Main";
 import Register from "../pages/Register";
-import Subscription from "../pages/Subscription";
 import CourseChatPage from "../pages/CourseChatPage";
 import Welcome from "../pages/Welcome";
 import PrepareRestorePassword from "../pages/PrepareRestorePassword";
@@ -15,7 +14,6 @@ export const RouteNames = {
   MAIN: "/",
   WELCOME: "/welcome",
   COURSE_CHAT: "/chat",
-  SUBSCRIBE: "/subscribe",
 };
 
 export const publicRoutes = [
@@ -35,5 +33,4 @@ export const privateRoutes = [
   { path: RouteNames.MAIN, component: Main },
   { path: RouteNames.WELCOME, component: Welcome },
   { path: `${RouteNames.COURSE_CHAT}/:id`, component: CourseChatPage },
-  { path: RouteNames.SUBSCRIBE, component: Subscription },
 ];

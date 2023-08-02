@@ -15,7 +15,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
         className={"h-full flex flex-col flex-wrap items-center justify-center"}
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
-        <p className={"text-lg my-5"}>
+        <p className={"text-lg my-5 text-center"}>
           НА КАКОЙ ПЕРИОД ВЫ ХОТИТЕ
           <br />
           ПРИОБРЕСТИ ДОСТУП К ПЛАТФОРМЕ?
@@ -23,7 +23,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
         <Row
           justify={"space-around"}
           align={"middle"}
-          className={"mb-5 w-screen items justify-center"}
+          className={"mb-5 items justify-center"}
         >
           <Card
             style={{ height: "fit-content" }}
@@ -35,7 +35,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
           </Card>
           <Card
             style={{ height: "fit-content" }}
-            className={"text-center p-10 content"}
+            className={"text-center p-10 content m-5"}
           >
             <p className={"mb-2"}>3 МЕС.</p>
             <p className={"text-3xl m-0 mb-5"}>12 000 р.</p>

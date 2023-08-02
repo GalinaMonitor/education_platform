@@ -110,7 +110,7 @@ const CourseCard = ({ course, refresh }) => {
             />
           </div>
         )}
-        <Divider />
+        <Divider color={course.color} />
       </div>
       <ChooseTimeModal
         isModalOpen={isTimeModalOpen}

@@ -9,7 +9,7 @@ const Welcome = () => {
         <Image width={185} src={"/tolya-big.svg"} preview={false} />
       </Row>
       <Row justify="center">
-        <p className={"text-xl my-10"}>Здравствуйте!</p>
+        <p className={"text-xl my-10"}>КУ!</p>
       </Row>
       <Row justify="center">
         <p className={"text-md text-center"}>

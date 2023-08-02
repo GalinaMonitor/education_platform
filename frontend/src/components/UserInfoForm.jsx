@@ -8,7 +8,6 @@ import { RouteNames } from "../router";
 
 const UserInfoForm = () => {
   const { isLoading, checkAuth } = useUserStore();
-  const { user } = useUserStore();
   const navigate = useNavigate();
   const [fullname, setFullname] = useState("");
   const [company, setCompany] = useState("");
@@ -20,13 +19,12 @@ const UserInfoForm = () => {
   });
 
   const submit = () => {
-    patchUser({ fullname, company, job, passed_welcome_page: true });
-    setTimeout(navigate, 1000, RouteNames.MAIN);
+    patchUser({ fullname, company, job });
+    navigate(RouteNames.MAIN);
   };
 
   const rejection = () => {
-    patchUser({ passed_welcome_page: true });
-    setTimeout(navigate, 1000, RouteNames.MAIN);
+    navigate(RouteNames.MAIN);
   };
 
   return (

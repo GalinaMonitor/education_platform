@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useFetching } from "../hooks/useFetching";
-import { Image, Row, Skeleton } from "antd";
+import { Avatar, Row, Skeleton } from "antd";
 import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
 import Message from "./Message";
@@ -67,6 +67,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   const [fetchCourseChapter, isLoading, error] = useFetching(async () => {
     const response = await CourseChapterService.retrieve(courseChapterId);
     setCourseChapter(response.data);
+    console.log(response.data);
   });
 
   const [fetchMessagesPrevious, isLoadingPrevious, errorPrevious] = useFetching(
@@ -134,20 +135,19 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
         </InfiniteScroll>
       </div>
       <Row className={"absolute bottom-5"}>
-        <Image
-          width={"70px"}
+        <Avatar
           src={
-            courseChapter?.user?.avatar
-              ? courseChapter?.user?.avatar
+            courseChapter?.mentor?.avatar
+              ? courseChapter?.mentor?.avatar
               : "/tolya.svg"
           }
-          preview={false}
+          size={70}
         />
         <TextBlock
           className={"ml-5"}
           bigText={
-            courseChapter?.user?.fullname
-              ? courseChapter?.user?.fullname
+            courseChapter?.mentor?.fullname
+              ? courseChapter?.mentor?.fullname
               : "Имя куратора"
           }
           smallText={"Куратор"}

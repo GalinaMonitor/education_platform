@@ -40,7 +40,7 @@ class CourseChapterService(BaseService):
         if not result:
             raise NotFoundException()
         result = pyd_models.CourseChapterRead(
-            **(self.pydantic_model.from_orm(result[0][0]).dict()),
+            **(pyd_models.CourseChapterMentor.from_orm(result[0][0]).dict()),
             messages_amount=result[0][1],
         )
         return result

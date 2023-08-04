@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFetching } from "../hooks/useFetching";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { Image, List, Row, Skeleton } from "antd";
+import { Avatar, List, Row, Skeleton } from "antd";
 import Divider from "./UI/Divider";
 import UserService from "../services/UserService";
 import Message from "./Message";
@@ -92,7 +92,7 @@ const BaseChat = () => {
         </InfiniteScroll>
       </div>
       <Row className={"absolute bottom-5"}>
-        <Image width={"70px"} src={"/tolya.svg"} preview={false} />
+        <Avatar size={70} src={"/tolya.svg"} />
         <TextBlock
           className={"ml-5"}
           bigText={"Анатолий"}

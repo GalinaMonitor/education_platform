@@ -41,12 +41,21 @@ const BaseChat = () => {
     >
       <div
         id="scrollableDiv"
-        className={`w-4/5 pt-5 overflow-auto flex flex-col-reverse h-full`}
+        className={`w-full pt-5 overflow-auto flex flex-col-reverse`}
         style={{
           overflowAnchor: "none",
+          height: "80%",
         }}
       >
         <InfiniteScroll
+          loadingComponent={
+            <Skeleton
+              paragraph={{
+                rows: 1,
+              }}
+              active
+            />
+          }
           dataLength={messages.length}
           next={() => {
             setPage(page + 1);
@@ -82,17 +91,14 @@ const BaseChat = () => {
           />
         </InfiniteScroll>
       </div>
-      <div className={"absolute bottom-5 right-10 text-right"}>
-        <Row>
-          <TextBlock bigText={"Анатолий"} smallText={"Куратор"} />
-          <Image
-            className={"ml-5"}
-            width={"100px"}
-            src={"/tolya.svg"}
-            preview={false}
-          />
-        </Row>
-      </div>
+      <Row className={"absolute bottom-5"}>
+        <Image width={"70px"} src={"/tolya.svg"} preview={false} />
+        <TextBlock
+          className={"ml-5"}
+          bigText={"Анатолий"}
+          smallText={"Куратор"}
+        />
+      </Row>
     </Card>
   );
 };

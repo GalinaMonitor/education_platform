@@ -234,12 +234,11 @@ input.ant-checkbox-input {
 }
 
 .big-button {
-    height: 60px;
+    height: 70px;
     font-size: 16px;
     font-style: normal;
     font-weight: 700;
     line-height: 26px; /* 130% */
-    text-transform: uppercase;
 }
 
 .medium-button {
@@ -248,7 +247,6 @@ input.ant-checkbox-input {
     font-style: normal;
     font-weight: 700;
     line-height: 18px; /* 150% */
-    text-transform: uppercase;
 }
 
 .small-button {
@@ -257,7 +255,6 @@ input.ant-checkbox-input {
     font-style: normal;
     font-weight: 700;
     line-height: 14px; /* 175% */
-    text-transform: uppercase;
 }
 
 .ant-modal {
@@ -278,4 +275,8 @@ input.ant-checkbox-input {
 
 .ant-modal-root .ant-modal-wrap {
     overflow: unset;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }

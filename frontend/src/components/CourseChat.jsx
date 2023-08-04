@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useFetching } from "../hooks/useFetching";
-import { Skeleton } from "antd";
+import { Image, Row, Skeleton } from "antd";
 import CourseChapterService from "../services/CourseChapterService";
 import UserService from "../services/UserService";
 import Message from "./Message";
 import InfiniteScroll from "./UI/InfiniteScroll";
 import Card from "./UI/Card";
+import TextBlock from "./UI/TextBlock";
 
 const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   const [messages, setMessages] = useState([]);
@@ -16,6 +17,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   const [hasMorePrevious, setHasMorePrevious] = useState(true);
   const [page, setPage] = useState(1);
   const [reverseColumn, setReverseColumn] = useState(false);
+  const [courseChapter, setCourseChapter] = useState({});
 
   const [fetchThemeMessages, isLoadingTheme, errorTheme] = useFetching(
     async () => {
@@ -40,6 +42,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
 
   useEffect(() => {
     fetchThemeMessages();
+    fetchCourseChapter();
   }, [themeId, courseChapterId]);
 
   const [fetchMessagesNext, isLoadingNext, errorNext] = useFetching(
@@ -60,6 +63,11 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
       }
     }
   );
+
+  const [fetchCourseChapter, isLoading, error] = useFetching(async () => {
+    const response = await CourseChapterService.retrieve(courseChapterId);
+    setCourseChapter(response.data);
+  });
 
   const [fetchMessagesPrevious, isLoadingPrevious, errorPrevious] = useFetching(
     async () => {
@@ -85,8 +93,19 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
     }
   );
   return (
-    <Card text={`ЧАТ С НАСТАВНИКОМ ${courseName}`} style={{ height: "90%" }}>
-      <div className={`h-full`}>
+    <Card
+      text={`ЧАТ С НАСТАВНИКОМ ${courseName}`}
+      style={{ height: "90%" }}
+      className={"relative"}
+    >
+      <div
+        id="scrollableDiv"
+        className={`w-full pt-5 overflow-auto flex flex-col-reverse`}
+        style={{
+          overflowAnchor: "none",
+          height: "80%",
+        }}
+      >
         <InfiniteScroll
           loadingComponent={
             <Skeleton
@@ -114,6 +133,26 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
           ))}
         </InfiniteScroll>
       </div>
+      <Row className={"absolute bottom-5"}>
+        <Image
+          width={"70px"}
+          src={
+            courseChapter?.user?.avatar
+              ? courseChapter?.user?.avatar
+              : "/tolya.svg"
+          }
+          preview={false}
+        />
+        <TextBlock
+          className={"ml-5"}
+          bigText={
+            courseChapter?.user?.fullname
+              ? courseChapter?.user?.fullname
+              : "Имя куратора"
+          }
+          smallText={"Куратор"}
+        />
+      </Row>
     </Card>
   );
 };

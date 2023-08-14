@@ -40,7 +40,7 @@ class CourseChapterService(BaseService):
         if not result:
             raise NotFoundException()
         result = pyd_models.CourseChapterRead(
-            **(pyd_models.CourseChapterMentor.from_orm(result[0][0]).dict()),
+            **(pyd_models.CourseChapterMentor.model_validate(result[0][0]).model_dump()),
             messages_amount=result[0][1],
         )
         return result
@@ -74,7 +74,7 @@ class CourseChapterService(BaseService):
         parsed_results = []
         for result in results:
             parsed_result = pyd_models.ThemeRead(
-                **(pyd_models.Theme.from_orm(result[0]).dict()),
+                **(pyd_models.Theme.model_validate(result[0]).model_dump()),
                 video_amount=result[1],
                 viewed_video_amount=result[2],
             )

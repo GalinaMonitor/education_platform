@@ -18,7 +18,7 @@ class BaseService:
             statement = statement.where(getattr(self.model, key) == value)
         results = await self.session.execute(statement)
         results = results.scalars().all()
-        return [self.pydantic_model.from_orm(model) for model in results]
+        return [self.pydantic_model.model_validate(model) for model in results]
 
     async def retrieve(self, id: int):
         statement = select(self.model).where(self.model.id == id)
@@ -26,13 +26,13 @@ class BaseService:
         result = results.scalar_one_or_none()
         if not result:
             raise NotFoundException()
-        return self.pydantic_model.from_orm(result)
+        return self.pydantic_model.model_validate(result)
 
     async def create(self, data):
-        new_model = self.model(**data.dict())
+        new_model = self.model(**data.model_dump())
         self.session.add(new_model)
         await self.session.commit()
-        return self.pydantic_model.from_orm(new_model)
+        return self.pydantic_model.model_validate(new_model)
 
     async def update(self, id: int, data):
         statement = select(self.model).where(self.model.id == id)
@@ -45,7 +45,7 @@ class BaseService:
         self.session.add(model)
         await self.session.commit()
         await self.session.refresh(model)
-        return self.pydantic_model.from_orm(model)
+        return self.pydantic_model.model_validate(model)
 
     async def delete(self, id: int) -> None:
         statement = select(self.model).where(self.model.id == id)

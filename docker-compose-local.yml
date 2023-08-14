@@ -55,7 +55,7 @@ services:
     container_name: celery_beat
     depends_on:
       - backend
-    entrypoint: [ "celery", "-A", "async_tasks.celery_config", "beat", "--loglevel=INFO" ]
+    entrypoint: [ "celery", "-A", "src.async_tasks.celery_config", "beat", "--loglevel=INFO" ]
 
   celery_worker:
     networks:
@@ -68,7 +68,7 @@ services:
     container_name: celery_worker
     depends_on:
       - backend
-    entrypoint: [ "celery", "-A", "async_tasks.celery_config", "worker", "--loglevel=INFO" ]
+    entrypoint: [ "celery", "-A", "src.async_tasks.celery_config", "worker", "--loglevel=INFO" ]
 
   postgres:
     networks:

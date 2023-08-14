@@ -19,4 +19,4 @@ class VideoService(BaseService):
         result = results.scalar_one_or_none()
         if not result:
             raise NotFoundException()
-        return self.pydantic_model.from_orm(result)
+        return self.pydantic_model.model_validate(result)

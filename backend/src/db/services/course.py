@@ -1,7 +1,7 @@
 from datetime import time
 from typing import List
 
-from pydantic import parse_obj_as
+from pydantic.tools import parse_obj_as
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -48,7 +48,7 @@ class CourseService(BaseService):
         parsed_results = []
         for result in results:
             parsed_result = pyd_models.CourseRead(
-                **(pyd_models.CourseCourseChapters.from_orm(result[0]).dict()),
+                **(pyd_models.CourseCourseChapters.model_validate(result[0]).model_dump()),
                 course_chapter_id=result[1],
                 receive_time=result[2],
                 is_active=result[3],

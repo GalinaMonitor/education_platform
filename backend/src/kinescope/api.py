@@ -1,7 +1,8 @@
 from pprint import pprint
 from typing import List, Optional
 
-from pydantic import BaseModel, parse_obj_as
+from pydantic.main import BaseModel
+from pydantic.tools import parse_obj_as
 from requests import Session
 
 from src.settings import settings
@@ -26,7 +27,7 @@ class Video(BaseModel):
     assets: List[VideoAsset]
     additional_materials: List[FileAsset]
     folder_name: str
-    folder_id: Optional[str]
+    folder_id: Optional[str] = None
 
 
 # TODO Обработать запрос с пагинацией. Сейчас стоит per_page=3000

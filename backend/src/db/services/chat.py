@@ -1,6 +1,6 @@
 from typing import List
 
-from pydantic import parse_obj_as
+from pydantic.tools import parse_obj_as
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 

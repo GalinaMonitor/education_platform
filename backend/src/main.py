@@ -1,3 +1,4 @@
+import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_mail import ConnectionConfig
@@ -11,6 +12,11 @@ from src.api.course_chapter import router as course_chapter_router
 from src.api.user import router as user_router
 from src.middlewares import LoggerMiddleware
 from src.settings import settings
+
+sentry_sdk.init(
+    dsn=settings.sentry_dsn,
+    traces_sample_rate=1.0,
+)
 
 # app = FastAPI(openapi_url=None)
 app = FastAPI()

@@ -14,6 +14,7 @@ class Settings(BaseSettings):
     mail_username: str
     mail_password: str
     mail_server: str
+    sentry_dsn: str
 
 
 settings = Settings()

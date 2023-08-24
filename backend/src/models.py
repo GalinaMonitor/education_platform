@@ -117,7 +117,7 @@ class UpdateUser(BaseModel):
 
 class Message(BaseModel):
     id: Optional[int] = None
-    datetime: Optional[datetime]
+    datetime: Optional[datetime] = None
     content: Optional[str] = None
     content_type: Optional[DataType] = None
     chat_id: Optional[int] = None

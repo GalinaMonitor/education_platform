@@ -2,6 +2,7 @@ from datetime import date, datetime, time
 from typing import List, Optional, Union
 from uuid import UUID
 
+from pydantic import NaiveDatetime
 from pydantic.config import ConfigDict
 from pydantic.main import BaseModel as PydanticBaseModel
 
@@ -117,7 +118,7 @@ class UpdateUser(BaseModel):
 
 class Message(BaseModel):
     id: Optional[int] = None
-    datetime: Optional[datetime] = None
+    datetime: Optional[NaiveDatetime] = None
     content: Optional[str] = None
     content_type: Optional[DataType] = None
     chat_id: Optional[int] = None

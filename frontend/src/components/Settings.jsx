@@ -162,7 +162,7 @@ const Settings = () => {
         <Image
           width={20}
           preview={false}
-          src={"close.svg"}
+          src={"/close.svg"}
           onClick={openCloseSettings}
         />
       </div>

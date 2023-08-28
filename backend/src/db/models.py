@@ -104,6 +104,7 @@ class CourseChapter(Base):
 class DataType(str, enum.Enum):
     TEXT = "TEXT"
     VIDEO = "VIDEO"
+    BUTTON = "BUTTON"
 
 
 class Theme(Base):

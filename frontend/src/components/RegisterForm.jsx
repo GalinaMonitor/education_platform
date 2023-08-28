@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import useUserStore from "../store/useUserStore";
 import { Button, Checkbox, Form, Input } from "antd";
 import { rules } from "../utils/rules";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteNames } from "../router";
 
 const RegisterForm = ({ handleFormData, onSubmit = null }) => {
   const { isLoading } = useUserStore();
   const { register } = useUserStore();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const submit = () => {
     register(email, password);
+    navigate(RouteNames.LOGIN);
   };
 
   return (

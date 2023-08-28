@@ -25,7 +25,7 @@ class UserService(BaseService):
             email=data.email,
             hashed_password=pwd_context.hash(password),
             subscription_type=SubscriptionType.DEMO,
-            end_of_subscription=date + timedelta(days=60),
+            end_of_subscription=date + timedelta(days=28),
         )
         self.session.add(new_model)
         await self.session.commit()

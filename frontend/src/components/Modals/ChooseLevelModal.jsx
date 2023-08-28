@@ -6,6 +6,7 @@ import MediumLevelSvg from "../UI/MediumLevelSVG";
 import ExpertLevelSvg from "../UI/ExpertLevelSVG";
 import { useFetching } from "../../hooks/useFetching";
 import CourseChapterService from "../../services/CourseChapterService";
+import { success } from "../../messages";
 
 const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
   const previewImages = [
@@ -16,6 +17,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
 
   const [updateActiveCourse, isLoading, error] = useFetching(async (id) => {
     await CourseChapterService.activate({ id });
+    success("Уровень успешно изменен");
   });
 
   return (
@@ -48,7 +50,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
                     key={item.id}
                     onClick={() => {
                       updateActiveCourse(item.id);
-                      handleCancel();
+                      handleCancel(item.id);
                     }}
                   >
                     <Elem color={course.color} />

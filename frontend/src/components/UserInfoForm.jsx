@@ -20,7 +20,7 @@ const UserInfoForm = () => {
 
   const submit = () => {
     patchUser({ fullname, company, job });
-    navigate(RouteNames.MAIN);
+    setTimeout(navigate, 1000, RouteNames.MAIN);
   };
 
   const rejection = () => {

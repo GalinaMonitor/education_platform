@@ -48,7 +48,10 @@ const Navbar = ({ className }) => {
         ) : (
           <TextBlock
             smallText={"ДАТА ОКОНЧАНИЯ ПОДПИСКИ"}
-            bigText={formatDate(user.end_of_subscription)}
+            bigText={`${formatDate(user.end_of_subscription)} (${Math.floor(
+              (Date.parse(user.end_of_subscription) - Date.now()) /
+                (1000 * 3600 * 24)
+            )} дн.)`}
           />
         )}
         <Row justify={"space-around"} align={"middle"}>

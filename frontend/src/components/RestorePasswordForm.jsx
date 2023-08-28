@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import { Button, Form, Input } from "antd";
 import { rules } from "../utils/rules";
 import useUserStore from "../store/useUserStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { RouteNames } from "../router";
 
 const RestorePasswordForm = ({ email, uuid }) => {
   const { isLoading, error, restorePassword } = useUserStore();
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const submit = () => {
     restorePassword(email, password, uuid);
+    navigate(RouteNames.LOGIN);
   };
 
   return (

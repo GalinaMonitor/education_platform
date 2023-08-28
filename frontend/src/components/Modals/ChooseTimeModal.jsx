@@ -5,10 +5,12 @@ import { rules } from "../../utils/rules";
 import { useFetching } from "../../hooks/useFetching";
 import CourseService from "../../services/CourseService";
 import { Link } from "react-router-dom";
+import { success } from "../../messages";
 
 const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
   const [updateReceiveTime, isLoading, error] = useFetching(async (time) => {
     await CourseService.set_receive_time(modalCourseId, time);
+    success("Время успешно изменено");
   });
   const formRef = React.useRef(null);
   const submit = async (data) => {
@@ -41,7 +43,7 @@ const ChooseTimeModal = ({ isModalOpen, handleCancel, modalCourseId }) => {
           layout="vertical"
         >
           <Form.Item
-            label={<p className={"title-l"}>ВРЕМЯ</p>}
+            label={<p className={"title-l"}>ВРЕМЯ (Мск)</p>}
             name="time"
             rules={[rules.required("Введите время")]}
           >

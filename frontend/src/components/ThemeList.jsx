@@ -21,7 +21,7 @@ const ThemeList = ({ courseChapterId, setThemeId, color }) => {
     <Card text={"БЛОКИ ОБУЧЕНИЯ"}>
       {themes.map((theme, index) => (
         <div
-          className={"mb-5"}
+          className={"mb-5 cursor-pointer"}
           key={theme.id}
           onClick={() => setThemeId(theme.id)}
         >

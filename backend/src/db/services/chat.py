@@ -44,6 +44,7 @@ class ChatService(BaseService):
 
     async def messages(self, id: int, **kwargs) -> List[pyd_models.Message]:
         statement = select(db_models.Message).where(db_models.Message.chat_id == id)
+        reverse = False
         for key, value in kwargs.items():
             if key == "before" and value is not None:
                 statement = statement.where(db_models.Message.id < value)
@@ -53,9 +54,18 @@ class ChatService(BaseService):
                 statement = statement.limit(value)
             elif key == "theme" and value is not None:
                 statement = statement.where(db_models.Message.theme_id == value)
-        statement = statement.order_by(db_models.Message.datetime.desc())
+        if "limit" in kwargs and kwargs["limit"] and "after" in kwargs and kwargs["after"]:
+            order_by = db_models.Message.datetime
+            reverse = True
+        else:
+            order_by = db_models.Message.datetime.desc()
+        statement = statement.order_by(order_by)
         results = await self.session.execute(statement)
         results = results.scalars().all()
+
+        if reverse:
+            results = reversed(results)
+
         return [parse_obj_as(pyd_models.Message, message) for message in results]
 
     async def activate(self, id: int):

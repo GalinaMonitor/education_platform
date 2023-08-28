@@ -29,6 +29,7 @@ celery_app = Celery(
     acks_late=True,
     prefetch_multiplier=1,
     create_missing_queues=True,
+    backend=settings.redis_url,
 )
 
 

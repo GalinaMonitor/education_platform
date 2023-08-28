@@ -1,5 +1,5 @@
 THIS_FILE := $(lastword $(MAKEFILE_LIST))
-.PHONY: help up local_up down logs db style migrate revision
+.PHONY: help up local_up down logs db style migrate revision task
 help:
 	make -pRrq  -f $(THIS_FILE) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -v -e '^[^[:alnum:]]' -e '^$@$$'
 up:
@@ -16,6 +16,8 @@ db:
 style:
 	black backend && isort backend --profile black --filter-files
 revision:
-	docker exec -it backend alembic revision --autogenerate -m $(c)
+	docker compose -f docker-compose.yml exec -it backend alembic revision --autogenerate -m $(c)
 migrate:
-	docker exec -it backend alembic upgrade head
+	docker compose -f docker-compose.yml exec -it backend alembic upgrade head
+task:
+	docker compose -f docker-compose.yml exec -it celery_beat celery -A src.async_tasks.celery_config result $(shell docker exec -it celery_beat celery -b redis://redis:6379/0 call src.async_tasks.celery_config.$(c));

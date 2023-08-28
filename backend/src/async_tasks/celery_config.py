@@ -36,28 +36,41 @@ async def sync_kinescope():
     async with async_session() as session:
         course_chapters = await CourseChapterService(session).list()
         for course_chapter in course_chapters:
+            if not course_chapter.kinescope_project_id:
+                continue
             video_list = KinescopeClient().get_project_video_list(course_chapter.kinescope_project_id)
             for video in video_list:
-                try:
-                    await VideoService(session).retrieve(id=video.id)
-                except NotFoundException:
-                    if video.folder_id:
-                        try:
-                            theme = await ThemeService(session).retrieve(id=video.folder_id)
-                        except NotFoundException:
-                            theme = await ThemeService(session).create(
-                                data=Theme(
-                                    id=video.folder_id,
-                                    name=video.folder_name,
-                                    coursechapter_id=course_chapter.id,
-                                )
-                            )
-                    else:
-                        theme = None
+                if video.folder_id:
                     try:
-                        order = int(video.title.split(". ")[0])
-                    except Exception:
-                        continue
+                        theme = await ThemeService(session).retrieve(id=video.folder_id)
+                    except NotFoundException:
+                        theme = await ThemeService(session).create(
+                            data=Theme(
+                                id=video.folder_id,
+                                name=video.folder_name,
+                                coursechapter_id=course_chapter.id,
+                            )
+                        )
+                else:
+                    theme = None
+                try:
+                    order = int(video.title.split(". ")[0])
+                except Exception:
+                    continue
+                try:
+                    db_video = await VideoService(session).retrieve(id=video.id)
+                    await VideoService(session).update(
+                        id=db_video.id,
+                        data=Video(
+                            id=db_video.id,
+                            order=order,
+                            name=video.title,
+                            link=video.play_link,
+                            coursechapter_id=course_chapter.id,
+                            theme_id=theme.id if theme else None,
+                        ),
+                    )
+                except NotFoundException:
                     await VideoService(session).create(
                         data=Video(
                             id=video.id,
@@ -131,7 +144,7 @@ def check_subscription_task():
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(hour="0", minute="30", day_of_week="*"),
+        crontab(hour="*", minute="22", day_of_week="*"),
         sync_kinescope_task,
     )
     sender.add_periodic_task(

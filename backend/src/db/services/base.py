@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -34,7 +34,7 @@ class BaseService:
         await self.session.commit()
         return self.pydantic_model.model_validate(new_model)
 
-    async def update(self, id: int, data):
+    async def update(self, id: Union[int, str], data):
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         model = results.scalar_one_or_none()

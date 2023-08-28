@@ -144,7 +144,7 @@ def check_subscription_task():
 @celery_app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
-        crontab(hour="*", minute="22", day_of_week="*"),
+        crontab(hour="0", minute="30", day_of_week="*"),
         sync_kinescope_task,
     )
     sender.add_periodic_task(

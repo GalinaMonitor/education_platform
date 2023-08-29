@@ -19,25 +19,27 @@ const ThemeList = ({ courseChapterId, setThemeId, color }) => {
 
   return (
     <Card text={"БЛОКИ ОБУЧЕНИЯ"}>
-      {themes.map((theme, index) => (
-        <div
-          className={"mb-5 cursor-pointer"}
-          key={theme.id}
-          onClick={() => setThemeId(theme.id)}
-        >
-          <Button
-            disabled={true}
-            className={"p-0 small-button"}
-            shape={"round"}
+      <div className={"pt-5"}>
+        {themes.map((theme, index) => (
+          <div
+            className={"mb-5 cursor-pointer"}
+            key={theme.id}
+            onClick={() => setThemeId(theme.id)}
           >
-            0/0
-          </Button>
-          <div className={"flex flex-row items-center"}>
-            <TextBlock key={theme.id} bigText={theme.name} small_text={""} />
+            <Button
+              disabled={true}
+              className={"p-0 small-button"}
+              shape={"round"}
+            >
+              0/0
+            </Button>
+            <div className={"flex flex-row items-center"}>
+              <TextBlock key={theme.id} bigText={theme.name} small_text={""} />
+            </div>
+            <Divider color={color} />
           </div>
-          <Divider color={color} />
-        </div>
-      ))}
+        ))}
+      </div>
     </Card>
   );
 };

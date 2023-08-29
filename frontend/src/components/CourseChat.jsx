@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFetching } from "../hooks/useFetching";
 import { Avatar, Row, Skeleton } from "antd";
 import CourseChapterService from "../services/CourseChapterService";
@@ -18,6 +18,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   const [page, setPage] = useState(1);
   const [reverseColumn, setReverseColumn] = useState(false);
   const [courseChapter, setCourseChapter] = useState({});
+  const scollToRef = useRef();
 
   const [fetchThemeMessages, isLoadingTheme, errorTheme] = useFetching(
     async () => {
@@ -36,6 +37,9 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
         setLastPrevious(newMessages[0].id);
         setMessages([...newMessages]);
         setReverseColumn(true);
+      }
+      if (themeId) {
+        scollToRef.current.scrollIntoView();
       }
     }
   );
@@ -67,7 +71,6 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   const [fetchCourseChapter, isLoading, error] = useFetching(async () => {
     const response = await CourseChapterService.retrieve(courseChapterId);
     setCourseChapter(response.data);
-    console.log(response.data);
   });
 
   const [fetchMessagesPrevious, isLoadingPrevious, errorPrevious] = useFetching(
@@ -124,6 +127,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
           previousLoading={isLoadingPrevious}
           initialReverse={reverseColumn}
         >
+          <div ref={scollToRef}></div>
           {messages.map((item, index) => (
             <Message
               key={item.id}

@@ -27,11 +27,16 @@ const ThemeList = ({ courseChapterId, setThemeId, color }) => {
             onClick={() => setThemeId(theme.id)}
           >
             <Button
-              disabled={true}
+              disabled={theme.viewed_video_amount <= 0}
               className={"p-0 small-button"}
+              style={{
+                borderColor: theme.viewed_video_amount > 0 ? color : "ffffff",
+                color: theme.viewed_video_amount > 0 ? color : "ffffff",
+                pointerEvents: "none",
+              }}
               shape={"round"}
             >
-              0/0
+              {theme.viewed_video_amount}/{theme.video_amount}
             </Button>
             <div className={"flex flex-row items-center"}>
               <TextBlock key={theme.id} bigText={theme.name} small_text={""} />

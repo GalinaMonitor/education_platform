@@ -109,11 +109,7 @@ const Settings = () => {
         )}
       </Upload>
       <div className={"mt-3 mb-3"}>
-        <Button
-          disabled={true}
-          className={"p-0 small-button my-5"}
-          shape={"round"}
-        >
+        <Button className={"p-0 small-button my-5"} shape={"round"}>
           Имя
         </Button>
         <div className={"mb-5"}>
@@ -125,11 +121,7 @@ const Settings = () => {
           </Typography.Text>
         </div>
         <Divider />
-        <Button
-          disabled={true}
-          className={"p-0 small-button my-5"}
-          shape={"round"}
-        >
+        <Button className={"p-0 small-button my-5"} shape={"round"}>
           Компания
         </Button>
         <div className={"mb-5"}>
@@ -141,11 +133,7 @@ const Settings = () => {
           </Typography.Text>
         </div>
         <Divider />
-        <Button
-          disabled={true}
-          className={"p-0 small-button my-5"}
-          shape={"round"}
-        >
+        <Button className={"p-0 small-button my-5"} shape={"round"}>
           Должность
         </Button>
         <div className={"mb-5"}>

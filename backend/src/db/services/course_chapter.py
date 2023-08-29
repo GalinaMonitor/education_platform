@@ -54,7 +54,7 @@ class CourseChapterService(BaseService):
             )
             .join(self.model, self.model.id == db_models.Theme.coursechapter_id)
             .join(db_models.Chat, self.model.id == db_models.Chat.coursechapter_id)
-            .join(db_models.Video, self.model.id == db_models.Video.coursechapter_id)
+            .join(db_models.Video, db_models.Theme.id == db_models.Video.theme_id)
             .where(db_models.Chat.user_id == user_id)
             .group_by(db_models.Theme.id)
             .subquery()
@@ -79,4 +79,15 @@ class CourseChapterService(BaseService):
                 viewed_video_amount=result[2],
             )
             parsed_results.append(parsed_result)
+        # TODO Transform into sql
+        if parsed_results:
+            total_viewed_video = parsed_results[0].viewed_video_amount
+            for theme in parsed_results:
+                theme.viewed_video_amount = (
+                    theme.video_amount if theme.video_amount <= total_viewed_video else total_viewed_video
+                )
+                if theme.video_amount >= total_viewed_video:
+                    total_viewed_video = 0
+                else:
+                    total_viewed_video -= theme.video_amount
         return parsed_results

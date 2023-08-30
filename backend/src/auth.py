@@ -45,7 +45,7 @@ def get_password_hash(password):
 
 async def authenticate_user(session, username: str, password: str):
     user = await UserService(session).get_by_email(username)
-    if not verify_password(password, user.hashed_password):
+    if not verify_password(password, user.hashed_password) or not user.is_active:
         return False
     return user
 
@@ -88,7 +88,7 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
 
 
 async def prepare_restore_password(email):
-    from main import email_conf
+    from src.main import email_conf
 
     user_uuid = uuid.uuid4()
     async_session = sessionmaker(
@@ -102,14 +102,13 @@ async def prepare_restore_password(email):
         user = await UserService(session).get_by_email(email)
         await UserService(session).update(user.id, data=AuthUser(service_uuid=user_uuid))
     message = MessageSchema(
-        subject="Восстановление пароля",
+        subject="Восстановление пароля от аккаунта",
         recipients=[email],
-        body=f"Для восстановления пароля перейдите по "
-        f"<a href='{settings.front_url}/restore_password/{email}/{user_uuid}'>ссылке</a>",
+        template_body={"url": f"{settings.front_url}/restore_password/{email}/{user_uuid}"},
         subtype=MessageType.html,
     )
     fm = FastMail(email_conf)
-    await fm.send_message(message, template_name=None)
+    await fm.send_message(message, template_name="restore_password.html")
 
 
 async def restore_password(email, user_uuid, password):
@@ -125,3 +124,44 @@ async def restore_password(email, user_uuid, password):
         if user.service_uuid != user_uuid:
             raise UnauthorizedException
         await UserService(session).update(user.id, data=AuthUser(hashed_password=pwd_context.hash(password)))
+
+
+async def prepare_activate_user(email):
+    import os
+
+    from src.main import email_conf
+
+    user_uuid = uuid.uuid4()
+    async_session = sessionmaker(
+        bind=engine,
+        class_=AsyncSession,
+        autocommit=False,
+        autoflush=False,
+        expire_on_commit=False,
+    )
+    async with async_session() as session:
+        user = await UserService(session).get_by_email(email)
+        await UserService(session).update(user.id, data=AuthUser(service_uuid=user_uuid))
+    message = MessageSchema(
+        subject="Активация аккаунта на платформе Ку-помогу",
+        recipients=[email],
+        template_body={"url": f"{settings.front_url}/activate_user/{email}/{user_uuid}"},
+        subtype=MessageType.html,
+    )
+    fm = FastMail(email_conf)
+    await fm.send_message(message, template_name="activate_user.html")
+
+
+async def activate_user(email, user_uuid):
+    async_session = sessionmaker(
+        bind=engine,
+        class_=AsyncSession,
+        autocommit=False,
+        autoflush=False,
+        expire_on_commit=False,
+    )
+    async with async_session() as session:
+        user = await UserService(session).get_by_email(email)
+        if user.service_uuid != user_uuid:
+            raise UnauthorizedException
+        await UserService(session).update(user.id, data=AuthUser(is_active=True))

@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,7 +12,8 @@ from src.api.chat import router as chat_router
 from src.api.course import router as course_router
 from src.api.course_chapter import router as course_chapter_router
 from src.api.user import router as user_router
-from src.middlewares import LoggerMiddleware
+
+# from src.middlewares import LoggerMiddleware
 from src.settings import settings
 
 sentry_sdk.init(
@@ -29,8 +32,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(LoggerMiddleware)
-
+# app.add_middleware(LoggerMiddleware)
 email_conf = ConnectionConfig(
     MAIL_USERNAME=settings.mail_username,
     MAIL_PASSWORD=settings.mail_password,
@@ -42,6 +44,7 @@ email_conf = ConnectionConfig(
     MAIL_SSL_TLS=True,
     USE_CREDENTIALS=True,
     VALIDATE_CERTS=True,
+    TEMPLATE_FOLDER=f"{Path(__file__).parent}/mail/template",
 )
 
 app.include_router(authentication_router, prefix="/auth")

@@ -89,6 +89,20 @@ const useUserStore = create(
         }
         set({ isLoading: false });
       },
+      activateUser: async (email, uuid) => {
+        set({ isLoading: true });
+        try {
+          const registerResponse = await AuthService.activate_user(email, uuid);
+          if (registerResponse.status !== 200) {
+            error("Ошибка при активации");
+          } else {
+            success("Ваша учетная запись активирована");
+          }
+        } catch (e) {
+          error("Ошибка при активации");
+        }
+        set({ isLoading: false });
+      },
       checkAuth: async () => {
         try {
           const userResponse = await AuthService.get_user();

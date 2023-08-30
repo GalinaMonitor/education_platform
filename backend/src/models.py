@@ -51,6 +51,7 @@ class User(BaseModel):
     service_uuid: Optional[UUID] = None
     subscription_type: SubscriptionType
     end_of_subscription: Optional[date] = None
+    is_active: Optional[bool] = None
 
 
 class UserAvatar(BaseModel):
@@ -103,6 +104,7 @@ class AuthUser(BaseModel):
     password: Optional[str] = None
     hashed_password: Optional[str] = None
     service_uuid: Optional[UUID] = None
+    is_active: Optional[bool] = None
 
 
 class UpdateUser(BaseModel):

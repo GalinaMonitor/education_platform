@@ -13,6 +13,7 @@ from src.auth import (
     authenticate_user,
     create_access_token,
     get_current_active_user,
+    prepare_activate_user,
 )
 from src.db.config import get_session
 from src.db.services.user import UserService
@@ -58,7 +59,15 @@ async def create_user(user: AuthUser, session: AsyncSession = Depends(get_sessio
     except IntegrityError:
         raise AlreadyRegisteredException
     await init_user(user)
+    await prepare_activate_user(user.email)
     return user
+
+
+@router.post("/users/activate_user/{email}/{user_uuid}")
+async def activate_user(email: str, user_uuid: UUID):
+    import src.auth as auth
+
+    await auth.activate_user(email, user_uuid)
 
 
 @router.post("/users/prepare_restore_password")

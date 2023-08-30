@@ -68,6 +68,7 @@ class User(Base):
 
     id = Column(Integer, autoincrement=True, primary_key=True)
     is_admin = Column(Boolean, default=False)
+    is_active = Column(Boolean, default=False)
     passed_welcome_page = Column(Boolean, default=False)
     time_on_platform = Column(Integer, default=0)
     avatar = Column(Text, default="")

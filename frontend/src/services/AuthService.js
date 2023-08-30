@@ -19,6 +19,10 @@ export default class AuthService {
     });
   }
 
+  static async activate_user(email, uuid) {
+    return $api.post(`/auth/users/activate_user/${email}/${uuid}`);
+  }
+
   static async get_user() {
     return $api.get("/auth/users/me");
   }

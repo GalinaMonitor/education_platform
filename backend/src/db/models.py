@@ -95,6 +95,7 @@ class CourseChapter(Base):
     kinescope_project_id = Column(Text, default="")
     course_id = Column(Integer, ForeignKey("course.id"), nullable=True, default=None)
     mentor_id = Column(Integer, ForeignKey("user.id"), nullable=True, default=None)
+    welcome_message = Column(Text, default="")
     mentor = relationship("User", backref=backref("coursechapter"))
     themes = relationship("Theme", backref=backref("coursechapter"))
 

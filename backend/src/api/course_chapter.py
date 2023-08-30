@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, List, Optional
 
 from fastapi import APIRouter, Depends
@@ -5,7 +6,7 @@ from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.auth import get_current_active_user
 from src.db.config import get_session
-from src.db.models import SubscriptionType
+from src.db.models import DataType, SubscriptionType
 from src.db.services.chat import ChatService
 from src.db.services.course_chapter import CourseChapterService
 from src.db.services.message import MessageService
@@ -63,6 +64,17 @@ async def activate_course_chapter(
     service = ChatService(session)
     course_chapter = await CourseChapterService(session).retrieve(id=id)
     chat = await service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
+    await MessageService(session).create(
+        Message(
+            datetime=datetime.now(),
+            content=f"Ку, {current_user.fullname}! "
+            if current_user.fullname
+            else "Ку! " + course_chapter.welcome_message,
+            content_type=DataType.TEXT,
+            chat_id=chat.id,
+            theme_id=None,
+        )
+    )
     all_chats = await service.get_from_user_and_course(user_id=current_user.id, course_id=course_chapter.course_id)
     for deactivate_chat in all_chats:
         await service.deactivate(id=deactivate_chat.id)

@@ -14,7 +14,7 @@ const ButtonMessage = ({ text, time = null, buttonText, buttonUrl }) => {
         <div className={"top-0 left-0 text-left text-white"}>{parsedText}</div>
         {time ? (
           <div className={"absolute bottom-0 right-2 text-right"}>
-            <p className={"title-s text-white"}>{formatDatetime(time)}</p>
+            <p className={"title-xs text-white"}>{formatDatetime(time)}</p>
           </div>
         ) : (
           <></>

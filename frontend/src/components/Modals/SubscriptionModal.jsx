@@ -46,7 +46,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </Button>
           </Card>
         </Row>
-        <Link to={"https://ku-pomogu.ru/ooo"}>
+        <Link to={"https://ku-pomogu.ru/for-companies"}>
           <p>БЕЗНАЛИЧНЫЙ РАСЧЁТ</p>
         </Link>
         <Link

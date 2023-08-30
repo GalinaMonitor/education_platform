@@ -67,6 +67,7 @@ class CourseChapter(BaseModel):
     name: Optional[str] = None
     kinescope_project_id: str
     course_id: int
+    welcome_message: Optional[str] = None
 
 
 class CourseChapterMentor(CourseChapter):

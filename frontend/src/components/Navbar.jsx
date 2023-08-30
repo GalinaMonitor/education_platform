@@ -9,6 +9,7 @@ import useInterfaceStore from "../store/useInterfaceStore";
 import Card from "./UI/Card";
 import SubscriptionModal from "./Modals/SubscriptionModal";
 import { formatDate } from "../utils/utils";
+import { RouteNames } from "../router";
 
 const Navbar = ({ className }) => {
   const { user, logout } = useUserStore();
@@ -22,9 +23,11 @@ const Navbar = ({ className }) => {
   return (
     <Card className={className}>
       <Row justify={"space-around"} align={"middle"}>
-        <div>
-          <Image src={"/ku-logo.svg"} preview={false} width={"250px"} />
-        </div>
+        <Link to={RouteNames.MAIN}>
+          <div>
+            <Image src={"/ku-logo.svg"} preview={false} width={"250px"} />
+          </div>
+        </Link>
         <Row justify={"space-around"} align={"middle"}>
           <Avatar
             onClick={openCloseSettings}
@@ -56,7 +59,9 @@ const Navbar = ({ className }) => {
         )}
         <Row justify={"space-around"} align={"middle"}>
           <Link to={"mailto:support@ku-pomogu.ru"}>
-            <Button className={"medium-button mr-5"}>ТЕХ.ПОДДЕРЖКА</Button>
+            <Button className={"medium-button mr-5"} type={"primary"}>
+              ТЕХ.ПОДДЕРЖКА
+            </Button>
           </Link>
           <Button
             className={"medium-button mr-5"}

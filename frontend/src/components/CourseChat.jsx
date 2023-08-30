@@ -152,9 +152,9 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
           bigText={
             courseChapter?.mentor?.fullname
               ? courseChapter?.mentor?.fullname
-              : "Имя куратора"
+              : "Имя наставника"
           }
-          smallText={"Куратор"}
+          smallText={"Наставник"}
         />
       </Row>
     </Card>

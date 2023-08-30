@@ -68,7 +68,7 @@ async def activate_course_chapter(
         Message(
             datetime=datetime.now(),
             content=f"Ку, {current_user.fullname}! "
-            if current_user.fullname
+            if not current_user.fullname
             else "Ку! " + course_chapter.welcome_message,
             content_type=DataType.TEXT,
             chat_id=chat.id,

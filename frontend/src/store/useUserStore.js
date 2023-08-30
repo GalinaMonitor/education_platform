@@ -43,7 +43,9 @@ const useUserStore = create(
           if (registerResponse.status !== 200) {
             error("Ошибка при регистрации");
           } else {
-            success("Регистрация прошла успешно");
+            success(
+              "Вам на почту было направлено письмо для активации аккаунта"
+            );
           }
         } catch (e) {
           if (e.response?.data?.detail === "User already registered") {

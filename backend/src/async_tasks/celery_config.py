@@ -3,6 +3,7 @@ from datetime import datetime
 
 from celery import Celery
 from celery.schedules import crontab
+from sqlalchemy.exc import IntegrityError
 
 from src.db.config import async_session
 from src.db.models import DataType, SubscriptionType
@@ -14,8 +15,9 @@ from src.db.services.user import UserService
 from src.db.services.video import VideoService
 from src.exceptions import NotFoundException
 from src.kinescope.api import KinescopeClient
-from src.models import Chat, Message, Theme, UpdateUser, User, Video
+from src.models import AuthUser, Chat, Message, Theme, UpdateUser, User, Video
 from src.settings import settings
+from src.utils import init_user
 
 celery_app = Celery(
     broker=settings.redis_url,
@@ -140,6 +142,26 @@ async def check_subscription():
 @celery_app.task
 def check_subscription_task():
     asyncio.run(check_subscription())
+
+
+async def create_admin():
+    async with async_session() as session:
+        try:
+            user = await UserService(session).create(
+                AuthUser(
+                    email=settings.admin_email,
+                    password=settings.admin_password,
+                )
+            )
+            await init_user(user)
+            await UserService(session).update(user.id, data=AuthUser(is_active=True))
+        except IntegrityError:
+            pass
+
+
+@celery_app.task
+def create_admin_task():
+    asyncio.run(create_admin())
 
 
 @celery_app.on_after_configure.connect

@@ -42,8 +42,12 @@ const CourseCard = ({ course, refresh }) => {
     setTimeout(refresh, 500);
   };
 
-  const handleCancelCourseModal = async () => {
+  const handleCancelCourseModal = async (courseChapterId = null) => {
     setIsCourseModalOpen(false);
+    setTimeout(refresh, 500);
+    if (courseChapterId) {
+      setTimeout(navigate, 500, `${RouteNames.COURSE_CHAT}/${courseChapterId}`);
+    }
   };
 
   return (
@@ -94,7 +98,6 @@ const CourseCard = ({ course, refresh }) => {
             className={"flex flex-row items-center"}
             style={{ cursor: "pointer" }}
             onClick={() => {
-              showTimeModal();
               showCourseModal();
             }}
           >

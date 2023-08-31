@@ -83,9 +83,12 @@ class CourseChapterService(BaseService):
         if parsed_results:
             total_viewed_video = parsed_results[0].viewed_video_amount
             for theme in parsed_results:
-                theme.viewed_video_amount = (
-                    theme.video_amount if theme.video_amount <= total_viewed_video else total_viewed_video
-                )
+                if theme.viewed_video_amount:
+                    theme.viewed_video_amount = (
+                        theme.video_amount if theme.video_amount <= total_viewed_video else total_viewed_video
+                    )
+                else:
+                    theme.viewed_video_amount = 0
                 if theme.video_amount >= total_viewed_video:
                     total_viewed_video = 0
                 else:

@@ -21,5 +21,4 @@ structlog.configure(
         structlog.dev.ConsoleRenderer(),
     ],
     logger_factory=structlog.PrintLoggerFactory(),
-    # wrapper_class=structlog.make_filtering_bound_logger(logging.WARNING),
 )

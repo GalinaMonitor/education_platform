@@ -12,8 +12,7 @@ from src.api.chat import router as chat_router
 from src.api.course import router as course_router
 from src.api.course_chapter import router as course_chapter_router
 from src.api.user import router as user_router
-
-# from src.middlewares import LoggerMiddleware
+from src.middlewares import LoggerMiddleware
 from src.settings import settings
 
 sentry_sdk.init(
@@ -21,8 +20,7 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
-# app = FastAPI(openapi_url=None)
-app = FastAPI()
+app = FastAPI(openapi_url=None)
 admin.mount_to(app)
 
 app.add_middleware(
@@ -32,7 +30,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-# app.add_middleware(LoggerMiddleware)
+app.add_middleware(LoggerMiddleware)
 email_conf = ConnectionConfig(
     MAIL_USERNAME=settings.mail_username,
     MAIL_PASSWORD=settings.mail_password,

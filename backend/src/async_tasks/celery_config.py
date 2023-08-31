@@ -15,7 +15,7 @@ from src.db.services.user import UserService
 from src.db.services.video import VideoService
 from src.exceptions import NotFoundException
 from src.kinescope.api import KinescopeClient
-from src.models import AuthUser, Chat, Message, Theme, UpdateUser, User, Video
+from src.models import AuthUser, Chat, Message, Theme, UpdateUser, Video
 from src.settings import settings
 from src.utils import init_user
 

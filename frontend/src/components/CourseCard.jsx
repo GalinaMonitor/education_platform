@@ -83,7 +83,7 @@ const CourseCard = ({ course, refresh }) => {
               />
             </div>
 
-            <p className={"title-md"} style={{ color: course.color }}>
+            <p className={"title-l"} style={{ color: course.color }}>
               {courseChapter?.messages_amount
                 ? "+" + courseChapter.messages_amount
                 : ""}

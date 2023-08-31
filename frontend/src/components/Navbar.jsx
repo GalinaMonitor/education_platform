@@ -65,7 +65,6 @@ const Navbar = ({ className }) => {
           </Link>
           <Button
             className={"medium-button mr-5"}
-            type={"primary"}
             onClick={() => {
               setIsSubscriptionModalOpen(true);
             }}
@@ -74,7 +73,6 @@ const Navbar = ({ className }) => {
           </Button>
           <Button
             className={"medium-button"}
-            type={"primary"}
             icon={<LogoutOutlined />}
             onClick={() => {
               logout();

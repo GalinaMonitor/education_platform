@@ -162,7 +162,7 @@
 }
 
 .title-xs {
-    font-size: 8px;
+    font-size: 10px;
     font-style: normal;
     font-weight: 500;
     line-height: 14px; /* 150% */
@@ -178,11 +178,10 @@
 }
 
 .title-md {
-    font-size: 16px;
+    font-size: 14px;
     font-style: normal;
-    font-weight: 700;
+    font-weight: 500;
     line-height: 22px; /* 137.5% */
-    text-transform: uppercase;
 }
 
 .title-l {

@@ -67,8 +67,8 @@ async def activate_course_chapter(
     await MessageService(session).create(
         Message(
             datetime=datetime.now(),
-            content=f"Ку, {current_user.fullname}! "
-            if not current_user.fullname
+            content=f"Ку, {current_user.fullname}! " + course_chapter.welcome_message
+            if current_user.fullname
             else "Ку! " + course_chapter.welcome_message,
             content_type=DataType.TEXT,
             chat_id=chat.id,

@@ -88,7 +88,7 @@ async def init_user(user: User):
         await MessageService(session).create(
             Message(
                 datetime=datetime.now(),
-                content=f"Ку, {f'{user.fullname}, ' if user.fullname else ''}мне очень приятно познакомиться с вами! ",
+                content=f"Ку! Мне очень приятно познакомиться с вами!",
                 content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,

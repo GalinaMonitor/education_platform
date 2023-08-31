@@ -33,6 +33,7 @@ class Chat(Base):
     receive_time = Column(TIME, default=datetime.strptime("10:00", "%H:%M"))
     is_active = Column(Boolean, default=False)
     last_video = Column(Integer, default=0)
+    get_welcome_message = Column(Boolean, default=False)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     messages = relationship("Message", backref=backref("chat"))
     coursechapter = relationship("CourseChapter", backref=backref("chats"))

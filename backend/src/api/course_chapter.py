@@ -11,7 +11,7 @@ from src.db.services.chat import ChatService
 from src.db.services.course_chapter import CourseChapterService
 from src.db.services.message import MessageService
 from src.exceptions import HasNoSubscriptionException
-from src.models import CourseChapterRead, Message, ThemeRead, User
+from src.models import CourseChapterRead, Message, ThemeRead, UpdateChat, User
 
 router = APIRouter()
 
@@ -64,17 +64,19 @@ async def activate_course_chapter(
     service = ChatService(session)
     course_chapter = await CourseChapterService(session).retrieve(id=id)
     chat = await service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
-    await MessageService(session).create(
-        Message(
-            datetime=datetime.now(),
-            content=f"Ку, {current_user.fullname}! " + course_chapter.welcome_message
-            if current_user.fullname
-            else "Ку! " + course_chapter.welcome_message,
-            content_type=DataType.TEXT,
-            chat_id=chat.id,
-            theme_id=None,
+    if not chat.get_welcome_message:
+        await MessageService(session).create(
+            Message(
+                datetime=datetime.now(),
+                content=f"Ку, {current_user.fullname}! " + course_chapter.welcome_message
+                if current_user.fullname
+                else "Ку! " + course_chapter.welcome_message,
+                content_type=DataType.TEXT,
+                chat_id=chat.id,
+                theme_id=None,
+            )
         )
-    )
+        await service.update(id=chat.id, data=UpdateChat(get_welcome_message=True))
     all_chats = await service.get_from_user_and_course(user_id=current_user.id, course_id=course_chapter.course_id)
     for deactivate_chat in all_chats:
         await service.deactivate(id=deactivate_chat.id)

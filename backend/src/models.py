@@ -136,6 +136,7 @@ class Chat(BaseModel):
     receive_time: Optional[Union[time, datetime]] = None
     last_video: Optional[int] = None
     coursechapter_id: Optional[int] = None
+    get_welcome_message: Optional[bool] = None
 
 
 class ChatMessages(Chat):
@@ -143,7 +144,8 @@ class ChatMessages(Chat):
 
 
 class UpdateChat(BaseModel):
-    receive_time: time
+    receive_time: Optional[time] = None
+    get_welcome_message: Optional[bool] = None
 
 
 class Time(BaseModel):

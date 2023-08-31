@@ -22,7 +22,8 @@ from src.db.config import engine
 
 
 class Base(DeclarativeBase):
-    pass
+    async def __admin_repr__(self, request: Request):
+        return self.name
 
 
 class Chat(Base):
@@ -100,9 +101,6 @@ class CourseChapter(Base):
     mentor = relationship("User", backref=backref("coursechapter"))
     themes = relationship("Theme", backref=backref("coursechapter"), cascade="all, delete")
 
-    async def __admin_repr__(self, request: Request):
-        return self.name
-
 
 class DataType(str, enum.Enum):
     TEXT = "TEXT"
@@ -118,9 +116,6 @@ class Theme(Base):
     name = Column(Text, default="")
     videos = relationship("Video", back_populates="theme", cascade="all, delete")
     messages = relationship("Message", back_populates="theme", cascade="all, delete")
-
-    async def __admin_repr__(self, request: Request):
-        return self.name
 
 
 class Message(Base):
@@ -149,9 +144,6 @@ class Course(Base):
     coursechapters = relationship(
         CourseChapter, backref=backref("course"), order_by=CourseChapter.id, cascade="all, delete"
     )
-
-    async def __admin_repr__(self, request: Request):
-        return self.name
 
 
 class Video(Base):

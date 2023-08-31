@@ -35,7 +35,7 @@ class Chat(Base):
     last_video = Column(Integer, default=0)
     get_welcome_message = Column(Boolean, default=False)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
-    messages = relationship("Message", backref=backref("chat"))
+    messages = relationship("Message", backref=backref("chat"), cascade="all, delete")
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
     async def __admin_repr__(self, request: Request):
@@ -81,7 +81,7 @@ class User(Base):
     end_of_subscription = Column(Date, default=None)
     subscription_type = Column(Enum(SubscriptionType))
     service_uuid = Column(UUID(as_uuid=True), default=uuid.uuid4)
-    chats = relationship(Chat, backref=backref("user"))
+    chats = relationship(Chat, backref=backref("user"), cascade="all, delete")
 
     async def __admin_repr__(self, request: Request):
         return self.email
@@ -98,7 +98,7 @@ class CourseChapter(Base):
     mentor_id = Column(Integer, ForeignKey("user.id"), nullable=True, default=None)
     welcome_message = Column(Text, default="")
     mentor = relationship("User", backref=backref("coursechapter"))
-    themes = relationship("Theme", backref=backref("coursechapter"))
+    themes = relationship("Theme", backref=backref("coursechapter"), cascade="all, delete")
 
     async def __admin_repr__(self, request: Request):
         return self.name
@@ -116,8 +116,8 @@ class Theme(Base):
     id = Column(Text, primary_key=True)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     name = Column(Text, default="")
-    videos = relationship("Video", back_populates="theme")
-    messages = relationship("Message", back_populates="theme")
+    videos = relationship("Video", back_populates="theme", cascade="all, delete")
+    messages = relationship("Message", back_populates="theme", cascade="all, delete")
 
     async def __admin_repr__(self, request: Request):
         return self.name
@@ -146,7 +146,9 @@ class Course(Base):
     description = Column(Text, default="")
     name = Column(Text, default="")
     color = Column(Text, default="#ff7d1f")
-    coursechapters = relationship(CourseChapter, backref=backref("course"), order_by=CourseChapter.id)
+    coursechapters = relationship(
+        CourseChapter, backref=backref("course"), order_by=CourseChapter.id, cascade="all, delete"
+    )
 
     async def __admin_repr__(self, request: Request):
         return self.name

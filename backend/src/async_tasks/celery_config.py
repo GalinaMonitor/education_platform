@@ -154,7 +154,7 @@ async def create_admin():
                 )
             )
             await init_user(user)
-            await UserService(session).update(user.id, data=AuthUser(is_active=True))
+            await UserService(session).update(user.id, data=AuthUser(is_active=True, is_admin=True))
         except IntegrityError:
             pass
 

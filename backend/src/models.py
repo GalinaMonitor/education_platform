@@ -106,6 +106,7 @@ class AuthUser(BaseModel):
     hashed_password: Optional[str] = None
     service_uuid: Optional[UUID] = None
     is_active: Optional[bool] = None
+    is_admin: Optional[bool] = None
 
 
 class UpdateUser(BaseModel):

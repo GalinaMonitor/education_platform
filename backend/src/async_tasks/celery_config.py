@@ -91,7 +91,44 @@ def sync_kinescope_task():
     asyncio.run(sync_kinescope())
 
 
-async def send_video():
+async def send_video(email: str, coursechapter_id: int):
+    async with async_session() as session:
+        user = await UserService(session).get_by_email(email)
+        chat = await ChatService(session).get_or_create_from_user_and_chapter(
+            user_id=user.id, coursechapter_id=coursechapter_id
+        )
+        new_video = await VideoService(session).list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+        if new_video:
+            new_video = new_video[0]
+        else:
+            return
+        await MessageService(session).create(
+            Message(
+                datetime=datetime.now(),
+                content=new_video.link,
+                content_type=DataType.VIDEO,
+                chat_id=chat.id,
+                theme_id=new_video.theme_id,
+            )
+        )
+        await MessageService(session).create(
+            Message(
+                datetime=datetime.now(),
+                content=new_video.name,
+                content_type=DataType.TEXT,
+                chat_id=chat.id,
+                theme_id=new_video.theme_id,
+            )
+        )
+        await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+
+
+@celery_app.task
+def send_video_task(email: str, coursechapter_id: int):
+    asyncio.run(send_video(email, coursechapter_id))
+
+
+async def send_video_all():
     async with async_session() as session:
         time = datetime.strptime(str(datetime.now().hour), "%H").time()
         chat_list = await ChatService(session).list(receive_time=time)
@@ -125,8 +162,8 @@ async def send_video():
 
 
 @celery_app.task
-def send_video_task():
-    asyncio.run(send_video())
+def send_video_all_task():
+    asyncio.run(send_video_all())
 
 
 async def check_subscription():
@@ -172,7 +209,7 @@ def setup_periodic_tasks(sender, **kwargs):
     )
     sender.add_periodic_task(
         crontab(hour="*", minute="0", day_of_week="1-5"),
-        send_video_task,
+        send_video_all_task,
     )
     sender.add_periodic_task(
         crontab(hour="0", minute="0", day_of_month="*"),

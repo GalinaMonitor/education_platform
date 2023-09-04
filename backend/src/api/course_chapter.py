@@ -4,6 +4,7 @@ from typing import Annotated, List, Optional
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
+from src.async_tasks.celery_config import send_video_task
 from src.auth import get_current_active_user
 from src.db.config import get_session
 from src.db.models import DataType, SubscriptionType
@@ -77,6 +78,7 @@ async def activate_course_chapter(
             )
         )
         await service.update(id=chat.id, data=UpdateChat(get_welcome_message=True))
+        send_video_task.delay(email=current_user.email, coursechapter_id=course_chapter.id)
     all_chats = await service.get_from_user_and_course(user_id=current_user.id, course_id=course_chapter.course_id)
     for deactivate_chat in all_chats:
         await service.deactivate(id=deactivate_chat.id)

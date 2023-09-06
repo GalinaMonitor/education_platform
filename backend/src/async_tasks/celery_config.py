@@ -3,6 +3,7 @@ from datetime import datetime
 
 from celery import Celery
 from celery.schedules import crontab
+from fastapi_mail import FastMail, MessageSchema, MessageType
 from sqlalchemy.exc import IntegrityError
 
 from src.db.config import async_session
@@ -92,6 +93,8 @@ def sync_kinescope_task():
 
 
 async def send_video(email: str, coursechapter_id: int):
+    from src.main import email_conf
+
     async with async_session() as session:
         user = await UserService(session).get_by_email(email)
         chat = await ChatService(session).get_or_create_from_user_and_chapter(
@@ -121,6 +124,20 @@ async def send_video(email: str, coursechapter_id: int):
             )
         )
         await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+        coursechapter = await CourseChapterService(session).retrieve(id=chat.coursechapter_id)
+        user = await UserService(session).retrieve(id=chat.user_id)
+        message = MessageSchema(
+            subject="Новое видео на платформе Ку-Помогу",
+            recipients=[user.email],
+            template_body={
+                "url": f"{settings.front_url}",
+                "coursechapter": coursechapter.name,
+                "video": new_video.name,
+            },
+            subtype=MessageType.html,
+        )
+        fm = FastMail(email_conf)
+        await fm.send_message(message, template_name="new_video.html")
 
 
 @celery_app.task
@@ -129,9 +146,11 @@ def send_video_task(email: str, coursechapter_id: int):
 
 
 async def send_video_all():
+    from src.main import email_conf
+
     async with async_session() as session:
         time = datetime.strptime(str(datetime.now().hour), "%H").time()
-        chat_list = await ChatService(session).list(receive_time=time)
+        chat_list = await ChatService(session).list(receive_time=time, is_active=True)
         for chat in chat_list:
             new_video = await VideoService(session).list(
                 coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1
@@ -159,6 +178,20 @@ async def send_video_all():
                 )
             )
             await ChatService(session).update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+            coursechapter = await CourseChapterService(session).retrieve(id=chat.coursechapter_id)
+            user = await UserService(session).retrieve(id=chat.user_id)
+            message = MessageSchema(
+                subject="Новое видео на платформе Ку-Помогу",
+                recipients=[user.email],
+                template_body={
+                    "url": f"{settings.front_url}",
+                    "coursechapter": coursechapter.name,
+                    "video": new_video.name,
+                },
+                subtype=MessageType.html,
+            )
+            fm = FastMail(email_conf)
+            await fm.send_message(message, template_name="new_video.html")
 
 
 @celery_app.task

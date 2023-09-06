@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Вам пришел новый урок
+<span style="color:#FF7D1F">{{ video }}</span>
+в курсе
+<span style="color:#FF7D1F">{{ coursechapter }}{% endblock %}</span>
+{% block content %}
+<a
+	href="{{ url }}"
+	style="
+		background-color: #FF7D1F;
+		border-color: #FF7D1F;
+		border-radius: 10px;
+		height: 70px;
+		font-size: 18px;
+		font-style: normal;
+		font-weight: 700;
+		color: white;
+		cursor: pointer;
+		padding: 20px;
+		text-decoration: none;
+	"
+>
+	Перейти на платформу
+</a>
+{% endblock %}

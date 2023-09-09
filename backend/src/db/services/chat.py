@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, NoReturn
 
 from pydantic.tools import parse_obj_as
 from sqlalchemy import select
@@ -68,7 +68,7 @@ class ChatService(BaseService):
 
         return [parse_obj_as(pyd_models.Message, message) for message in results]
 
-    async def activate(self, id: int):
+    async def activate(self, id: int) -> NoReturn:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
@@ -76,7 +76,7 @@ class ChatService(BaseService):
         self.session.add(result)
         await self.session.commit()
 
-    async def deactivate(self, id: int):
+    async def deactivate(self, id: int) -> NoReturn:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()

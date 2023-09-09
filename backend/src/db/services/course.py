@@ -1,5 +1,5 @@
 from datetime import time
-from typing import List
+from typing import List, NoReturn
 
 from pydantic.tools import parse_obj_as
 from sqlalchemy import func, select
@@ -62,7 +62,7 @@ class CourseService(BaseService):
         result = results.all()
         return [parse_obj_as(pyd_models.CourseChapterThemes, coursechapter) for coursechapter in result]
 
-    async def change_receive_time(self, id: int, user_id, receive_time: time):
+    async def change_receive_time(self, id: int, user_id, receive_time: time) -> NoReturn:
         statement = (
             select(db_models.Chat)
             .join(db_models.CourseChapter, db_models.Chat.coursechapter_id == db_models.CourseChapter.id)

@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+from typing import NoReturn
 
 from celery import Celery
 from celery.schedules import crontab
@@ -36,7 +37,7 @@ celery_app = Celery(
 )
 
 
-async def sync_kinescope():
+async def sync_kinescope() -> NoReturn:
     async with async_session() as session:
         course_chapters = await CourseChapterService(session).list()
         for course_chapter in course_chapters:
@@ -88,11 +89,11 @@ async def sync_kinescope():
 
 
 @celery_app.task
-def sync_kinescope_task():
+def sync_kinescope_task() -> NoReturn:
     asyncio.run(sync_kinescope())
 
 
-async def send_video(email: str, coursechapter_id: int):
+async def send_video(email: str, coursechapter_id: int) -> NoReturn:
     from src.main import email_conf
 
     async with async_session() as session:
@@ -141,11 +142,11 @@ async def send_video(email: str, coursechapter_id: int):
 
 
 @celery_app.task
-def send_video_task(email: str, coursechapter_id: int):
+def send_video_task(email: str, coursechapter_id: int) -> NoReturn:
     asyncio.run(send_video(email, coursechapter_id))
 
 
-async def send_video_all():
+async def send_video_all() -> NoReturn:
     from src.main import email_conf
 
     async with async_session() as session:
@@ -195,11 +196,11 @@ async def send_video_all():
 
 
 @celery_app.task
-def send_video_all_task():
+def send_video_all_task() -> NoReturn:
     asyncio.run(send_video_all())
 
 
-async def check_subscription():
+async def check_subscription() -> NoReturn:
     date = datetime.now().date()
     async with async_session() as session:
         users_without_subscription = await UserService(session).list(end_of_subscription=date)
@@ -210,11 +211,11 @@ async def check_subscription():
 
 
 @celery_app.task
-def check_subscription_task():
+def check_subscription_task() -> NoReturn:
     asyncio.run(check_subscription())
 
 
-async def create_admin():
+async def create_admin() -> NoReturn:
     async with async_session() as session:
         try:
             user = await UserService(session).create(
@@ -230,12 +231,12 @@ async def create_admin():
 
 
 @celery_app.task
-def create_admin_task():
+def create_admin_task() -> NoReturn:
     asyncio.run(create_admin())
 
 
 @celery_app.on_after_configure.connect
-def setup_periodic_tasks(sender, **kwargs):
+def setup_periodic_tasks(sender, **kwargs) -> NoReturn:
     sender.add_periodic_task(
         crontab(hour="0", minute="30", day_of_week="*"),
         sync_kinescope_task,

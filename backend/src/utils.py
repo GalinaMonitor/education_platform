@@ -21,7 +21,7 @@ from src.models import (
 )
 
 
-async def create_message(course_id, coursechapter_id, message_id, chat_id, theme_id):
+async def create_message(course_id, message_id, chat_id, theme_id):
     async with async_session() as session:
         await MessageService(session).create(
             Message(
@@ -44,7 +44,7 @@ async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
             )
         )
         for i in range(10):
-            await create_message(course_id, coursechapter_id, i, chat_id, theme.id)
+            await create_message(course_id, i, chat_id, theme.id)
 
 
 async def create_course_chapter(course_id, coursechapter_id, user_id):

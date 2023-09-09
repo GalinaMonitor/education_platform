@@ -1,4 +1,5 @@
 import uuid
+from typing import Callable
 
 import structlog
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -9,7 +10,7 @@ from src.logging_config import logger
 
 
 class LoggerMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
+    async def dispatch(self, request: Request, call_next: Callable) -> Response:
         # Clear previous context variables
         structlog.contextvars.clear_contextvars()
 

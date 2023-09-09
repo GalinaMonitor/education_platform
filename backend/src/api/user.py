@@ -16,15 +16,15 @@ router = APIRouter()
 
 
 @router.get("/total_users")
-async def get_total_users(session: AsyncSession = Depends(get_session)):
+async def get_total_users(session: AsyncSession = Depends(get_session)) -> int:
     return await UserService(session).get_total_users()
 
 
-@router.get("/messages", response_model=Page[Message])
+@router.get("/messages")
 async def get_messages(
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: AsyncSession = Depends(get_session),
-) -> List[Message]:
+) -> Page[Message]:
     user_service = UserService(session)
     chat_service = ChatService(session)
     chat = await user_service.get_base_chat(id=current_user.id)
@@ -36,7 +36,7 @@ async def patch(
     user: UpdateUser,
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: AsyncSession = Depends(get_session),
-):
+) -> User:
     return await UserService(session).update(id=current_user.id, data=user)
 
 
@@ -45,7 +45,7 @@ async def update_avatar(
     photo: UploadFile,
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: AsyncSession = Depends(get_session),
-):
+) -> str:
     file_format = photo.filename.split(".")[-1]
     filename = f"{current_user.fullname}.{file_format}"
     AWSClient().delete_file(filename)

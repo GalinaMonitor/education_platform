@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
-from typing import Annotated
+from typing import Annotated, NoReturn, Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -35,22 +35,22 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/form_token")
 
 
-def verify_password(plain_password, hashed_password):
+def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
 
-def get_password_hash(password):
+def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-async def authenticate_user(session, username: str, password: str):
+async def authenticate_user(session: AsyncSession, username: str, password: str) -> Union[bool, User]:
     user = await UserService(session).get_by_email(username)
     if not verify_password(password, user.hashed_password) or not user.is_active:
         return False
     return user
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -61,7 +61,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -83,11 +83,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]):
+async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
     return current_user
 
 
-async def prepare_restore_password(email):
+async def prepare_restore_password(email: str) -> NoReturn:
     from src.main import email_conf
 
     user_uuid = uuid.uuid4()
@@ -111,7 +111,7 @@ async def prepare_restore_password(email):
     await fm.send_message(message, template_name="restore_password.html")
 
 
-async def restore_password(email, user_uuid, password):
+async def restore_password(email: str, user_uuid: str, password: str) -> NoReturn:
     async_session = sessionmaker(
         bind=engine,
         class_=AsyncSession,
@@ -126,9 +126,7 @@ async def restore_password(email, user_uuid, password):
         await UserService(session).update(user.id, data=AuthUser(hashed_password=pwd_context.hash(password)))
 
 
-async def prepare_activate_user(email):
-    import os
-
+async def prepare_activate_user(email: str) -> NoReturn:
     from src.main import email_conf
 
     user_uuid = uuid.uuid4()
@@ -152,7 +150,7 @@ async def prepare_activate_user(email):
     await fm.send_message(message, template_name="activate_user.html")
 
 
-async def activate_user(email, user_uuid):
+async def activate_user(email: str, user_uuid: uuid.UUID) -> NoReturn:
     async_session = sessionmaker(
         bind=engine,
         class_=AsyncSession,

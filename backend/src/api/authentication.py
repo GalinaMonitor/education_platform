@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Annotated
+from typing import Annotated, NoReturn
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -24,36 +24,36 @@ from src.utils import init_user
 router = APIRouter()
 
 
-@router.post("/form_token", response_model=Token)
+@router.post("/form_token")
 async def form_login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: AsyncSession = Depends(get_session),
-):
+) -> Token:
     user = await authenticate_user(session, form_data.username, form_data.password)
     if not user:
         raise UnauthorizedException
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token, token_type="bearer")
 
 
-@router.post("/token", response_model=Token)
-async def login_for_access_token(user: AuthUser, session: AsyncSession = Depends(get_session)):
+@router.post("/token")
+async def login_for_access_token(user: AuthUser, session: AsyncSession = Depends(get_session)) -> Token:
     user = await authenticate_user(session, user.email, user.password)
     if not user:
         raise UnauthorizedException
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return Token(access_token=access_token, token_type="bearer")
 
 
-@router.get("/users/me", response_model=User)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
+@router.get("/users/me")
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]) -> User:
     return current_user
 
 
-@router.post("/users", response_model=User)
-async def create_user(user: AuthUser, session: AsyncSession = Depends(get_session)):
+@router.post("/users")
+async def create_user(user: AuthUser, session: AsyncSession = Depends(get_session)) -> User:
     try:
         user = await UserService(session).create(user)
     except IntegrityError:
@@ -64,21 +64,21 @@ async def create_user(user: AuthUser, session: AsyncSession = Depends(get_sessio
 
 
 @router.post("/users/activate_user/{email}/{user_uuid}")
-async def activate_user(email: str, user_uuid: UUID):
+async def activate_user(email: str, user_uuid: UUID) -> NoReturn:
     import src.auth as auth
 
     await auth.activate_user(email, user_uuid)
 
 
 @router.post("/users/prepare_restore_password")
-async def prepare_restore_password(user: AuthUser):
+async def prepare_restore_password(user: AuthUser) -> NoReturn:
     import src.auth as auth
 
     await auth.prepare_restore_password(user.email)
 
 
 @router.post("/users/restore_password/{email}/{user_uuid}")
-async def restore_password(email: str, user_uuid: UUID, password: AuthUser):
+async def restore_password(email: str, user_uuid: UUID, password: AuthUser) -> NoReturn:
     import src.auth as auth
 
     await auth.restore_password(email, user_uuid, password.password)

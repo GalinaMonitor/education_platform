@@ -1,9 +1,10 @@
-from typing import List, Union
+from typing import List, NoReturn, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
 
 from src.exceptions import NotFoundException
+from src.models import BaseModel
 
 
 class BaseService:
@@ -12,7 +13,7 @@ class BaseService:
         self.model = None
         self.pydantic_model = None
 
-    async def list(self, **kwargs) -> List:
+    async def list(self, **kwargs) -> List[BaseModel]:
         statement = select(self.model)
         for key, value in kwargs.items():
             statement = statement.where(getattr(self.model, key) == value)
@@ -20,7 +21,7 @@ class BaseService:
         results = results.scalars().all()
         return [self.pydantic_model.model_validate(model) for model in results]
 
-    async def retrieve(self, id: int):
+    async def retrieve(self, id: int) -> BaseModel:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         result = results.scalar_one_or_none()
@@ -28,13 +29,13 @@ class BaseService:
             raise NotFoundException()
         return self.pydantic_model.model_validate(result)
 
-    async def create(self, data):
+    async def create(self, data: BaseModel) -> BaseModel:
         new_model = self.model(**data.model_dump())
         self.session.add(new_model)
         await self.session.commit()
         return self.pydantic_model.model_validate(new_model)
 
-    async def update(self, id: Union[int, str], data):
+    async def update(self, id: Union[int, str], data: BaseModel) -> BaseModel:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         model = results.scalar_one_or_none()
@@ -47,7 +48,7 @@ class BaseService:
         await self.session.refresh(model)
         return self.pydantic_model.model_validate(model)
 
-    async def delete(self, id: int) -> None:
+    async def delete(self, id: int) -> NoReturn:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         model = results.scalar_one_or_none()

@@ -39,7 +39,7 @@ class Chat(Base):
     messages = relationship("Message", backref=backref("chat"), cascade="all, delete")
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
-    async def __admin_repr__(self, request: Request):
+    async def __admin_repr__(self, request: Request) -> str:
         async_session = sessionmaker(
             bind=engine,
             class_=AsyncSession,
@@ -84,7 +84,7 @@ class User(Base):
     service_uuid = Column(UUID(as_uuid=True), default=uuid.uuid4)
     chats = relationship(Chat, backref=backref("user"), cascade="all, delete")
 
-    async def __admin_repr__(self, request: Request):
+    async def __admin_repr__(self, request: Request) -> str:
         return self.email
 
 
@@ -130,7 +130,7 @@ class Message(Base):
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="messages")
 
-    async def __admin_repr__(self, request: Request):
+    async def __admin_repr__(self, request: Request) -> str:
         return f"{self.content}"
 
 

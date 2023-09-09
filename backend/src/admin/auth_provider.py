@@ -42,7 +42,7 @@ class MyAuthProvider(AuthProvider):
         request.session.update({"access_token": access_token})
         return response
 
-    async def is_authenticated(self, request) -> bool:
+    async def is_authenticated(self, request: Request) -> bool:
         if request.session.get("access_token", None):
             try:
                 user = await get_current_user(request.session.get("access_token"))

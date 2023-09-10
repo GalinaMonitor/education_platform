@@ -1,5 +1,5 @@
 from datetime import timedelta
-from typing import Annotated, NoReturn
+from typing import Annotated
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -64,21 +64,21 @@ async def create_user(user: AuthUser, session: AsyncSession = Depends(get_sessio
 
 
 @router.post("/users/activate_user/{email}/{user_uuid}")
-async def activate_user(email: str, user_uuid: UUID) -> NoReturn:
+async def activate_user(email: str, user_uuid: UUID):
     import src.auth as auth
 
     await auth.activate_user(email, user_uuid)
 
 
 @router.post("/users/prepare_restore_password")
-async def prepare_restore_password(user: AuthUser) -> NoReturn:
+async def prepare_restore_password(user: AuthUser):
     import src.auth as auth
 
     await auth.prepare_restore_password(user.email)
 
 
 @router.post("/users/restore_password/{email}/{user_uuid}")
-async def restore_password(email: str, user_uuid: UUID, password: AuthUser) -> NoReturn:
+async def restore_password(email: str, user_uuid: UUID, password: AuthUser):
     import src.auth as auth
 
     await auth.restore_password(email, user_uuid, password.password)

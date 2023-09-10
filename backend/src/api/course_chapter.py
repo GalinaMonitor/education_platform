@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, List, NoReturn, Optional
+from typing import Annotated, List, Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -59,7 +59,7 @@ async def activate_course_chapter(
     id: int,
     current_user: Annotated[User, Depends(get_current_active_user)] = None,
     session: AsyncSession = Depends(get_session),
-) -> NoReturn:
+):
     if current_user.subscription_type == SubscriptionType.NO_SUBSCRIPTION:
         raise HasNoSubscriptionException
     service = ChatService(session)

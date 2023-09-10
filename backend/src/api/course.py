@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, List, NoReturn
+from typing import Annotated, List
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -41,7 +41,7 @@ async def change_receive_time(
     id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],
     session: AsyncSession = Depends(get_session),
-) -> NoReturn:
+):
     if current_user.subscription_type == SubscriptionType.NO_SUBSCRIPTION:
         raise HasNoSubscriptionException
     time = datetime.strptime(time.time, "%H:%M").time()

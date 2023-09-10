@@ -21,7 +21,7 @@ from src.models import (
 )
 
 
-async def create_message(course_id, message_id, chat_id, theme_id):
+async def create_message(course_id: int, message_id: int, chat_id: int, theme_id: str) -> None:
     async with async_session() as session:
         await MessageService(session).create(
             Message(
@@ -34,7 +34,7 @@ async def create_message(course_id, message_id, chat_id, theme_id):
         )
 
 
-async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
+async def create_theme(theme_id: str, course_id: int, coursechapter_id: int, chat_id: int) -> None:
     async with async_session() as session:
         theme = await ThemeService(session).create(
             ThemeVideos(
@@ -47,7 +47,7 @@ async def create_theme(theme_id, course_id, coursechapter_id, chat_id):
             await create_message(course_id, i, chat_id, theme.id)
 
 
-async def create_course_chapter(course_id, coursechapter_id, user_id):
+async def create_course_chapter(course_id: int, coursechapter_id: int, user_id: int) -> None:
     async with async_session() as session:
         course_chapter = await CourseChapterService(session).create(
             CourseChapterThemes(
@@ -57,12 +57,12 @@ async def create_course_chapter(course_id, coursechapter_id, user_id):
             )
         )
         chat = await ChatService(session).create(ChatMessages(user_id=user_id, coursechapter_id=course_chapter.id))
-        await create_theme(0, course_id, course_chapter.id, chat.id)
-        await create_theme(1, course_id, course_chapter.id, chat.id)
-        await create_theme(2, course_id, course_chapter.id, chat.id)
+        await create_theme("0", course_id, course_chapter.id, chat.id)
+        await create_theme("1", course_id, course_chapter.id, chat.id)
+        await create_theme("2", course_id, course_chapter.id, chat.id)
 
 
-async def create_course(course_id, user_id):
+async def create_course(course_id: int, user_id: int) -> None:
     colors = ["#FF4343", "#10B10D", "#50D9FF"]
     async with async_session() as session:
         course = await CourseService(session).create(
@@ -78,7 +78,7 @@ async def create_course(course_id, user_id):
             tg.create_task(create_course_chapter(course.id, 2, user_id))
 
 
-async def init_user(user: User):
+async def init_user(user: User) -> None:
     async with async_session() as session:
         chat = await ChatService(session).create(
             ChatMessages(
@@ -108,7 +108,7 @@ async def init_user(user: User):
             await ChatService(session).create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
 
 
-async def init_data():
+async def init_data() -> None:
     async with async_session() as session:
         user = await UserService(session).create(AuthUser(email="test@test.com", password="secret"))
         user = await UserService(session).update(

@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
-from typing import Annotated, NoReturn, Union
+from typing import Annotated, Union
 
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
@@ -87,7 +87,7 @@ async def get_current_active_user(current_user: Annotated[User, Depends(get_curr
     return current_user
 
 
-async def prepare_restore_password(email: str) -> NoReturn:
+async def prepare_restore_password(email: str) -> None:
     from src.main import email_conf
 
     user_uuid = uuid.uuid4()
@@ -111,7 +111,7 @@ async def prepare_restore_password(email: str) -> NoReturn:
     await fm.send_message(message, template_name="restore_password.html")
 
 
-async def restore_password(email: str, user_uuid: str, password: str) -> NoReturn:
+async def restore_password(email: str, user_uuid: str, password: str) -> None:
     async_session = sessionmaker(
         bind=engine,
         class_=AsyncSession,
@@ -126,7 +126,7 @@ async def restore_password(email: str, user_uuid: str, password: str) -> NoRetur
         await UserService(session).update(user.id, data=AuthUser(hashed_password=pwd_context.hash(password)))
 
 
-async def prepare_activate_user(email: str) -> NoReturn:
+async def prepare_activate_user(email: str) -> None:
     from src.main import email_conf
 
     user_uuid = uuid.uuid4()
@@ -150,7 +150,7 @@ async def prepare_activate_user(email: str) -> NoReturn:
     await fm.send_message(message, template_name="activate_user.html")
 
 
-async def activate_user(email: str, user_uuid: uuid.UUID) -> NoReturn:
+async def activate_user(email: str, user_uuid: uuid.UUID) -> None:
     async_session = sessionmaker(
         bind=engine,
         class_=AsyncSession,

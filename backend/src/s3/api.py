@@ -1,5 +1,4 @@
 import io
-from typing import NoReturn
 
 import boto3
 from botocore.client import Config
@@ -19,7 +18,7 @@ class AWSClient:
         )
         self.bucket_name = settings.aws_bucket_name
 
-    def upload_file(self, file_io: io.BytesIO, filename: str) -> NoReturn:
+    def upload_file(self, file_io: io.BytesIO, filename: str) -> None:
         self.session.upload_fileobj(file_io, Bucket=self.bucket_name, Key=filename)
 
     def download_file(self, filename: str) -> io.BytesIO:
@@ -28,5 +27,5 @@ class AWSClient:
         file_io.seek(0)
         return file_io
 
-    def delete_file(self, filename: str) -> NoReturn:
+    def delete_file(self, filename: str) -> None:
         self.session.delete_object(Bucket=self.bucket_name, Key=filename)

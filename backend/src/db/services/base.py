@@ -1,4 +1,4 @@
-from typing import List, NoReturn, Union
+from typing import List, Union
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio.session import AsyncSession
@@ -48,7 +48,7 @@ class BaseService:
         await self.session.refresh(model)
         return self.pydantic_model.model_validate(model)
 
-    async def delete(self, id: int) -> NoReturn:
+    async def delete(self, id: int) -> None:
         statement = select(self.model).where(self.model.id == id)
         results = await self.session.execute(statement)
         model = results.scalar_one_or_none()

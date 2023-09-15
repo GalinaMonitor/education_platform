@@ -3,7 +3,6 @@ from starlette.responses import Response
 from starlette_admin.auth import AdminUser, AuthProvider
 
 from src.exceptions import UnauthorizedException
-from src.services.auth import AuthService
 
 
 class MyAuthProvider(AuthProvider):
@@ -15,6 +14,8 @@ class MyAuthProvider(AuthProvider):
         request: Request,
         response: Response,
     ) -> Response:
+        from src.services.auth import AuthService
+
         user = await AuthService().authenticate_admin(username, password)
         request.session.update({"access_token": AuthService().create_access_token(user.email)})
         return response

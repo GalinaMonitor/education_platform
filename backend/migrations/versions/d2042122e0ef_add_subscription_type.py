@@ -5,17 +5,23 @@ Revises: 2b3ab9780760
 Create Date: 2023-07-23 16:03:51.200090
 
 """
+import enum
+
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
-
-from src.schemas import SubscriptionType
 
 # revision identifiers, used by Alembic.
 revision = "d2042122e0ef"
 down_revision = "2b3ab9780760"
 branch_labels = None
 depends_on = None
+
+
+class SubscriptionType(str, enum.Enum):
+    NO_SUBSCRIPTION = "Нет подписки"
+    DEMO = "Пробная"
+    LEARN_ALL = "Изучаю всё"
 
 
 def upgrade() -> None:

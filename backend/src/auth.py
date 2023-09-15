@@ -10,7 +10,6 @@ from pydantic import BaseModel
 from src.db.config import async_session
 from src.db.models import User
 from src.exceptions import UnauthorizedException
-from src.services.user import UserService
 from src.settings import settings
 
 ALGORITHM = "HS256"
@@ -46,6 +45,8 @@ def create_access_token(email: str) -> Token:
 
 
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
+    from src.services.user import UserService
+
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
         username: str = payload.get("sub")

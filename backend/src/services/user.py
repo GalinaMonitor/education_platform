@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime, timedelta
 
-from src.auth import pwd_context
 from src.exceptions import HasNoSubscriptionException
 from src.repositories.user import UserRepository
 from src.schemas import (
@@ -29,6 +28,8 @@ class UserService(BaseService):
         self.repo = UserRepository()
 
     async def create(self, data: AuthUser) -> User:
+        from src.auth import pwd_context
+
         raw_user = self.repo.create(
             {
                 "email": data.email,

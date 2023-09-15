@@ -2,7 +2,6 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette_admin.auth import AdminUser, AuthProvider
 
-from src.auth import get_current_user
 from src.exceptions import UnauthorizedException
 from src.services.auth import AuthService
 
@@ -21,6 +20,8 @@ class MyAuthProvider(AuthProvider):
         return response
 
     async def is_authenticated(self, request: Request) -> bool:
+        from src.auth import get_current_user
+
         if request.session.get("access_token", None):
             try:
                 user = await get_current_user(request.session.get("access_token"))

@@ -1,20 +1,10 @@
-from datetime import timedelta
-
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette_admin.auth import AdminUser, AuthProvider
-from starlette_admin.exceptions import LoginFailed
 
-from src.auth import (
-    ACCESS_TOKEN_EXPIRE_MINUTES,
-    authenticate_user,
-    create_access_token,
-    get_current_user,
-)
-from src.db.config import engine
+from src.auth import get_current_user
 from src.exceptions import UnauthorizedException
+from src.services.auth import AuthService
 
 
 class MyAuthProvider(AuthProvider):
@@ -26,20 +16,8 @@ class MyAuthProvider(AuthProvider):
         request: Request,
         response: Response,
     ) -> Response:
-        async_session = sessionmaker(
-            bind=engine,
-            class_=AsyncSession,
-            autocommit=False,
-            autoflush=False,
-            expire_on_commit=False,
-        )
-        async with async_session() as session:
-            user = await authenticate_user(session, username, password)
-        if not user or not user.is_admin:
-            raise LoginFailed("Invalid username or password")
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-        access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-        request.session.update({"access_token": access_token})
+        user = await AuthService().authenticate_admin(username, password)
+        request.session.update({"access_token": AuthService().create_access_token(user.email)})
         return response
 
     async def is_authenticated(self, request: Request) -> bool:
@@ -56,7 +34,7 @@ class MyAuthProvider(AuthProvider):
             return True
         return False
 
-    def get_admin_user(self, request: Request) -> AdminUser:
+    def get_admin_user(self, request: Request) -> AdminUser | None:
         if hasattr(request.state, "user"):
             user = request.state.user
             return AdminUser(username=user["name"], photo_url=user["avatar"])

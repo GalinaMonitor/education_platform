@@ -1,4 +1,3 @@
-import enum
 import uuid
 from datetime import datetime
 
@@ -19,17 +18,18 @@ from sqlalchemy.orm import DeclarativeBase, backref, relationship, sessionmaker
 from starlette.requests import Request
 
 from src.db.config import engine
+from src.schemas import DataType, SubscriptionType
 
 
 class Base(DeclarativeBase):
-    async def __admin_repr__(self, request: Request):
-        return self.name
+    __abstract__ = True
+
+    id = Column(Integer, autoincrement=True, primary_key=True)
 
 
 class Chat(Base):
     __tablename__ = "chat"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=True, default=None)
     receive_time = Column(TIME, default=datetime.strptime("10:00", "%H:%M"))
     is_active = Column(Boolean, default=False)
@@ -48,8 +48,8 @@ class Chat(Base):
             expire_on_commit=False,
         )
         async with async_session() as session:
-            from src.db.services.course_chapter import CourseChapterService
-            from src.db.services.user import UserService
+            from src.services.course_chapter import CourseChapterService
+            from src.services.user import UserService
 
             chat_repr = []
             if self.coursechapter_id:
@@ -59,16 +59,9 @@ class Chat(Base):
             return " ".join(chat_repr)
 
 
-class SubscriptionType(str, enum.Enum):
-    NO_SUBSCRIPTION = "Нет подписки"
-    DEMO = "Пробная"
-    LEARN_ALL = "Изучаю всё"
-
-
 class User(Base):
     __tablename__ = "user"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
     is_admin = Column(Boolean, default=False)
     is_active = Column(Boolean, default=False)
     passed_welcome_page = Column(Boolean, default=False)
@@ -91,7 +84,6 @@ class User(Base):
 class CourseChapter(Base):
     __tablename__ = "coursechapter"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
     description = Column(Text, default="")
     name = Column(Text, default="")
     kinescope_project_id = Column(Text, default="")
@@ -101,11 +93,8 @@ class CourseChapter(Base):
     mentor = relationship("User", backref=backref("coursechapter"))
     themes = relationship("Theme", backref=backref("coursechapter"), cascade="all, delete")
 
-
-class DataType(str, enum.Enum):
-    TEXT = "TEXT"
-    VIDEO = "VIDEO"
-    BUTTON = "BUTTON"
+    async def __admin_repr__(self, request: Request):
+        return self.name
 
 
 class Theme(Base):
@@ -117,11 +106,13 @@ class Theme(Base):
     videos = relationship("Video", back_populates="theme", cascade="all, delete")
     messages = relationship("Message", back_populates="theme", cascade="all, delete")
 
+    async def __admin_repr__(self, request: Request):
+        return self.name
+
 
 class Message(Base):
     __tablename__ = "message"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
     datetime = Column(DateTime)
     content = Column(Text, default="")
     content_type = Column(Enum(DataType))
@@ -137,13 +128,15 @@ class Message(Base):
 class Course(Base):
     __tablename__ = "course"
 
-    id = Column(Integer, autoincrement=True, primary_key=True)
     description = Column(Text, default="")
     name = Column(Text, default="")
     color = Column(Text, default="#ff7d1f")
     coursechapters = relationship(
         CourseChapter, backref=backref("course"), order_by=CourseChapter.id, cascade="all, delete"
     )
+
+    async def __admin_repr__(self, request: Request):
+        return self.name
 
 
 class Video(Base):
@@ -156,3 +149,6 @@ class Video(Base):
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="videos")
+
+    async def __admin_repr__(self, request: Request):
+        return self.name

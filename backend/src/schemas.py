@@ -1,3 +1,4 @@
+import enum
 from datetime import date, datetime, time
 from typing import List, Optional, Union
 from uuid import UUID
@@ -6,7 +7,17 @@ from pydantic import NaiveDatetime
 from pydantic.config import ConfigDict
 from pydantic.main import BaseModel as PydanticBaseModel
 
-from src.db.models import DataType, SubscriptionType
+
+class SubscriptionType(str, enum.Enum):
+    NO_SUBSCRIPTION = "Нет подписки"
+    DEMO = "Пробная"
+    LEARN_ALL = "Изучаю всё"
+
+
+class DataType(str, enum.Enum):
+    TEXT = "TEXT"
+    VIDEO = "VIDEO"
+    BUTTON = "BUTTON"
 
 
 class BaseModel(PydanticBaseModel):
@@ -150,3 +161,15 @@ class UpdateChat(BaseModel):
 
 class Time(BaseModel):
     time: str
+
+
+class PaginationParams:
+    def __init__(
+        self,
+        before: int | None = None,
+        after: int | None = None,
+        limit: int | None = None,
+    ):
+        self.before = before
+        self.after = after
+        self.limit = limit

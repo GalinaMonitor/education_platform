@@ -9,7 +9,7 @@ import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-from src.db.models import SubscriptionType
+from src.schemas import SubscriptionType
 
 # revision identifiers, used by Alembic.
 revision = "d2042122e0ef"

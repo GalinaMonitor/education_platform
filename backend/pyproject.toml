@@ -2,7 +2,8 @@
 name = "education-platform"
 version = "0.1.0"
 description = ""
-authors = ["gmonitor"]
+authors = ["Dmitry Seregin <dmitry.seregin.msk@gmail.com>"]
+license = "Apache-2.0"
 readme = "README.md"
 packages = []
 

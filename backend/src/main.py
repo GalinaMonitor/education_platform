@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_mail import ConnectionConfig
 from fastapi_pagination import add_pagination
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from src.admin.config import admin
 from src.api.authentication import router as authentication_router
@@ -20,7 +21,9 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
 )
 
-app = FastAPI(openapi_url=None)
+app = FastAPI()
+Instrumentator(should_group_status_codes=False, excluded_handlers=["/metrics"]).instrument(app).expose(app)
+
 admin.mount_to(app)
 
 app.add_middleware(

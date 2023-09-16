@@ -71,6 +71,7 @@ alembic = "^1.11.1"
 itsdangerous = "^2.1.2"
 bump-pydantic = "^0.6.1"
 sentry-sdk = {extras = ["fastapi"], version = "^1.29.2"}
+prometheus-fastapi-instrumentator = "^6.1.0"
 
 
 [build-system]

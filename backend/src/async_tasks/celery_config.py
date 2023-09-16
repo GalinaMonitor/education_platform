@@ -18,13 +18,6 @@ from src.schemas import (
     UpdateUser,
     Video,
 )
-from src.services.chat import ChatService
-from src.services.course_chapter import CourseChapterService
-from src.services.mail import MailService
-from src.services.message import MessageService
-from src.services.theme import ThemeService
-from src.services.user import UserService
-from src.services.video import VideoService
 from src.settings import settings
 from src.text_constants import EMAIL_NEW_VIDEO
 
@@ -45,6 +38,10 @@ celery_app = Celery(
 
 
 async def sync_kinescope() -> None:
+    from src.services.course_chapter import CourseChapterService
+    from src.services.theme import ThemeService
+    from src.services.video import VideoService
+
     course_chapters = await CourseChapterService().list()
     for course_chapter in course_chapters:
         if not course_chapter.kinescope_project_id:
@@ -101,6 +98,11 @@ def sync_kinescope_task() -> None:
 
 async def send_video(email: str, coursechapter_id: int) -> None:
     from src.main import email_conf
+    from src.services.chat import ChatService
+    from src.services.course_chapter import CourseChapterService
+    from src.services.message import MessageService
+    from src.services.user import UserService
+    from src.services.video import VideoService
 
     user = await UserService().get_by_email(email)
     chat = await ChatService().get_or_create_from_user_and_chapter(user_id=user.id, coursechapter_id=coursechapter_id)
@@ -150,14 +152,23 @@ def send_video_task(email: str, coursechapter_id: int) -> None:
 
 
 async def send_video_all() -> None:
+    from src.services.chat import ChatService
+    from src.services.course_chapter import CourseChapterService
+    from src.services.mail import MailService
+    from src.services.user import UserService
+
     time = datetime.strptime(str(datetime.now().hour), "%H").time()
     chat_list = await ChatService().list(receive_time=time, is_active=True)
     for chat in chat_list:
+        from src.services.video import VideoService
+
         new_video = await VideoService().list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
         if new_video:
             new_video = new_video[0]
         else:
             continue
+        from src.services.message import MessageService
+
         await MessageService().create(
             Message(
                 datetime=datetime.now(),
@@ -189,6 +200,8 @@ def send_video_all_task() -> None:
 
 async def check_subscription() -> None:
     date = datetime.now().date()
+    from src.services.user import UserService
+
     users_without_subscription = await UserService().list(end_of_subscription=date)
     for user in users_without_subscription:
         await UserService().update(id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION))
@@ -200,6 +213,8 @@ def check_subscription_task() -> None:
 
 
 async def create_admin() -> None:
+    from src.services.user import UserService
+
     try:
         user = await UserService().create(
             AuthUser(

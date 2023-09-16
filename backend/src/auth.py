@@ -5,24 +5,13 @@ from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
-from pydantic import BaseModel
 
-from src.db.config import async_session
-from src.db.models import User
 from src.exceptions import UnauthorizedException
+from src.schemas import Token, User
 from src.settings import settings
 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 4320
-
-
-class Token(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
-class TokenData(BaseModel):
-    username: str | None = None
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -54,8 +43,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
             raise UnauthorizedException
     except JWTError:
         raise UnauthorizedException
-    async with async_session() as session:
-        user = await UserService(session).get_by_email(username)
+    user = await UserService().get_by_email(username)
     if user is None:
         raise UnauthorizedException
     return user

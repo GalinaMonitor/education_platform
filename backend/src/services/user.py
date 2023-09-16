@@ -13,10 +13,6 @@ from src.schemas import (
     User,
 )
 from src.services.base import BaseService
-from src.services.chat import ChatService
-from src.services.course_chapter import CourseChapterService
-from src.services.mail import MailService
-from src.services.message import MessageService
 from src.text_constants import INIT_MESSAGE_INSTRUCTION, INIT_MESSAGE_WELCOME
 
 
@@ -30,7 +26,7 @@ class UserService(BaseService):
     async def create(self, data: AuthUser) -> User:
         from src.auth import pwd_context
 
-        raw_user = self.repo.create(
+        raw_user = await self.repo.create(
             {
                 "email": data.email,
                 "hashed_password": pwd_context.hash(data.password),
@@ -44,11 +40,17 @@ class UserService(BaseService):
         return user
 
     async def prepare_activate_user(self, user: User) -> None:
+        from src.services.mail import MailService
+
         user_uuid = uuid.uuid4()
         await self.repo.update(user.id, {"service_uuid": user_uuid})
-        await MailService().send_prepare_activate_email(user.email, user.service_uuid)
+        await MailService().send_prepare_activate_email(user.email, user_uuid)
 
     async def init_user(self, user: User) -> None:
+        from src.services.chat import ChatService
+        from src.services.course_chapter import CourseChapterService
+        from src.services.message import MessageService
+
         chat = await ChatService().create(
             Chat(
                 user_id=user.id,

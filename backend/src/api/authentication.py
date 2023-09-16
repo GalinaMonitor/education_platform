@@ -4,8 +4,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth import Token, get_current_active_user
-from src.schemas import AuthUser, User
+from src.auth import get_current_active_user
+from src.schemas import AuthUser, Token, User
 from src.services.auth import AuthService
 from src.services.user import UserService
 

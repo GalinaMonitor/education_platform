@@ -1,5 +1,5 @@
-from src.db.models import Video
 from src.repositories.video import VideoRepository
+from src.schemas import Video
 from src.services.base import BaseService
 
 

@@ -38,13 +38,12 @@ class CourseRepository(BaseRepository):
                 .outerjoin(chat_subquery, self.model.id == chat_subquery.c.id)
                 .options(selectinload(self.model.coursechapters))
             )
-
             results = await session.execute(statement)
             results = results.all()
             parsed_results = []
             for result in results:
                 parsed_result = {
-                    **result[0],
+                    **result[0].__dict__,
                     "course_chapter_id": result[1],
                     "receive_time": result[2],
                     "is_active": result[3],

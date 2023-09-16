@@ -13,11 +13,9 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.dialects.postgresql import TIME
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import DeclarativeBase, backref, relationship, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, backref, relationship
 from starlette.requests import Request
 
-from src.db.config import engine
 from src.schemas import DataType, SubscriptionType
 
 
@@ -40,23 +38,15 @@ class Chat(Base):
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
     async def __admin_repr__(self, request: Request) -> str:
-        async_session = sessionmaker(
-            bind=engine,
-            class_=AsyncSession,
-            autocommit=False,
-            autoflush=False,
-            expire_on_commit=False,
-        )
-        async with async_session() as session:
-            from src.services.course_chapter import CourseChapterService
-            from src.services.user import UserService
+        from src.services.course_chapter import CourseChapterService
+        from src.services.user import UserService
 
-            chat_repr = []
-            if self.coursechapter_id:
-                chat_repr.append((await CourseChapterService(session).retrieve(self.coursechapter_id)).name)
-            if self.user_id:
-                chat_repr.append((await UserService(session).retrieve(self.user_id)).email)
-            return " ".join(chat_repr)
+        chat_repr = []
+        if self.coursechapter_id:
+            chat_repr.append((await CourseChapterService().retrieve(self.coursechapter_id)).name)
+        if self.user_id:
+            chat_repr.append((await UserService().retrieve(self.user_id)).email)
+        return " ".join(chat_repr)
 
 
 class User(Base):

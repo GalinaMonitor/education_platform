@@ -3,8 +3,6 @@ from typing import List
 
 from pydantic.tools import parse_obj_as
 
-from src.async_tasks.celery_config import send_video_task
-from src.db.models import Message
 from src.exceptions import NotFoundException
 from src.repositories.chat import ChatRepository
 from src.schemas import (
@@ -12,12 +10,11 @@ from src.schemas import (
     ChatMessages,
     CourseChapter,
     DataType,
+    Message,
     PaginationParams,
     User,
 )
 from src.services.base import BaseService
-from src.services.course_chapter import CourseChapterService
-from src.services.message import MessageService
 
 
 class ChatService(BaseService):
@@ -45,7 +42,9 @@ class ChatService(BaseService):
         return [parse_obj_as(Message, message) for message in await self.repo.messages(id, pagination_params, theme_id)]
 
     async def activate(self, chat: Chat, user: User, coursechapter: CourseChapter) -> None:
-        course_chapter = await CourseChapterService().retrieve(id=id)
+        from src.async_tasks.celery_config import send_video_task
+        from src.services.message import MessageService
+
         if not chat.get_welcome_message:
             await MessageService().create(
                 Message(
@@ -59,8 +58,8 @@ class ChatService(BaseService):
                 )
             )
             await self.repo.update(chat.id, {"get_welcome_message": True})
-            send_video_task.delay(email=user.email, coursechapter_id=course_chapter.id)
-        all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=course_chapter.course_id)
+            send_video_task.delay(email=user.email, coursechapter_id=coursechapter.id)
+        all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=coursechapter.course_id)
         for deactivate_chat in all_chats:
             await self.repo.update(deactivate_chat.id, {"is_active": False})
         await self.repo.update(chat.id, {"is_active": True})

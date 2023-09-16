@@ -14,6 +14,9 @@ x-function: &backend
 services:
   backend:
     <<: *backend
+    build:
+      context: backend
+      dockerfile: Dockerfile
     networks:
       network:
         ipv4_address: 11.1.0.11

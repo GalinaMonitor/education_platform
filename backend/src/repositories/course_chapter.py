@@ -37,7 +37,7 @@ class CourseChapterRepository(BaseRepository):
             if not result:
                 raise NotFoundException()
             result = {
-                **result[0][0],
+                **result[0][0].__dict__,
                 "messages_amount": result[0][1],
             }
             return result
@@ -72,7 +72,7 @@ class CourseChapterRepository(BaseRepository):
             parsed_results = []
             for result in results:
                 parsed_result = {
-                    **result[0],
+                    **result[0].__dict__,
                     "video_amount": result[1],
                     "viewed_video_amount": result[2],
                 }

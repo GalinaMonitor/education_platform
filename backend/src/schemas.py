@@ -23,6 +23,11 @@ class DataType(str, enum.Enum):
 class BaseModel(PydanticBaseModel):
     model_config = ConfigDict(from_attributes=True)
 
+    def model_dump(self, *args, **kwargs):
+        if "exclude_unset" in kwargs:
+            kwargs.pop("exclude_unset")
+        return super().model_dump(exclude_unset=True, *args, **kwargs)
+
 
 class Video(BaseModel):
     id: str
@@ -173,3 +178,12 @@ class PaginationParams:
         self.before = before
         self.after = after
         self.limit = limit
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+
+
+class TokenData(BaseModel):
+    username: str | None = None

@@ -2,11 +2,11 @@ from datetime import time
 from typing import List
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import selectinload
 
 from src.db.config import async_session
 from src.db.models import Chat, Course, CourseChapter
 from src.repositories.base import BaseRepository
+from src.repositories.course_chapter import CourseChapterRepository
 
 
 class CourseRepository(BaseRepository):
@@ -28,35 +28,21 @@ class CourseRepository(BaseRepository):
                 .group_by(self.model.id)
                 .subquery()
             )
-            statement = (
-                select(
-                    self.model,
-                    chat_subquery.c.course_chapter_id,
-                    chat_subquery.c.receive_time,
-                    chat_subquery.c.is_active,
-                )
-                .outerjoin(chat_subquery, self.model.id == chat_subquery.c.id)
-                .options(selectinload(self.model.coursechapters))
-            )
+            statement = select(
+                self.model.__table__.columns,
+                chat_subquery.c.course_chapter_id,
+                chat_subquery.c.receive_time,
+                chat_subquery.c.is_active,
+            ).outerjoin(chat_subquery, self.model.id == chat_subquery.c.id)
             results = await session.execute(statement)
-            results = results.all()
-            parsed_results = []
+            results = results.mappings().all()
+            courses_with_coursechapters = []
+            coursechapter_repo = CourseChapterRepository()
             for result in results:
-                parsed_result = {
-                    **result[0].__dict__,
-                    "course_chapter_id": result[1],
-                    "receive_time": result[2],
-                    "is_active": result[3],
-                }
-                parsed_results.append(parsed_result)
-            return parsed_results
-
-    async def course_chapters(self, id: int) -> List[dict]:
-        async with async_session() as session:
-            statement = select(CourseChapter).where(CourseChapter.course_id == id)
-            results = await session.execute(statement)
-            result = results.all()
-            return result
+                result = dict(result)
+                result["coursechapters"] = await coursechapter_repo.list(course_id=result["id"])
+                courses_with_coursechapters.append(result)
+            return courses_with_coursechapters
 
     async def change_receive_time(self, id: int, user_id, receive_time: time) -> None:
         async with async_session() as session:

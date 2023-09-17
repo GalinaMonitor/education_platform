@@ -3,7 +3,6 @@ from datetime import datetime
 
 from celery import Celery
 from celery.schedules import crontab
-from fastapi_mail import FastMail, MessageSchema, MessageType
 from sqlalchemy.exc import IntegrityError
 
 from src.exceptions import NotFoundException
@@ -18,8 +17,8 @@ from src.schemas import (
     UpdateUser,
     Video,
 )
+from src.services.mail import MailService
 from src.settings import settings
-from src.text_constants import EMAIL_NEW_VIDEO
 
 celery_app = Celery(
     broker=settings.redis_url,
@@ -97,7 +96,6 @@ def sync_kinescope_task() -> None:
 
 
 async def send_video(email: str, coursechapter_id: int) -> None:
-    from src.main import email_conf
     from src.services.chat import ChatService
     from src.services.course_chapter import CourseChapterService
     from src.services.message import MessageService
@@ -132,18 +130,7 @@ async def send_video(email: str, coursechapter_id: int) -> None:
     await ChatService().update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
     coursechapter = await CourseChapterService().retrieve(id=chat.coursechapter_id)
     user = await UserService().retrieve(id=chat.user_id)
-    message = MessageSchema(
-        subject=EMAIL_NEW_VIDEO,
-        recipients=[user.email],
-        template_body={
-            "url": f"{settings.front_url}",
-            "coursechapter": coursechapter.name,
-            "video": new_video.name,
-        },
-        subtype=MessageType.html,
-    )
-    fm = FastMail(email_conf)
-    await fm.send_message(message, template_name="new_video.html")
+    await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
 
 
 @celery_app.task

@@ -1,12 +1,12 @@
 from typing import List
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import selectinload
 
 from src.db.config import async_session
 from src.db.models import Chat, CourseChapter, Message, Theme, Video
 from src.exceptions import NotFoundException
 from src.repositories.base import BaseRepository
+from src.services.user import UserService
 
 
 class CourseChapterRepository(BaseRepository):
@@ -25,21 +25,19 @@ class CourseChapterRepository(BaseRepository):
                 .subquery()
             )
             statement = (
-                select(self.model, messages_amount_subquery.c.messages_amount)
+                select(self.model.__table__.columns, messages_amount_subquery.c.messages_amount)
                 .outerjoin(messages_amount_subquery, self.model.id == messages_amount_subquery.c.id)
-                .options(selectinload(self.model.mentor))
                 .join(Chat, self.model.id == Chat.coursechapter_id)
                 .where(Chat.user_id == user_id)
                 .where(self.model.id == id)
             )
             results = await session.execute(statement)
-            result = results.all()
+            result = results.mappings().one_or_none()
             if not result:
                 raise NotFoundException()
-            result = {
-                **result[0][0].__dict__,
-                "messages_amount": result[0][1],
-            }
+            if "mentor_id" in result and result["mentor_id"]:
+                result = dict(result)
+                result["mentor"] = await UserService().retrieve(id=result["mentor_id"])
             return result
 
     async def themes(self, id: int, user_id: int) -> List[dict]:
@@ -60,7 +58,7 @@ class CourseChapterRepository(BaseRepository):
 
             statement = (
                 select(
-                    Theme,
+                    Theme.__table__.columns,
                     video_amount_subquery.c.video_amount,
                     video_amount_subquery.c.viewed_video_amount,
                 )
@@ -68,13 +66,5 @@ class CourseChapterRepository(BaseRepository):
                 .where(Theme.coursechapter_id == id)
             )
             results = await session.execute(statement)
-            results = results.all()
-            parsed_results = []
-            for result in results:
-                parsed_result = {
-                    **result[0].__dict__,
-                    "video_amount": result[1],
-                    "viewed_video_amount": result[2],
-                }
-                parsed_results.append(parsed_result)
-            return parsed_results
+            results = results.mappings().all()
+            return results

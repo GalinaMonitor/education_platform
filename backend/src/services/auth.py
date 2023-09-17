@@ -4,7 +4,7 @@ from typing import Union
 from src.auth import pwd_context, verify_password
 from src.exceptions import UnauthorizedException
 from src.repositories.user import UserRepository
-from src.schemas import AuthUser, User
+from src.schemas import AuthUser, Token, User
 
 
 class AuthService:
@@ -23,7 +23,7 @@ class AuthService:
             raise UnauthorizedException
         return user
 
-    async def create_access_token(self, email: str):
+    async def create_access_token(self, email: str) -> Token:
         from src import auth
 
         return auth.create_access_token(email)

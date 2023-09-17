@@ -17,7 +17,8 @@ class MyAuthProvider(AuthProvider):
         from src.services.auth import AuthService
 
         user = await AuthService().authenticate_admin(username, password)
-        request.session.update({"access_token": AuthService().create_access_token(user.email)})
+        token = await AuthService().create_access_token(user.email)
+        request.session.update(token.model_dump())
         return response
 
     async def is_authenticated(self, request: Request) -> bool:

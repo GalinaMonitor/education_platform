@@ -39,7 +39,7 @@ async def change_receive_time(
     current_user: Annotated[User, Depends(get_current_active_user)],
     course_service: CourseService = Depends(CourseService),
     user_service: UserService = Depends(UserService),
-):
+) -> None:
     await user_service.check_subscription(current_user)
     await course_service.change_receive_time(
         id=id,

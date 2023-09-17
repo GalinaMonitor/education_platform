@@ -53,7 +53,7 @@ async def activate_course_chapter(
     chat_service: ChatService = Depends(ChatService),
     coursechapter_service: CourseChapterService = Depends(CourseChapterService),
     user_service: UserService = Depends(UserService),
-):
+) -> None:
     await user_service.check_subscription(current_user)
     coursechapter = await coursechapter_service.retrieve(id=id)
     chat = await chat_service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)

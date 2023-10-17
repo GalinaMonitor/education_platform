@@ -8,7 +8,7 @@ const VideoMessage = ({ videoId, time = null }) => {
   );
   return (
     <div
-      className={`bg-black border-solid border-3 rounded-2xl relative m-10`}
+      className={`bg-black border-solid border-2 rounded-2xl relative m-10`}
       style={{ borderColor: "#ff7d1f" }}
     >
       <div className={"top-0 left-0 text-left"}>{video}</div>

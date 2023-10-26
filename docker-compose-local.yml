@@ -37,7 +37,6 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.12
-    image: education_platform-backend
     container_name: celery_beat
     entrypoint: [ "celery", "-A", "src.async_tasks.celery_config", "beat", "--loglevel=INFO" ]
 
@@ -46,7 +45,6 @@ services:
     networks:
       network:
         ipv4_address: 11.1.0.14
-    image: education_platform-backend
     container_name: celery_worker
     entrypoint: [ "celery", "-A", "src.async_tasks.celery_config", "worker", "--loglevel=INFO" ]
 

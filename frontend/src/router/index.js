@@ -6,6 +6,7 @@ import Welcome from "../pages/Welcome";
 import PrepareRestorePassword from "../pages/PrepareRestorePassword";
 import RestorePassword from "../pages/RestorePassword";
 import ActivateUser from "../pages/ActivateUser";
+import Privacy from "../pages/Privacy";
 
 export const RouteNames = {
   LOGIN: "/login",
@@ -16,6 +17,7 @@ export const RouteNames = {
   MAIN: "/",
   WELCOME: "/welcome",
   COURSE_CHAT: "/chat",
+  PRIVACY: "/privacy",
 };
 
 export const publicRoutes = [
@@ -33,6 +35,7 @@ export const publicRoutes = [
     path: `${RouteNames.ACTIVATE_USER}/:email/:uuid`,
     component: ActivateUser,
   },
+  { path: RouteNames.PRIVACY, component: Privacy },
 ];
 
 export const privateRoutes = [

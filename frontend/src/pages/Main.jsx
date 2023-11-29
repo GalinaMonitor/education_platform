@@ -8,11 +8,11 @@ import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutTwoBlocks from "../components/UI/LayoutTwoBlocks";
 import TimeOnPlatformCard from "../components/TimeOnPlatformCard";
-import UsersNumber from "../components/UsersNumber";
 import ShareLink from "../components/ShareLink";
 import { RouteNames } from "../router";
 import { useFetching } from "../hooks/useFetching";
 import UserService from "../services/UserService";
+import LinksBlock from "../components/UI/LinksBlock";
 
 const Main = () => {
   const { user, checkAuth } = useUserStore();
@@ -43,7 +43,7 @@ const Main = () => {
         )}
         <BaseChat />
       </LayoutTwoBlocks>
-      <UsersNumber className={"absolute bottom-5 right-16"} />
+      <LinksBlock className={"absolute bottom-5 right-16"} />
       <ShareLink className={"absolute bottom-5 left-16"} />
     </>
   );

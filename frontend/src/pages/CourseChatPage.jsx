@@ -10,8 +10,8 @@ import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutThreeBlocks from "../components/UI/LayoutThreeBlocks";
 import CourseChapterService from "../services/CourseChapterService";
-import UsersNumber from "../components/UsersNumber";
 import ShareLink from "../components/ShareLink";
+import LinksBlock from "../components/UI/LinksBlock";
 
 const CourseChatPage = () => {
   const { id } = useParams();
@@ -51,7 +51,7 @@ const CourseChatPage = () => {
           themeId={themeId}
         />
       </LayoutThreeBlocks>
-      <UsersNumber className={"absolute bottom-5 right-16"} />
+      <LinksBlock className={"absolute bottom-5 right-16"} />
       <ShareLink className={"absolute bottom-5 left-16"} />
     </>
   );

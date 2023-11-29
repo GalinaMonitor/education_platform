@@ -42,4 +42,5 @@ export const privateRoutes = [
   { path: RouteNames.MAIN, component: Main },
   { path: RouteNames.WELCOME, component: Welcome },
   { path: `${RouteNames.COURSE_CHAT}/:id`, component: CourseChatPage },
+  { path: RouteNames.PRIVACY, component: Privacy },
 ];

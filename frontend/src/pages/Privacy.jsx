@@ -1,8 +1,11 @@
 import React from "react";
+import { RouteNames } from "../router";
+import { Link } from "react-router-dom";
 
 const Privacy = () => {
   return (
-    <div>
+    <div className={"m-10"}>
+      <Link to={RouteNames.MAIN}>ВЕРНУТЬСЯ ОБРАТНО </Link>
       <h1>Политика в отношении обработки персональных данных</h1>
       <h2>1. Общие положения</h2>
       <p>

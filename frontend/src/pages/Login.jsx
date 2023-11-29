@@ -2,6 +2,7 @@ import React from "react";
 import { Image, Layout, Row } from "antd";
 import LoginForm from "../components/LoginForm";
 import { Link } from "react-router-dom";
+import LinksBlock from "../components/UI/LinksBlock";
 
 const Login = () => {
   return (
@@ -21,6 +22,7 @@ const Login = () => {
           СВЯЗАТЬСЯ С ТЕХНИЧЕСКОЙ ПОДДЕРЖКОЙ
         </Link>
       </div>
+      <LinksBlock className={"absolute bottom-5 right-16"} />
     </Layout>
   );
 };

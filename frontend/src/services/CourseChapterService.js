@@ -20,7 +20,7 @@ export default class CourseChapterService {
       requestUrl += `&before=${lastPrevious}`;
     }
     if (themeId) {
-      requestUrl += `&theme=${themeId}`;
+      requestUrl += `&theme_id=${themeId}`;
     }
     return $api.get(requestUrl);
   }

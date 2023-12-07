@@ -33,6 +33,7 @@ class Video(BaseModel):
     id: str
     order: int
     name: str
+    description: str
     link: str
     coursechapter_id: int
     theme_id: Optional[str] = None

@@ -136,6 +136,7 @@ class Video(Base):
     order = Column(Integer, default="")
     name = Column(Text, default="")
     link = Column(Text, default="")
+    description = Column(Text, default="")
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
     theme_id = Column(Text, ForeignKey("theme.id"), nullable=True, default=None)
     theme = relationship(Theme, back_populates="videos")

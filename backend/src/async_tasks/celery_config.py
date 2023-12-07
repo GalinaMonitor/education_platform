@@ -71,6 +71,7 @@ async def sync_kinescope() -> None:
                     data=Video(
                         id=db_video.id,
                         order=order,
+                        description=video.description,
                         name=video.title,
                         link=video.play_link,
                         coursechapter_id=course_chapter.id,
@@ -112,8 +113,8 @@ async def send_video(email: str, coursechapter_id: int) -> None:
     await MessageService().create(
         Message(
             datetime=datetime.now(),
-            content=new_video.link,
-            content_type=DataType.VIDEO,
+            content=f"{new_video.name}\n{new_video.description}",
+            content_type=DataType.TEXT,
             chat_id=chat.id,
             theme_id=new_video.theme_id,
         )
@@ -121,8 +122,8 @@ async def send_video(email: str, coursechapter_id: int) -> None:
     await MessageService().create(
         Message(
             datetime=datetime.now(),
-            content=new_video.name,
-            content_type=DataType.TEXT,
+            content=new_video.link,
+            content_type=DataType.VIDEO,
             chat_id=chat.id,
             theme_id=new_video.theme_id,
         )
@@ -161,8 +162,8 @@ async def send_video_all() -> None:
         await MessageService().create(
             Message(
                 datetime=datetime.now(),
-                content=new_video.link,
-                content_type=DataType.VIDEO,
+                content=f"{new_video.name}\n{new_video.description}",
+                content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=new_video.theme_id,
             )
@@ -170,8 +171,8 @@ async def send_video_all() -> None:
         await MessageService().create(
             Message(
                 datetime=datetime.now(),
-                content=new_video.name,
-                content_type=DataType.TEXT,
+                content=new_video.link,
+                content_type=DataType.VIDEO,
                 chat_id=chat.id,
                 theme_id=new_video.theme_id,
             )

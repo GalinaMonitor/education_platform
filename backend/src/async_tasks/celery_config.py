@@ -83,6 +83,7 @@ async def sync_kinescope() -> None:
                     data=Video(
                         id=video.id,
                         order=order,
+                        description=video.description,
                         name=video.title,
                         link=video.play_link,
                         coursechapter_id=course_chapter.id,

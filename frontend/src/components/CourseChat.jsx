@@ -22,6 +22,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
 
   const [fetchThemeMessages, isLoadingTheme, errorTheme] = useFetching(
     async () => {
+      setMessages([]);
       const response = await CourseChapterService.get_messages({
         id: courseChapterId,
         limit,
@@ -121,10 +122,10 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
           }
           nextDataFn={() => fetchMessagesNext()}
           nextEnd={!hasMoreNext}
-          nextLoading={isLoadingNext}
+          nextLoading={isLoadingNext || isLoadingTheme}
           previousDataFn={() => fetchMessagesPrevious()}
           previousEnd={!hasMorePrevious}
-          previousLoading={isLoadingPrevious}
+          previousLoading={isLoadingPrevious || isLoadingTheme}
           initialReverse={reverseColumn}
         >
           <div ref={scollToRef}></div>

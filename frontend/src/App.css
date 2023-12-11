@@ -2,6 +2,10 @@
     height: calc(100vh - 64px)
 }
 
+.brand-color {
+    color: #FF7D1F;
+}
+
 .card {
     background: white;
     border-radius: 10px;

@@ -1,10 +1,12 @@
 import "./App.css";
-import { ConfigProvider, Layout } from "antd";
-import AppRouter from "./components/AppRouter";
-import { BrowserRouter } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import useUserStore from "./store/useUserStore";
 import UserService from "./services/UserService";
+import Media from "react-media";
+import { BrowserRouter } from "react-router-dom";
+import { ConfigProvider, Layout } from "antd";
+import AppRouter from "./components/AppRouter";
+import MobileBlock from "./components/MobileBlock";
 
 const App = () => {
   const { checkAuth, setTimeOnPlatform, timeOnPlatform } = useUserStore();
@@ -46,7 +48,20 @@ const App = () => {
         }}
       >
         <Layout className={"h-full relative"}>
-          <AppRouter />
+          <Media
+            queries={{
+              small: "(max-width: 599px)",
+              medium: "(min-width: 600px) and (max-width: 1199px)",
+              large: "(min-width: 1200px)",
+            }}
+          >
+            {(matches) => (
+              <Fragment>
+                {(matches.small || matches.medium) && <MobileBlock />}
+                {matches.large && <AppRouter />}
+              </Fragment>
+            )}
+          </Media>
         </Layout>
       </ConfigProvider>
     </BrowserRouter>

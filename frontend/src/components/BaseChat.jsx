@@ -95,7 +95,7 @@ const BaseChat = () => {
         <Avatar size={70} src={"/tolya.svg"} />
         <TextBlock
           className={"ml-5"}
-          bigText={"Анатолий"}
+          bigText={"Робот Анатолий"}
           smallText={"Куратор"}
         />
       </Row>

@@ -12,7 +12,7 @@ const TolyaCard = ({ classname }) => {
         <TextBlock
           className={"mr-10"}
           smallText={"КУРАТОР"}
-          bigText={"Анатолий"}
+          bigText={"Робот Анатолий"}
         />
         <Link to={RouteNames.MAIN}>
           <Image width={111} src={"/tolya.svg"} preview={false} />

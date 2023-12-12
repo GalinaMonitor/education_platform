@@ -33,7 +33,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
         <p className={"title-l my-5"}>КАКОЙ УРОВЕНЬ ВАС ИНТЕРЕСУЕТ?</p>
-        <Link to={"https://ku-pomogu.ru/excel"}>
+        <Link to={"https://ku-pomogu.ru/learningstructure"}>
           <p className={"mb-10"}>ИЗУЧИТЬ СТРУКТУРУ ОБУЧЕНИЯ</p>
         </Link>
         <Row

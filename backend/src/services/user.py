@@ -13,7 +13,7 @@ from src.schemas import (
     User,
 )
 from src.services.base import BaseService
-from src.text_constants import INIT_MESSAGE_INSTRUCTION, INIT_MESSAGE_WELCOME
+from src.text_constants import INIT_MESSAGE_WELCOME
 
 
 class UserService(BaseService):
@@ -61,15 +61,6 @@ class UserService(BaseService):
             Message(
                 datetime=datetime.now(),
                 content=INIT_MESSAGE_WELCOME,
-                content_type=DataType.TEXT,
-                chat_id=chat.id,
-                theme_id=None,
-            )
-        )
-        await message_service.create(
-            Message(
-                datetime=datetime.now(),
-                content=INIT_MESSAGE_INSTRUCTION,
                 content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,

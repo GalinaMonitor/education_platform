@@ -147,9 +147,7 @@ async def send_video_all() -> None:
     from src.services.user import UserService
 
     time = datetime.strptime(str(datetime.now().hour), "%H").time()
-    # For test period
-    # chat_list = await ChatService().list(receive_time=time, is_active=True)
-    chat_list = await ChatService().list(is_active=True)
+    chat_list = await ChatService().list(receive_time=time, is_active=True)
     for chat in chat_list:
         from src.services.video import VideoService
 

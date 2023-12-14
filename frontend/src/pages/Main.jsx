@@ -7,7 +7,6 @@ import useUserStore from "../store/useUserStore";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutTwoBlocks from "../components/UI/LayoutTwoBlocks";
-import TimeOnPlatformCard from "../components/TimeOnPlatformCard";
 import ShareLink from "../components/ShareLink";
 import { RouteNames } from "../router";
 import { useFetching } from "../hooks/useFetching";
@@ -33,14 +32,7 @@ const Main = () => {
   return (
     <>
       <LayoutTwoBlocks>
-        {isOpenSettings ? (
-          <>
-            <Settings />
-            <TimeOnPlatformCard className={"mt-5"} />
-          </>
-        ) : (
-          <CourseList />
-        )}
+        {isOpenSettings ? <Settings /> : <CourseList />}
         <BaseChat />
       </LayoutTwoBlocks>
       <LinksBlock className={"absolute bottom-5 right-16"} />

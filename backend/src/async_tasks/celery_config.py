@@ -147,7 +147,8 @@ async def send_video_all() -> None:
     from src.services.user import UserService
 
     time = datetime.strptime(str(datetime.now().hour), "%H").time()
-    chat_list = await ChatService().list(receive_time=time, is_active=True)
+    chat_list = await ChatService().list(is_active=True)
+    # chat_list = await ChatService().list(receive_time=time, is_active=True)
     for chat in chat_list:
         from src.services.video import VideoService
 
@@ -229,7 +230,7 @@ def setup_periodic_tasks(sender, **kwargs) -> None:
         sync_kinescope_task,
     )
     sender.add_periodic_task(
-        crontab(hour="*", minute="0", day_of_week="1-5"),
+        crontab(hour="*", minute="*/3", day_of_week="1-5"),
         send_video_all_task,
     )
     sender.add_periodic_task(

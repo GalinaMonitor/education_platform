@@ -7,6 +7,7 @@ import PrepareRestorePassword from "../pages/PrepareRestorePassword";
 import RestorePassword from "../pages/RestorePassword";
 import ActivateUser from "../pages/ActivateUser";
 import Privacy from "../pages/Privacy";
+import Offer from "../pages/Offer";
 
 export const RouteNames = {
   LOGIN: "/login",
@@ -18,6 +19,7 @@ export const RouteNames = {
   WELCOME: "/welcome",
   COURSE_CHAT: "/chat",
   PRIVACY: "/privacy",
+  OFFER: "/offer",
 };
 
 export const publicRoutes = [
@@ -36,6 +38,7 @@ export const publicRoutes = [
     component: ActivateUser,
   },
   { path: RouteNames.PRIVACY, component: Privacy },
+  { path: RouteNames.OFFER, component: Offer },
 ];
 
 export const privateRoutes = [
@@ -43,4 +46,5 @@ export const privateRoutes = [
   { path: RouteNames.WELCOME, component: Welcome },
   { path: `${RouteNames.COURSE_CHAT}/:id`, component: CourseChatPage },
   { path: RouteNames.PRIVACY, component: Privacy },
+  { path: RouteNames.OFFER, component: Offer },
 ];

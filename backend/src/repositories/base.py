@@ -15,6 +15,7 @@ class BaseRepository:
             statement = select(self.model)
             for key, value in kwargs.items():
                 statement = statement.where(getattr(self.model, key) == value)
+            statement = statement.where(getattr(self.model, key) == value).order_by(getattr(self.model, "id"))
             results = await session.execute(statement)
             return results.scalars().all()
 

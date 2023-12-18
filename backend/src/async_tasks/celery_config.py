@@ -5,7 +5,7 @@ from celery import Celery
 from celery.schedules import crontab
 from sqlalchemy.exc import IntegrityError
 
-from src.exceptions import NotFoundException
+from src.exceptions import HasNoSubscriptionException, NotFoundException
 from src.kinescope.api import KinescopeClient
 from src.schemas import (
     AuthUser,
@@ -149,6 +149,11 @@ async def send_video_all() -> None:
     time = datetime.strptime(str(datetime.now().hour), "%H").time()
     chat_list = await ChatService().list(receive_time=time, is_active=True)
     for chat in chat_list:
+        user = await UserService().retrieve(id=chat.user_id)
+        try:
+            await UserService().check_subscription(user)
+        except HasNoSubscriptionException:
+            continue
         from src.services.video import VideoService
 
         new_video = await VideoService().list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
@@ -178,7 +183,6 @@ async def send_video_all() -> None:
         )
         await ChatService().update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
         coursechapter = await CourseChapterService().retrieve(id=chat.coursechapter_id)
-        user = await UserService().retrieve(id=chat.user_id)
         await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
 
 

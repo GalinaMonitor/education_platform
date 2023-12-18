@@ -1,5 +1,5 @@
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from celery import Celery
 from celery.schedules import crontab
@@ -19,6 +19,7 @@ from src.schemas import (
 )
 from src.services.mail import MailService
 from src.settings import settings
+from src.text_constants import SUBSCRIPTION_END_MESSAGE, SUBSCRIPTION_LAST_DAY_MESSAGE
 
 celery_app = Celery(
     broker=settings.redis_url,
@@ -191,18 +192,49 @@ def send_video_all_task() -> None:
     asyncio.run(send_video_all())
 
 
-async def check_subscription() -> None:
+async def check_subscription_end() -> None:
     date = datetime.now().date()
+    from src.services.message import MessageService
     from src.services.user import UserService
 
     users_without_subscription = await UserService().list(end_of_subscription=date)
     for user in users_without_subscription:
         await UserService().update(id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION))
+        await MessageService().create(
+            Message(
+                datetime=datetime.now(),
+                content=f"Ку, {user.fullname}.<br>" + SUBSCRIPTION_END_MESSAGE,
+                content_type=DataType.TEXT,
+                chat_id=(await UserService().get_base_chat(user.id)).id,
+            )
+        )
 
 
 @celery_app.task
-def check_subscription_task() -> None:
-    asyncio.run(check_subscription())
+def check_subscription_end_task() -> None:
+    asyncio.run(check_subscription_end())
+
+
+async def check_subscription_last_day() -> None:
+    tomorrow = datetime.now().date() + timedelta(days=1)
+    from src.services.message import MessageService
+    from src.services.user import UserService
+
+    users = await UserService().list(end_of_subscription=tomorrow)
+    for user in users:
+        await MessageService().create(
+            Message(
+                datetime=datetime.now(),
+                content=SUBSCRIPTION_LAST_DAY_MESSAGE,
+                content_type=DataType.TEXT,
+                chat_id=(await UserService().get_base_chat(user.id)).id,
+            )
+        )
+
+
+@celery_app.task
+def check_subscription_last_day_task() -> None:
+    asyncio.run(check_subscription_last_day())
 
 
 async def create_admin() -> None:
@@ -237,6 +269,10 @@ def setup_periodic_tasks(sender, **kwargs) -> None:
         send_video_all_task,
     )
     sender.add_periodic_task(
-        crontab(hour="0", minute="0", day_of_month="*"),
-        check_subscription_task,
+        crontab(hour="10", minute="0", day_of_month="*"),
+        check_subscription_end_task,
+    )
+    sender.add_periodic_task(
+        crontab(hour="10", minute="0", day_of_month="*"),
+        check_subscription_last_day_task,
     )

@@ -68,25 +68,6 @@ services:
       - backend
     entrypoint: [ "celery", "-A", "src.async_tasks.celery_config", "worker", "--loglevel=INFO" ]
 
-  postgres:
-    networks:
-      network:
-        ipv4_address: 11.1.0.100
-    image: postgres:13.3
-    container_name: postgres
-    env_file:
-      - .env
-    ports:
-      - '5432:5432'
-    restart: always
-    volumes:
-      - /data/postgresql/education_platform:/var/lib/postgresql/data
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin -d admin_db" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   frontend:
     networks:
       network:

@@ -34,10 +34,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
               Доступ ко всем программам и уровням <br />
               на 30 дней
             </p>
-            <p className={"title-l m-0"}>2 500 ₽ / 1 польз.</p>
-            <p className={"title-l m-0 brand-color"}>
-              <strike>5 000 ₽ / 1 польз.</strike>
-            </p>
+            <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
             {/* <Button type={"primary"} className={"big-button"}>*/}
             {/*  Оплатить подписку*/}
             {/* </Button>*/}
@@ -51,10 +48,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
               Доступ ко всем программам и уровням <br />
               на 90 дней
             </p>
-            <p className={"title-l m-0"}>6 000 ₽ / 1 польз.</p>
-            <p className={"title-l m-0 brand-color"}>
-              <strike>12 000 ₽ / 1 польз.</strike>
-            </p>
+            <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
             {/* <Button type={"primary"} className={"big-button"}>*/}
             {/*  Оплатить подписку*/}
             {/* </Button>*/}

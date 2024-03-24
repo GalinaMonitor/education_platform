@@ -30,9 +30,12 @@ async def get_payment_link(
 
 @router.post("/lifepay_callback/")
 async def lifepay_callback(
-    data: LifePayCallbackData, payment_service: PaymentService = Depends(), user_service: UserService = Depends()
+    data: LifePayCallbackData = Form(),
+    payment_service: PaymentService = Depends(),
+    user_service: UserService = Depends(),
 ):
     pprint(data)
+    data = LifePayCallbackData.model_validate(data)
     if data.status != "success":
         return
     user = await user_service.get_by_email(data.email)

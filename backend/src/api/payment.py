@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
@@ -45,10 +46,14 @@ async def lifepay_callback(
         return
     user = await user_service.get_by_email(data.email)
     subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop())
+    if user.end_of_subscription and user.end_of_subscription >= datetime.now():
+        end_of_subscription = user.end_of_subscription + subscription_info.duration
+    else:
+        end_of_subscription = datetime.now() + subscription_info.duration
     await user_service.update(
         user.id,
         UpdateUser(
-            end_of_subscription=user.end_of_subscription + subscription_info.duration,
+            end_of_subscription=end_of_subscription,
             subscription_type=SubscriptionType.LEARN_ALL,
         ),
     )

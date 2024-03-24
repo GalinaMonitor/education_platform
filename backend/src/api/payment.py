@@ -8,6 +8,7 @@ from pydantic import AnyUrl, Json
 from starlette.requests import Request
 
 from src.auth import get_current_active_user
+from src.logging_config import logger
 from src.schemas import (
     LifePayCallbackData,
     SubscriptionLength,
@@ -31,23 +32,18 @@ async def get_payment_link(
     return payment_data.payment_url
 
 
-async def get_data(request: Request):
-    try:
-        form = await request.form()
-        return json.loads(dict(form)["data"])
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid Form data")
+async def get_data(request: Request) -> LifePayCallbackData:
+    return LifePayCallbackData.model_validate(json.loads(dict(await request.form())["data"]))
 
 
 @router.post("/lifepay_callback/")
 async def lifepay_callback(
-    data=Depends(get_data),
+    data: LifePayCallbackData = Depends(get_data),
     payment_service: PaymentService = Depends(),
     user_service: UserService = Depends(),
 ):
-    pprint(data)
-    data = LifePayCallbackData.model_validate(data)
     if data.status != "success":
+        logger.warning(f"Payment error\n{data}")
         return
     user = await user_service.get_by_email(data.email)
     subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop().amount)

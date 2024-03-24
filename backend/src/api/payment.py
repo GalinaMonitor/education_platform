@@ -1,8 +1,10 @@
+from json import JSONDecodeError
 from pprint import pprint
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form
+from fastapi import APIRouter, Depends, Form, HTTPException
 from pydantic import AnyUrl, Json
+from starlette.requests import Request
 
 from src.auth import get_current_active_user
 from src.schemas import (
@@ -28,13 +30,31 @@ async def get_payment_link(
     return payment_data.payment_url
 
 
+async def get_body(request: Request):
+    content_type = request.headers.get("Content-Type")
+    if content_type is None:
+        raise HTTPException(status_code=400, detail="No Content-Type provided!")
+    elif content_type == "application/json":
+        try:
+            return await request.json()
+        except JSONDecodeError:
+            raise HTTPException(status_code=400, detail="Invalid JSON data")
+    elif content_type == "application/x-www-form-urlencoded" or content_type.startswith("multipart/form-data"):
+        try:
+            return await request.form()
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid Form data")
+    else:
+        raise HTTPException(status_code=400, detail="Content-Type not supported!")
+
+
 @router.post("/lifepay_callback/")
 async def lifepay_callback(
-    data: LifePayCallbackData = Form(),
+    data=Depends(get_body),
     payment_service: PaymentService = Depends(),
     user_service: UserService = Depends(),
 ):
-    pprint(data)
+    pprint(data.__dict__)
     data = LifePayCallbackData.model_validate(data)
     if data.status != "success":
         return

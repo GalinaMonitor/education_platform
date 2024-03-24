@@ -1,3 +1,4 @@
+import json
 from json import JSONDecodeError
 from pprint import pprint
 from typing import Annotated
@@ -30,31 +31,21 @@ async def get_payment_link(
     return payment_data.payment_url
 
 
-async def get_body(request: Request):
-    content_type = request.headers.get("Content-Type")
-    if content_type is None:
-        raise HTTPException(status_code=400, detail="No Content-Type provided!")
-    elif content_type == "application/json":
-        try:
-            return await request.json()
-        except JSONDecodeError:
-            raise HTTPException(status_code=400, detail="Invalid JSON data")
-    elif content_type == "application/x-www-form-urlencoded" or content_type.startswith("multipart/form-data"):
-        try:
-            return await request.form()
-        except Exception:
-            raise HTTPException(status_code=400, detail="Invalid Form data")
-    else:
-        raise HTTPException(status_code=400, detail="Content-Type not supported!")
+async def get_data(request: Request):
+    try:
+        form = await request.form()
+        return json.loads(dict(form)["data"])
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid Form data")
 
 
 @router.post("/lifepay_callback/")
 async def lifepay_callback(
-    data=Depends(get_body),
+    data=Depends(get_data),
     payment_service: PaymentService = Depends(),
     user_service: UserService = Depends(),
 ):
-    pprint(data.__dict__)
+    pprint(data)
     data = LifePayCallbackData.model_validate(data)
     if data.status != "success":
         return

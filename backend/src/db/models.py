@@ -65,7 +65,6 @@ class User(Base):
     end_of_subscription = Column(Date, default=None)
     subscription_type = Column(Enum(SubscriptionType))
     service_uuid = Column(UUID(as_uuid=True), default=uuid.uuid4)
-    service_payment_number = Column(Text, default="")
     chats = relationship(Chat, backref=backref("user"), cascade="all, delete")
 
     async def __admin_repr__(self, request: Request) -> str:

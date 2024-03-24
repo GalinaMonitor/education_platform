@@ -46,7 +46,7 @@ async def lifepay_callback(
         return
     user = await user_service.get_by_email(data.email)
     subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop())
-    if user.end_of_subscription and user.end_of_subscription >= datetime.now():
+    if user.end_of_subscription and user.end_of_subscription >= datetime.now().date():
         end_of_subscription = user.end_of_subscription + subscription_info.duration
     else:
         end_of_subscription = datetime.now() + subscription_info.duration

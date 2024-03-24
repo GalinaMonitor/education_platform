@@ -3,7 +3,12 @@ from urllib.parse import urljoin
 
 import httpx
 
-from src.schemas import BaseModel, PaymentData, SubscriptionLength
+from src.schemas import (
+    BaseModel,
+    LifePayCallbackPurchase,
+    PaymentData,
+    SubscriptionLength,
+)
 from src.settings import settings
 
 SUBSCRIPTION_PARAMS = {
@@ -44,9 +49,12 @@ class PaymentService:
             response = await client.post(url="bill", json=request_data)
         return PaymentData.model_validate(response.json()["data"])
 
-    def get_subscription_info_from_cost(self, amount: int):
+    def get_subscription_info_from_cost(self, purchase_data: LifePayCallbackPurchase):
         for subscription_info in SUBSCRIPTION_PARAMS.values():
-            if subscription_info["amount"] == amount:
+            if (
+                subscription_info["amount"] == purchase_data.amount
+                and subscription_info["description"] == purchase_data.name
+            ):
                 return SubscriptionSchema(
                     duration=subscription_info["duration"],
                     amount=subscription_info["amount"],

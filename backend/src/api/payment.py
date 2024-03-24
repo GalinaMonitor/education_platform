@@ -1,10 +1,8 @@
 import json
-from json import JSONDecodeError
-from pprint import pprint
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Form, HTTPException
-from pydantic import AnyUrl, Json
+from fastapi import APIRouter, Depends
+from pydantic import AnyUrl
 from starlette.requests import Request
 
 from src.auth import get_current_active_user
@@ -46,7 +44,7 @@ async def lifepay_callback(
         logger.warning(f"Payment error\n{data}")
         return
     user = await user_service.get_by_email(data.email)
-    subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop().amount)
+    subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop())
     await user_service.update(
         user.id,
         UpdateUser(

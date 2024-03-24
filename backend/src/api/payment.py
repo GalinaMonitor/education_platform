@@ -1,7 +1,7 @@
 from pprint import pprint
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Form
 from pydantic import AnyUrl
 
 from src.auth import get_current_active_user
@@ -30,7 +30,7 @@ async def get_payment_link(
 
 @router.post("/lifepay_callback/")
 async def lifepay_callback(
-    data: dict, payment_service: PaymentService = Depends(), user_service: UserService = Depends()
+    data: Annotated[dict, Form()], payment_service: PaymentService = Depends(), user_service: UserService = Depends()
 ):
     pprint(data)
     data = LifePayCallbackData.model_validate(data)

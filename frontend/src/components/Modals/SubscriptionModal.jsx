@@ -1,8 +1,20 @@
 import React from "react";
-import { Card, Image, Modal, Row } from "antd";
+import { Button, Card, Image, Modal, Row } from "antd";
 import { Link } from "react-router-dom";
+import { useFetching } from "../../hooks/useFetching";
+import PaymentService from "../../services/PaymentService";
 
 const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
+  const [fetchPayment, isLoading, error] = useFetching(
+    async (subscriptionType) => {
+      const paymentLink = await PaymentService.create_payment_link(
+        subscriptionType
+      );
+      console.log(paymentLink);
+      window.location = paymentLink.data;
+    }
+  );
+
   return (
     <Modal
       open={isModalOpen}
@@ -35,9 +47,13 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
               на 30 дней
             </p>
             <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
-            {/* <Button type={"primary"} className={"big-button"}>*/}
-            {/*  Оплатить подписку*/}
-            {/* </Button>*/}
+            <Button
+              type={"primary"}
+              className={"big-button mt-5"}
+              onClick={() => fetchPayment("month")}
+            >
+              Оплатить подписку
+            </Button>
           </Card>
           <Card
             style={{ height: "fit-content", borderColor: "#FF7D1F" }}
@@ -49,13 +65,17 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
               на 90 дней
             </p>
             <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
-            {/* <Button type={"primary"} className={"big-button"}>*/}
-            {/*  Оплатить подписку*/}
-            {/* </Button>*/}
+            <Button
+              type={"primary"}
+              className={"big-button mt-5"}
+              onClick={() => fetchPayment("quarter")}
+            >
+              Оплатить подписку
+            </Button>
           </Card>
         </Row>
         <Link to={"https://ku-pomogu.ru/for-companies"}>
-          {/* <p>БЕЗНАЛИЧНЫЙ РАСЧЁТ</p>*/}
+          <p>БЕЗНАЛИЧНЫЙ РАСЧЁТ</p>
           <p>ОПЛАТИТЬ ПОДПИСКУ</p>
         </Link>
         <Link

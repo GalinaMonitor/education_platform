@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
+    debug: bool = True
     db_url: str
     redis_url: str
     secret_key: str
@@ -17,6 +18,9 @@ class Settings(BaseSettings):
     sentry_dsn: str
     admin_email: str
     admin_password: str
+    lifepay_api_key: str
+    lifepay_login: str
+    service_url: str
 
 
 settings = Settings()

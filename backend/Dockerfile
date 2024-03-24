@@ -21,7 +21,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
-ENV POETRY_VERSION=1.3.0
+ENV POETRY_VERSION=1.8.2
 RUN curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION
 
 # Install main dependencies

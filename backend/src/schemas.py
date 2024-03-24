@@ -1,9 +1,9 @@
 import enum
 from datetime import date, datetime, time
-from typing import List, Optional, Union
+from typing import Any, List, Optional, Union
 from uuid import UUID
 
-from pydantic import NaiveDatetime
+from pydantic import AnyUrl, Field, NaiveDatetime, field_validator
 from pydantic.config import ConfigDict
 from pydantic.main import BaseModel as PydanticBaseModel
 
@@ -18,6 +18,11 @@ class DataType(str, enum.Enum):
     TEXT = "TEXT"
     VIDEO = "VIDEO"
     BUTTON = "BUTTON"
+
+
+class SubscriptionLength(str, enum.Enum):
+    MONTH = "month"
+    QUARTER = "quarter"
 
 
 class BaseModel(PydanticBaseModel):
@@ -188,3 +193,26 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class PaymentData(BaseModel):
+    status: int
+    number: str
+    payment_url: AnyUrl = Field(alias="paymentUrlWeb")
+
+
+class LifePayCallbackPurchase(BaseModel):
+    name: str
+    amount: int
+
+
+class LifePayCallbackData(BaseModel):
+    number: Any
+    status: str
+    email: str
+    purchase: list[LifePayCallbackPurchase]
+
+    @field_validator("number")
+    @classmethod
+    def parse_number(cls, value: int) -> str:
+        return str(value)

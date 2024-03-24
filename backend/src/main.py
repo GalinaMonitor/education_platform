@@ -12,6 +12,7 @@ from src.api.authentication import router as authentication_router
 from src.api.chat import router as chat_router
 from src.api.course import router as course_router
 from src.api.course_chapter import router as course_chapter_router
+from src.api.payment import router as payment_router
 from src.api.user import router as user_router
 from src.middlewares import LoggerMiddleware
 from src.settings import settings
@@ -28,7 +29,7 @@ admin.mount_to(app)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.front_url],
+    allow_origins=[settings.front_url, "https://api.life-pay.ru"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -53,5 +54,6 @@ app.include_router(chat_router, prefix="/chat")
 app.include_router(course_router, prefix="/course")
 app.include_router(course_chapter_router, prefix="/course_chapter")
 app.include_router(user_router, prefix="/user")
+app.include_router(payment_router, prefix="/payment")
 
 add_pagination(app)

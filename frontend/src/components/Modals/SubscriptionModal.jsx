@@ -48,6 +48,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </p>
             <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
             <Button
+              loading={isLoading}
               type={"primary"}
               className={"big-button mt-5"}
               onClick={() => fetchPayment("month")}
@@ -66,6 +67,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </p>
             <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
             <Button
+              loading={isLoading}
               type={"primary"}
               className={"big-button mt-5"}
               onClick={() => fetchPayment("quarter")}

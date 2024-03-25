@@ -5,15 +5,17 @@ import { useFetching } from "../../hooks/useFetching";
 import PaymentService from "../../services/PaymentService";
 
 const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
-  const [fetchPayment, isLoading, error] = useFetching(
-    async (subscriptionType) => {
-      const paymentLink = await PaymentService.create_payment_link(
-        subscriptionType
-      );
-      console.log(paymentLink);
+  const [fetchMonthPayment, isLoadingMonthPayment, errorMonthPayment] =
+    useFetching(async () => {
+      const paymentLink = await PaymentService.create_payment_link("month");
       window.location = paymentLink.data;
-    }
-  );
+    });
+
+  const [fetchQuarterPayment, isLoadingQuarterPayment, errorQuarterPayment] =
+    useFetching(async () => {
+      const paymentLink = await PaymentService.create_payment_link("quarter");
+      window.location = paymentLink.data;
+    });
 
   return (
     <Modal
@@ -48,10 +50,10 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </p>
             <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
             <Button
-              loading={isLoading}
+              loading={isLoadingMonthPayment}
               type={"primary"}
               className={"big-button mt-5"}
-              onClick={() => fetchPayment("month")}
+              onClick={fetchMonthPayment}
             >
               Оплатить подписку
             </Button>
@@ -67,10 +69,10 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </p>
             <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
             <Button
-              loading={isLoading}
+              loading={isLoadingQuarterPayment}
               type={"primary"}
               className={"big-button mt-5"}
-              onClick={() => fetchPayment("quarter")}
+              onClick={fetchQuarterPayment}
             >
               Оплатить подписку
             </Button>

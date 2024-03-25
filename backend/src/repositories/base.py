@@ -1,6 +1,6 @@
-from typing import Sequence, Union
+from typing import List, Sequence, Union
 
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 from src.db.config import async_session
 from src.db.models import Base
@@ -48,6 +48,12 @@ class BaseRepository:
             await session.commit()
             await session.refresh(model)
             return model
+
+    async def update_all(self, ids: List[Union[int, str]], data: dict) -> dict:
+        async with async_session() as session:
+            statement = update(self.model).where(self.model.id.in_(ids)).values(data).returning(self.model)
+            results = await session.scalars(statement)
+            return results.all()
 
     async def delete(self, id: int) -> None:
         async with async_session() as session:

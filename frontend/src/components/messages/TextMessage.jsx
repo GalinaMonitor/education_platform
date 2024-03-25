@@ -1,12 +1,16 @@
 import React from "react";
 import { formatDatetime } from "../../utils/utils";
 
-const TextMessage = ({ text, time = null }) => {
+const TextMessage = ({ text, time = null, isRead = true }) => {
   const parsedText = <p dangerouslySetInnerHTML={{ __html: text }} />;
   return (
     <div
       className={`border-2 border-solid rounded-2xl relative p-6 m-10`}
-      style={{ borderColor: "#ff7d1f" }}
+      style={{
+        borderColor: "#ff7d1f",
+        backgroundColor: isRead ? "#ffffff" : "#ff7d1f",
+        color: isRead ? "#000000" : "#ffffff",
+      }}
     >
       <div className={"top-0 left-0 text-left title-md whitespace-pre-line"}>
         {parsedText}

@@ -18,8 +18,8 @@ const ThemeList = ({ courseChapterId, setThemeId, color }) => {
   }, [courseChapterId]);
 
   return (
-    <Card text={"БЛОКИ ОБУЧЕНИЯ"}>
-      <div className={"pt-5"}>
+    <Card text={"БЛОКИ ОБУЧЕНИЯ"} style={{ height: "90%" }}>
+      <div style={{ height: "95%", overflow: "auto" }}>
         {themes.map((theme, index) => (
           <div
             className={"mb-5 cursor-pointer"}

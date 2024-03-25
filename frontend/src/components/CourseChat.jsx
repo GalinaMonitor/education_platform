@@ -105,10 +105,10 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
     >
       <div
         id="scrollableDiv"
-        className={`w-full pt-5 overflow-auto flex flex-col-reverse`}
+        className={`w-full overflow-auto flex flex-col-reverse`}
         style={{
           overflowAnchor: "none",
-          height: "80%",
+          height: "85%",
         }}
       >
         <InfiniteScroll

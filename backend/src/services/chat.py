@@ -39,7 +39,7 @@ class ChatService(BaseService):
     async def messages(
         self, id: int, pagination_params: PaginationParams | None = None, theme_id: str | None = None
     ) -> List[Message]:
-        return [parse_obj_as(Message, message) for message in await self.repo.messages(id, pagination_params, theme_id)]
+        return parse_obj_as(list[Message], await self.repo.messages(id, pagination_params, theme_id))
 
     async def activate(self, chat: Chat, user: User, coursechapter: CourseChapter) -> None:
         from src.async_tasks.celery_config import send_video_task

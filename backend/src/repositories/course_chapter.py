@@ -64,6 +64,7 @@ class CourseChapterRepository(BaseRepository):
                 )
                 .outerjoin(video_amount_subquery, Theme.id == video_amount_subquery.c.id)
                 .where(Theme.coursechapter_id == id)
+                .order_by(Theme.name)
             )
             results = await session.execute(statement)
             results = results.mappings().all()

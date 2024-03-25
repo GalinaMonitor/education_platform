@@ -41,8 +41,7 @@ async def get_messages(
 ) -> List[Message]:
     chat = await chat_service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
     messages = await chat_service.messages(chat.id, pagination_params, theme_id=theme_id)
-    for message in messages:
-        await message_service.update(message.id, data=Message(is_read=True))
+    await message_service.update_all([m.id for m in messages], data=Message(is_read=True))
     return messages
 
 

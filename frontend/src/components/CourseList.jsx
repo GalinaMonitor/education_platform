@@ -17,8 +17,8 @@ const CourseList = () => {
   }, []);
 
   return (
-    <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"}>
-      <div className={"pt-5"}>
+    <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"} style={{ height: "90%" }}>
+      <div style={{ height: "95%", overflow: "auto" }}>
         {courses.map((course, index) => (
           <CourseCard key={course.id} course={course} refresh={fetchCourses} />
         ))}

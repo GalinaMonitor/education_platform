@@ -76,7 +76,7 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - /data/postgresql/education_platform:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U admin -d admin_db" ]
       interval: 10s
@@ -97,3 +97,6 @@ services:
     ports:
       - "4000:80"
     container_name: frontend
+
+volumes:
+    postgres-data:

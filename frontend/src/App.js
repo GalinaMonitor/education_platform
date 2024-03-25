@@ -7,6 +7,10 @@ import { BrowserRouter } from "react-router-dom";
 import { ConfigProvider, Layout } from "antd";
 import AppRouter from "./components/AppRouter";
 import MobileBlock from "./components/MobileBlock";
+import "./fonts/GraphikLCG-Bold.ttf";
+import "./fonts/GraphikLCG-Regular.ttf";
+import "./fonts/GraphikLCG-Semibold.ttf";
+import "./fonts/GraphikLCG-Medium.ttf";
 
 const App = () => {
   const { checkAuth, setTimeOnPlatform, timeOnPlatform } = useUserStore();
@@ -36,7 +40,7 @@ const App = () => {
           token: {
             colorPrimary: "#FF7D1F",
             colorInfo: "#FF7D1F",
-            fontFamily: "Unbounded",
+            fontFamily: "Semibold",
             borderRadius: 10,
             fontSize: 12,
             controlHeight: 40,

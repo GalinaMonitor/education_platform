@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "Bold";
+  src: local("GraphikLCG-Bold"),
+    url("./fonts/GraphikLCG-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Medium";
+  src: local("GraphikLCG-Medium"),
+    url("./fonts/GraphikLCG-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Regular";
+  src: local("GraphikLCG-Regular"),
+    url("./fonts/GraphikLCG-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Semibold";
+  src: local("GraphikLCG-Semibold"),
+    url("./fonts/GraphikLCG-Semibold.ttf") format("truetype");
+}
+
 .h100 {
     height: calc(100vh - 64px)
 }

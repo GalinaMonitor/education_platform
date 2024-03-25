@@ -7,7 +7,7 @@ export const success = (text) =>
     placement: "top",
     closeIcon: null,
     style: {
-      fontFamily: "Unbounded",
+      fontFamily: "Semibold",
       backgroundColor: "#e1ffd6",
     },
   });
@@ -18,7 +18,7 @@ export const error = (text) =>
     placement: "top",
     closeIcon: null,
     style: {
-      fontFamily: "Unbounded",
+      fontFamily: "Semibold",
       backgroundColor: "#ffd6d6",
     },
   });

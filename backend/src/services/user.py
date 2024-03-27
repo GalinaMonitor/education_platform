@@ -31,7 +31,7 @@ class UserService(BaseService):
                 "email": data.email,
                 "hashed_password": pwd_context.hash(data.password),
                 "subscription_type": SubscriptionType.DEMO,
-                "end_of_subscription": datetime.now().date() + timedelta(days=28),
+                "end_of_subscription": datetime.now().date() + timedelta(days=4),
             }
         )
         user = self.model.model_validate(raw_user)

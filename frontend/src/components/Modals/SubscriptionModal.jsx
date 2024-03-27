@@ -43,11 +43,8 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             style={{ height: "fit-content", borderColor: "#FF7D1F" }}
             className={"text-center p-10 content m-5"}
           >
-            <p className={"title-l m-0 brand-color"}>Месячная</p>
-            <p className={"m-5"}>
-              Доступ ко всем программам и уровням <br />
-              на 30 дней
-            </p>
+            <p className={"title-l m-0 brand-color"}>30 дней</p>
+            <p className={"m-5"}>Доступ ко всем программам и уровням</p>
             <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
             <Button
               loading={isLoadingMonthPayment}
@@ -62,11 +59,8 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             style={{ height: "fit-content", borderColor: "#FF7D1F" }}
             className={"text-center p-10 content m-5"}
           >
-            <p className={"title-l m-0 brand-color"}>Квартальная</p>
-            <p className={"m-5"}>
-              Доступ ко всем программам и уровням <br />
-              на 90 дней
-            </p>
+            <p className={"title-l m-0 brand-color"}>90 дней</p>
+            <p className={"m-5"}>Доступ ко всем программам и уровням</p>
             <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
             <Button
               loading={isLoadingQuarterPayment}

@@ -7,6 +7,7 @@ from src.schemas import (
     AuthUser,
     Chat,
     ChatMessages,
+    ChatType,
     DataType,
     Message,
     SubscriptionType,
@@ -51,11 +52,7 @@ class UserService(BaseService):
         from src.services.course_chapter import CourseChapterService
         from src.services.message import MessageService
 
-        chat = await ChatService().create(
-            Chat(
-                user_id=user.id,
-            )
-        )
+        chat = await ChatService().create(Chat(user_id=user.id, chat_type=ChatType.MAIN))
         message_service = MessageService()
         await message_service.create(
             Message(

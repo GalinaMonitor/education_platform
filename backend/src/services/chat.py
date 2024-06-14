@@ -8,6 +8,7 @@ from src.repositories.chat import ChatRepository
 from src.schemas import (
     Chat,
     ChatMessages,
+    ChatType,
     CourseChapter,
     DataType,
     Message,
@@ -29,7 +30,7 @@ class ChatService(BaseService):
             result = await self.repo.get_from_user_and_chapter(user_id, coursechapter_id)
         except NotFoundException:
             result = await self.repo.create(
-                ChatMessages(user_id=user_id, coursechapter_id=coursechapter_id).model_dump()
+                ChatMessages(user_id=user_id, coursechapter_id=coursechapter_id, chat_type=ChatType.COURSE).model_dump()
             )
         return self.model.model_validate(result)
 

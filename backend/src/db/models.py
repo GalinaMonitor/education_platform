@@ -16,7 +16,7 @@ from sqlalchemy.dialects.postgresql import TIME
 from sqlalchemy.orm import DeclarativeBase, backref, relationship
 from starlette.requests import Request
 
-from src.schemas import DataType, SubscriptionType
+from src.schemas import ChatType, DataType, SubscriptionType
 
 
 class Base(DeclarativeBase):
@@ -34,6 +34,7 @@ class Chat(Base):
     last_video = Column(Integer, default=0)
     get_welcome_message = Column(Boolean, default=False)
     coursechapter_id = Column(Integer, ForeignKey("coursechapter.id"), nullable=True, default=None)
+    chat_type = Column(Enum(ChatType), default=ChatType.COURSE)
     messages = relationship("Message", backref=backref("chat"), cascade="all, delete")
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 

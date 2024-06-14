@@ -14,6 +14,11 @@ class SubscriptionType(str, enum.Enum):
     LEARN_ALL = "Изучаю всё"
 
 
+class ChatType(str, enum.Enum):
+    COURSE = "Чат курса"
+    MAIN = "Главный чат"
+
+
 class DataType(str, enum.Enum):
     TEXT = "TEXT"
     VIDEO = "VIDEO"
@@ -156,6 +161,7 @@ class Chat(BaseModel):
     id: Optional[int] = None
     user_id: Optional[int] = None
     receive_time: Optional[Union[time, datetime]] = None
+    chat_type: Optional[ChatType] = None
     last_video: Optional[int] = None
     coursechapter_id: Optional[int] = None
     get_welcome_message: Optional[bool] = None

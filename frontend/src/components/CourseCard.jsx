@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useFetching } from "../hooks/useFetching";
 import CourseChapterService from "../services/CourseChapterService";
 
-const CourseCard = ({ course, refresh }) => {
+const CourseCard = ({ course, refresh, selected }) => {
   const [isTimeModalOpen, setIsTimeModalOpen] = useState(false);
   const [isCourseModalOpen, setIsCourseModalOpen] = useState(false);
   const [courseChapter, setCourseChapter] = useState(null);
@@ -108,7 +108,7 @@ const CourseCard = ({ course, refresh }) => {
             />
           </div>
         )}
-        <Divider color={course.color} />
+        <Divider color={course.color} selected={selected} />
       </div>
       <ChooseTimeModal
         isModalOpen={isTimeModalOpen}

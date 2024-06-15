@@ -1,6 +1,7 @@
 from datetime import time
 from typing import List
 
+from fastapi import Depends
 from pydantic.tools import parse_obj_as
 
 from src.repositories.course import CourseRepository
@@ -11,9 +12,9 @@ from src.services.base import BaseService
 class CourseService(BaseService):
     model = Course
 
-    def __init__(self):
+    def __init__(self, repo: CourseRepository = Depends()):
         super().__init__()
-        self.repo = CourseRepository()
+        self.repo = repo
 
     async def list(self, user_id: int) -> List[CourseRead]:
         return [parse_obj_as(CourseRead, course) for course in await self.repo.list(user_id)]

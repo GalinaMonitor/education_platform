@@ -1,5 +1,7 @@
 from typing import List, Union
 
+from fastapi import Depends
+
 from src.repositories.base import BaseRepository
 from src.schemas import BaseModel
 
@@ -7,8 +9,8 @@ from src.schemas import BaseModel
 class BaseService:
     model: BaseModel = None
 
-    def __init__(self):
-        self.repo = BaseRepository()
+    def __init__(self, repo: BaseRepository = Depends()):
+        self.repo = repo
 
     async def list(self, **kwargs) -> List[BaseModel]:
         return [self.model.model_validate(model) for model in await self.repo.list(**kwargs)]

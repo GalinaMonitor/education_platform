@@ -11,4 +11,11 @@ async_session = async_sessionmaker(engine, autocommit=False, expire_on_commit=Fa
 
 async def get_session() -> AsyncGenerator:
     async with async_session() as session:
-        yield session
+        try:
+            yield session
+        except Exception as e:
+            await session.rollback()
+            raise e
+        finally:
+            await session.commit()
+            await session.close()

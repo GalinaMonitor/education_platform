@@ -4,23 +4,36 @@ import { useFetching } from "../hooks/useFetching";
 import Card from "./UI/Card";
 import CourseCard from "./CourseCard";
 
-const CourseList = () => {
+const CourseList = ({ courseChapterId }) => {
   const [courses, setCourses] = useState([]);
 
   const [fetchCourses, isLoading, error] = useFetching(async () => {
     const response = await CourseService.get();
+    console.log(
+      courseChapterId,
+      JSON.stringify(15),
+      response,
+      courseChapterId === JSON.stringify(15)
+    );
     setCourses([...response.data]);
   });
 
   useEffect(() => {
     fetchCourses();
-  }, []);
+  }, [courseChapterId]);
 
   return (
     <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"} style={{ height: "90%" }}>
       <div style={{ height: "95%", overflow: "auto" }}>
         {courses.map((course, index) => (
-          <CourseCard key={course.id} course={course} refresh={fetchCourses} />
+          <CourseCard
+            key={course.id}
+            course={course}
+            refresh={fetchCourses}
+            selected={
+              courseChapterId === JSON.stringify(course.course_chapter_id)
+            }
+          />
         ))}
       </div>
     </Card>

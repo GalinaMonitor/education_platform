@@ -1,7 +1,11 @@
 import uuid
 from datetime import datetime, timedelta
+from urllib.parse import urljoin
 
-from src.exceptions import HasNoSubscriptionException
+from fastapi import Depends
+from sqlalchemy.exc import IntegrityError
+
+from src.exceptions import AlreadyRegisteredException, HasNoSubscriptionException
 from src.repositories.user import UserRepository
 from src.schemas import (
     AuthUser,
@@ -14,27 +18,31 @@ from src.schemas import (
     User,
 )
 from src.services.base import BaseService
+from src.settings import settings
 from src.text_constants import INIT_MESSAGE_WELCOME
 
 
 class UserService(BaseService):
     model = User
 
-    def __init__(self):
+    def __init__(self, repo: UserRepository = Depends()):
         super().__init__()
-        self.repo = UserRepository()
+        self.repo = repo
 
     async def create(self, data: AuthUser) -> User:
         from src.auth import pwd_context
 
-        raw_user = await self.repo.create(
-            {
-                "email": data.email,
-                "hashed_password": pwd_context.hash(data.password),
-                "subscription_type": SubscriptionType.DEMO,
-                "end_of_subscription": datetime.now().date() + timedelta(days=4),
-            }
-        )
+        try:
+            raw_user = await self.repo.create(
+                {
+                    "email": data.email,
+                    "hashed_password": pwd_context.hash(data.password),
+                    "subscription_type": SubscriptionType.DEMO,
+                    "end_of_subscription": datetime.now().date() + timedelta(days=4),
+                }
+            )
+        except IntegrityError:
+            raise AlreadyRegisteredException
         user = self.model.model_validate(raw_user)
         await self.init_user(user)
         await self.prepare_activate_user(user)
@@ -59,6 +67,15 @@ class UserService(BaseService):
                 datetime=datetime.now(),
                 content=INIT_MESSAGE_WELCOME,
                 content_type=DataType.TEXT,
+                chat_id=chat.id,
+                theme_id=None,
+            )
+        )
+        await message_service.create(
+            Message(
+                datetime=datetime.now(),
+                content=f"{settings.aws_host}/{settings.aws_bucket_name}/Закрепленные материалы-41aef431-ea72-4f28-ada0-619381dc899e.png",
+                content_type=DataType.IMAGE,
                 chat_id=chat.id,
                 theme_id=None,
             )

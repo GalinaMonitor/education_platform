@@ -14,7 +14,7 @@ router = APIRouter()
 @router.get("")
 async def get_courses(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    course_service: CourseService = Depends(CourseService),
+    course_service: CourseService = Depends(),
 ) -> List[CourseRead]:
     return await course_service.list(user_id=current_user.id)
 
@@ -27,7 +27,7 @@ async def get_course(id: int, course_service: CourseService = Depends(CourseServ
 @router.get("/{id}/course_chapters")
 async def get_course_chapters(
     id: int,
-    course_service: CourseService = Depends(CourseService),
+    course_service: CourseService = Depends(),
 ) -> List[CourseChapterThemes]:
     return await course_service.course_chapters(id)
 
@@ -37,8 +37,8 @@ async def change_receive_time(
     time: Time,
     id: int,
     current_user: Annotated[User, Depends(get_current_active_user)],
-    course_service: CourseService = Depends(CourseService),
-    user_service: UserService = Depends(UserService),
+    course_service: CourseService = Depends(),
+    user_service: UserService = Depends(),
 ) -> None:
     await user_service.check_subscription(current_user)
     await course_service.change_receive_time(

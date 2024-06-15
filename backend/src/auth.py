@@ -8,6 +8,7 @@ from passlib.context import CryptContext
 
 from src.exceptions import UnauthorizedException
 from src.schemas import Token, User
+from src.services.user import UserService
 from src.settings import settings
 
 ALGORITHM = "HS256"
@@ -33,9 +34,9 @@ def create_access_token(email: str) -> Token:
     return Token(access_token=encoded_jwt, token_type="bearer")
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> User:
-    from src.services.user import UserService
-
+async def get_current_user(
+    token: Annotated[str, Depends(oauth2_scheme)], user_service: UserService = Depends()
+) -> User:
     try:
         payload = jwt.decode(token, settings.secret_key, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
@@ -43,7 +44,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]) -> Use
             raise UnauthorizedException
     except JWTError:
         raise UnauthorizedException
-    user = await UserService().get_by_email(username)
+    user = await user_service.get_by_email(username)
     if user is None:
         raise UnauthorizedException
     return user

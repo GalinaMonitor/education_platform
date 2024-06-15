@@ -37,7 +37,7 @@ const CourseChatPage = () => {
           <Settings />
         ) : (
           <>
-            <CourseList />
+            <CourseList courseChapterId={id} />
           </>
         )}
         <ThemeList

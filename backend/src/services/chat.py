@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 
+from fastapi import Depends
 from pydantic.tools import parse_obj_as
 
 from src.exceptions import NotFoundException
@@ -21,9 +22,9 @@ from src.services.base import BaseService
 class ChatService(BaseService):
     model = Chat
 
-    def __init__(self):
+    def __init__(self, repo: ChatRepository = Depends()):
         super().__init__()
-        self.repo = ChatRepository()
+        self.repo = repo
 
     async def get_or_create_from_user_and_chapter(self, user_id: int, coursechapter_id: int) -> Chat:
         try:
@@ -61,6 +62,7 @@ class ChatService(BaseService):
             await self.repo.update(chat.id, {"get_welcome_message": True})
             send_video_task.delay(email=user.email, coursechapter_id=coursechapter.id)
         all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=coursechapter.course_id)
-        for deactivate_chat in all_chats:
-            await self.repo.update(deactivate_chat.id, {"is_active": False})
         await self.repo.update(chat.id, {"is_active": True})
+        for deactivate_chat in all_chats:
+            if deactivate_chat.id != chat.id:
+                await self.repo.update(deactivate_chat.id, {"is_active": False})

@@ -23,6 +23,7 @@ class DataType(str, enum.Enum):
     TEXT = "TEXT"
     VIDEO = "VIDEO"
     BUTTON = "BUTTON"
+    IMAGE = "IMAGE"
 
 
 class SubscriptionLength(str, enum.Enum):

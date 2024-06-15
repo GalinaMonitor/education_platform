@@ -1,4 +1,5 @@
 from typing import Annotated
+from uuid import uuid4
 
 from fastapi import APIRouter, Depends, UploadFile
 from fastapi_pagination import Page, paginate
@@ -45,7 +46,7 @@ async def update_avatar(
     aws_client: AWSClient = Depends(AWSClient),
 ) -> str:
     file_format = photo.filename.split(".")[-1]
-    filename = f"{current_user.email}.{file_format}"
+    filename = f"{current_user.email}-{uuid4()}.{file_format}"
     aws_client.delete_file(filename)
     aws_client.upload_file(photo.file, filename)
     await user_service.update(

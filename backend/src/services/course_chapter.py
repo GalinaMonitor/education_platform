@@ -1,5 +1,6 @@
 from typing import List
 
+from fastapi import Depends
 from pydantic.tools import parse_obj_as
 
 from src.repositories.course_chapter import CourseChapterRepository
@@ -10,9 +11,9 @@ from src.services.base import BaseService
 class CourseChapterService(BaseService):
     model = CourseChapter
 
-    def __init__(self):
+    def __init__(self, repo: CourseChapterRepository = Depends()):
         super().__init__()
-        self.repo = CourseChapterRepository()
+        self.repo = repo
 
     async def retrieve_from_user_and_id(self, id: int, user_id: int) -> CourseChapterRead:
         return CourseChapterRead.model_validate(await self.repo.retrieve_from_user_and_id(id, user_id))

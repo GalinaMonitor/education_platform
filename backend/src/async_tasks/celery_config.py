@@ -5,8 +5,15 @@ from celery import Celery
 from celery.schedules import crontab
 from sqlalchemy.exc import IntegrityError
 
+from src.db.config import async_session
 from src.exceptions import HasNoSubscriptionException, NotFoundException
 from src.kinescope.api import KinescopeClient
+from src.repositories.chat import ChatRepository
+from src.repositories.course_chapter import CourseChapterRepository
+from src.repositories.message import MessageRepository
+from src.repositories.theme import ThemeRepository
+from src.repositories.user import UserRepository
+from src.repositories.video import VideoRepository
 from src.schemas import (
     AuthUser,
     Chat,
@@ -42,55 +49,61 @@ async def sync_kinescope() -> None:
     from src.services.theme import ThemeService
     from src.services.video import VideoService
 
-    course_chapters = await CourseChapterService().list()
-    for course_chapter in course_chapters:
-        if not course_chapter.kinescope_project_id:
-            continue
-        video_list = KinescopeClient().get_project_video_list(course_chapter.kinescope_project_id)
-        for video in video_list:
-            if video.folder_id:
+    async with async_session() as session:
+        theme_service = ThemeService(ThemeRepository(session))
+        coursechapter_service = CourseChapterService(CourseChapterRepository(session))
+        video_service = VideoService(VideoRepository(session))
+
+        course_chapters = await coursechapter_service.list()
+        for course_chapter in course_chapters:
+            if not course_chapter.kinescope_project_id:
+                continue
+            video_list = KinescopeClient().get_project_video_list(course_chapter.kinescope_project_id)
+            for video in video_list:
+                if video.folder_id:
+                    try:
+                        theme = await theme_service.retrieve(id=video.folder_id)
+                    except NotFoundException:
+                        theme = await theme_service.create(
+                            data=Theme(
+                                id=video.folder_id,
+                                name=video.folder_name,
+                                coursechapter_id=course_chapter.id,
+                            )
+                        )
+                else:
+                    theme = None
                 try:
-                    theme = await ThemeService().retrieve(id=video.folder_id)
-                except NotFoundException:
-                    theme = await ThemeService().create(
-                        data=Theme(
-                            id=video.folder_id,
-                            name=video.folder_name,
+                    order = int(video.title.split(". ")[0])
+                except Exception:
+                    continue
+                try:
+                    db_video = await video_service.retrieve(id=video.id)
+                    await video_service.update(
+                        id=db_video.id,
+                        data=Video(
+                            id=db_video.id,
+                            order=order,
+                            description=video.description,
+                            name=video.title,
+                            link=video.play_link,
                             coursechapter_id=course_chapter.id,
+                            theme_id=theme.id if theme else None,
+                        ),
+                    )
+                except NotFoundException:
+                    await video_service.create(
+                        data=Video(
+                            id=video.id,
+                            order=order,
+                            description=video.description,
+                            name=video.title,
+                            link=video.play_link,
+                            coursechapter_id=course_chapter.id,
+                            theme_id=theme.id if theme else None,
                         )
                     )
-            else:
-                theme = None
-            try:
-                order = int(video.title.split(". ")[0])
-            except Exception:
-                continue
-            try:
-                db_video = await VideoService().retrieve(id=video.id)
-                await VideoService().update(
-                    id=db_video.id,
-                    data=Video(
-                        id=db_video.id,
-                        order=order,
-                        description=video.description,
-                        name=video.title,
-                        link=video.play_link,
-                        coursechapter_id=course_chapter.id,
-                        theme_id=theme.id if theme else None,
-                    ),
-                )
-            except NotFoundException:
-                await VideoService().create(
-                    data=Video(
-                        id=video.id,
-                        order=order,
-                        description=video.description,
-                        name=video.title,
-                        link=video.play_link,
-                        coursechapter_id=course_chapter.id,
-                        theme_id=theme.id if theme else None,
-                    )
-                )
+        session.commit()
 
 
 @celery_app.task
@@ -105,35 +118,45 @@ async def send_video(email: str, coursechapter_id: int) -> None:
     from src.services.user import UserService
     from src.services.video import VideoService
 
-    user = await UserService().get_by_email(email)
-    chat = await ChatService().get_or_create_from_user_and_chapter(user_id=user.id, coursechapter_id=coursechapter_id)
-    new_video = await VideoService().list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
-    if new_video:
-        new_video = new_video[0]
-    else:
-        return
-    await MessageService().create(
-        Message(
-            datetime=datetime.now(),
-            content=f"{new_video.name}\n{new_video.description}",
-            content_type=DataType.TEXT,
-            chat_id=chat.id,
-            theme_id=new_video.theme_id,
+    async with async_session() as session:
+        coursechapter_service = CourseChapterService(CourseChapterRepository(session))
+        video_service = VideoService(VideoRepository(session))
+        chat_service = ChatService(ChatRepository(session))
+        user_service = UserService(UserRepository(session))
+        message_service = MessageService(MessageRepository(session))
+
+        user = await user_service.get_by_email(email)
+        chat = await chat_service.get_or_create_from_user_and_chapter(
+            user_id=user.id, coursechapter_id=coursechapter_id
         )
-    )
-    await MessageService().create(
-        Message(
-            datetime=datetime.now(),
-            content=new_video.link,
-            content_type=DataType.VIDEO,
-            chat_id=chat.id,
-            theme_id=new_video.theme_id,
+        new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+        if new_video:
+            new_video = new_video[0]
+        else:
+            return
+        await message_service.create(
+            Message(
+                datetime=datetime.now(),
+                content=f"{new_video.name}\n{new_video.description}",
+                content_type=DataType.TEXT,
+                chat_id=chat.id,
+                theme_id=new_video.theme_id,
+            )
         )
-    )
-    await ChatService().update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
-    coursechapter = await CourseChapterService().retrieve(id=chat.coursechapter_id)
-    user = await UserService().retrieve(id=chat.user_id)
-    await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+        await message_service.create(
+            Message(
+                datetime=datetime.now(),
+                content=new_video.link,
+                content_type=DataType.VIDEO,
+                chat_id=chat.id,
+                theme_id=new_video.theme_id,
+            )
+        )
+        await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+        coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
+        user = await user_service.retrieve(id=chat.user_id)
+        await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+        session.commit()
 
 
 @celery_app.task
@@ -145,46 +168,54 @@ async def send_video_all() -> None:
     from src.services.chat import ChatService
     from src.services.course_chapter import CourseChapterService
     from src.services.mail import MailService
+    from src.services.message import MessageService
     from src.services.user import UserService
+    from src.services.video import VideoService
 
-    time = datetime.strptime(str(datetime.now().hour), "%H").time()
-    chat_list = await ChatService().list(receive_time=time, is_active=True)
-    for chat in chat_list:
-        user = await UserService().retrieve(id=chat.user_id)
-        try:
-            await UserService().check_subscription(user)
-        except HasNoSubscriptionException:
-            continue
-        from src.services.video import VideoService
+    async with async_session() as session:
+        coursechapter_service = CourseChapterService(CourseChapterRepository(session))
+        chat_service = ChatService(ChatRepository(session))
+        user_service = UserService(UserRepository(session))
+        video_service = VideoService(VideoRepository(session))
+        message_service = MessageService(MessageRepository(session))
 
-        new_video = await VideoService().list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
-        if new_video:
-            new_video = new_video[0]
-        else:
-            continue
-        from src.services.message import MessageService
+        time = datetime.strptime(str(datetime.now().hour), "%H").time()
+        chat_list = await chat_service.list(receive_time=time, is_active=True)
+        for chat in chat_list:
+            user = await user_service.retrieve(id=chat.user_id)
+            try:
+                await user_service.check_subscription(user)
+            except HasNoSubscriptionException:
+                continue
 
-        await MessageService().create(
-            Message(
-                datetime=datetime.now(),
-                content=f"{new_video.name}\n{new_video.description}",
-                content_type=DataType.TEXT,
-                chat_id=chat.id,
-                theme_id=new_video.theme_id,
+            new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+            if new_video:
+                new_video = new_video[0]
+            else:
+                continue
+
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=f"{new_video.name}\n{new_video.description}",
+                    content_type=DataType.TEXT,
+                    chat_id=chat.id,
+                    theme_id=new_video.theme_id,
+                )
             )
-        )
-        await MessageService().create(
-            Message(
-                datetime=datetime.now(),
-                content=new_video.link,
-                content_type=DataType.VIDEO,
-                chat_id=chat.id,
-                theme_id=new_video.theme_id,
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=new_video.link,
+                    content_type=DataType.VIDEO,
+                    chat_id=chat.id,
+                    theme_id=new_video.theme_id,
+                )
             )
-        )
-        await ChatService().update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
-        coursechapter = await CourseChapterService().retrieve(id=chat.coursechapter_id)
-        await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+            await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+            coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
+            await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+        session.commit()
 
 
 @celery_app.task
@@ -197,17 +228,22 @@ async def check_subscription_end() -> None:
     from src.services.message import MessageService
     from src.services.user import UserService
 
-    users_without_subscription = await UserService().list(end_of_subscription=date)
-    for user in users_without_subscription:
-        await UserService().update(id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION))
-        await MessageService().create(
-            Message(
-                datetime=datetime.now(),
-                content=f"Ку, {user.fullname}.<br>" + SUBSCRIPTION_END_MESSAGE,
-                content_type=DataType.TEXT,
-                chat_id=(await UserService().get_base_chat(user.id)).id,
+    async with async_session() as session:
+        user_service = UserService(UserRepository(session))
+        message_service = MessageService(MessageRepository(session))
+
+        users_without_subscription = await user_service.list(end_of_subscription=date)
+        for user in users_without_subscription:
+            await user_service.update(id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION))
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=f"Ку, {user.fullname}.<br>" + SUBSCRIPTION_END_MESSAGE,
+                    content_type=DataType.TEXT,
+                    chat_id=(await UserService().get_base_chat(user.id)).id,
+                )
             )
-        )
+        session.commit()
 
 
 @celery_app.task
@@ -216,20 +252,25 @@ def check_subscription_end_task() -> None:
 
 
 async def check_subscription_last_day() -> None:
-    tomorrow = datetime.now().date() + timedelta(days=1)
     from src.services.message import MessageService
     from src.services.user import UserService
 
-    users = await UserService().list(end_of_subscription=tomorrow)
-    for user in users:
-        await MessageService().create(
-            Message(
-                datetime=datetime.now(),
-                content=SUBSCRIPTION_LAST_DAY_MESSAGE,
-                content_type=DataType.TEXT,
-                chat_id=(await UserService().get_base_chat(user.id)).id,
+    async with async_session() as session:
+        user_service = UserService(UserRepository(session))
+        message_service = MessageService(MessageRepository(session))
+
+        tomorrow = datetime.now().date() + timedelta(days=1)
+        users = await user_service.list(end_of_subscription=tomorrow)
+        for user in users:
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=SUBSCRIPTION_LAST_DAY_MESSAGE,
+                    content_type=DataType.TEXT,
+                    chat_id=(await UserService().get_base_chat(user.id)).id,
+                )
             )
-        )
+        session.commit()
 
 
 @celery_app.task
@@ -240,17 +281,21 @@ def check_subscription_last_day_task() -> None:
 async def create_admin() -> None:
     from src.services.user import UserService
 
-    try:
-        user = await UserService().create(
-            AuthUser(
-                email=settings.admin_email,
-                password=settings.admin_password,
+    async with async_session() as session:
+        user_service = UserService(UserRepository(session))
+
+        try:
+            user = await user_service.create(
+                AuthUser(
+                    email=settings.admin_email,
+                    password=settings.admin_password,
+                )
             )
-        )
-        await UserService().init_user(user)
-        await UserService().update(user.id, data=AuthUser(is_active=True, is_admin=True))
-    except IntegrityError:
-        pass
+            await user_service.init_user(user)
+            await user_service.update(user.id, data=AuthUser(is_active=True, is_admin=True))
+        except IntegrityError:
+            pass
+        session.commit()
 
 
 @celery_app.task

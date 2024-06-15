@@ -56,4 +56,5 @@ app.include_router(course_chapter_router, prefix="/course_chapter")
 app.include_router(user_router, prefix="/user")
 app.include_router(payment_router, prefix="/payment")
 
+
 add_pagination(app)

@@ -64,8 +64,3 @@ class KinescopeClient:
 
         video_list = [parse_obj_as(Video, video) for video in video_dict_list]
         return video_list
-
-
-if __name__ == "__main__":
-    video_list = KinescopeClient().get_project_video_list("b0cc85b3-63b1-4a9d-abfc-5c1e02a70daf")
-    pprint(video_list)

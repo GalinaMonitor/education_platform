@@ -6,7 +6,7 @@ const Divider = ({ color = null, selected = false }) => {
   }
   let width;
   if (selected) {
-    width = "5px";
+    width = "4px";
   } else {
     width = "1px";
   }

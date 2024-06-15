@@ -9,12 +9,6 @@ const CourseList = ({ courseChapterId }) => {
 
   const [fetchCourses, isLoading, error] = useFetching(async () => {
     const response = await CourseService.get();
-    console.log(
-      courseChapterId,
-      JSON.stringify(15),
-      response,
-      courseChapterId === JSON.stringify(15)
-    );
     setCourses([...response.data]);
   });
 

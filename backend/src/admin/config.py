@@ -32,6 +32,7 @@ class UserView(ModelView):
         "subscription_type",
         "service_uuid",
     ]
+    exclude_fields_from_list = ["chats"]
 
 
 class ChatView(ModelView):
@@ -45,14 +46,17 @@ class ChatView(ModelView):
         "coursechapter",
         "chat_type",
     ]
+    exclude_fields_from_list = ["messages"]
 
 
 class CourseChapterView(ModelView):
     fields = ["description", "name", "kinescope_project_id", "course_id", "welcome_message", "mentor_id", "mentor"]
+    exclude_fields_from_list = ["chats"]
 
 
 class ThemeView(ModelView):
     fields = ["coursechapter_id", "name"]
+    exclude_fields_from_list = ["messages"]
 
 
 class MessageView(ModelView):

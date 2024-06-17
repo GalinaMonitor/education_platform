@@ -220,9 +220,19 @@
     text-transform: uppercase;
 }
 
+.title-xl {
+    font-size: 42px;
+    font-style: normal;
+    font-family: Bold, serif;
+    font-weight: 700;
+    line-height: 52px;
+    text-transform: uppercase;
+}
+
 .text-md {
     font-size: 12px;
     font-style: normal;
+    font-family: Regular, serif;
     font-weight: 500;
     line-height: 18px; /* 150% */
 }

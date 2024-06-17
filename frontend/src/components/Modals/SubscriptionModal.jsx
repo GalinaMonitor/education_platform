@@ -30,9 +30,9 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
       >
         <Image src={"/tolya.svg"} width={120} preview={false} />
         <p className={"title-l my-5 text-center"}>
-          НА КАКОЙ ПЕРИОД ВЫ ХОТИТЕ
+          КАКУЮ ПОДПИСКУ ВЫ
           <br />
-          ПРИОБРЕСТИ ДОСТУП К ПЛАТФОРМЕ?
+          ХОТИТЕ ПОДКЛЮЧИТЬ?
         </p>
         <Row
           justify={"space-around"}
@@ -41,15 +41,30 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
         >
           <Card
             style={{ height: "fit-content", borderColor: "#FF7D1F" }}
-            className={"text-center p-10 content m-5"}
+            className={"text-center content m-5"}
           >
-            <p className={"title-l m-0 brand-color"}>30 дней</p>
-            <p className={"m-5"}>Доступ ко всем программам и уровням</p>
-            <p className={"title-l m-0"}>5 000 ₽ / 1 польз.</p>
+            <p className={"title-l m-0"}>30 дней</p>
+            <p className={"title-xl mt-5"}>3 599₽</p>
+            <div className={"text-left"}>
+              <p className={"text-md m-5"}>
+                → Одновременно доступны все
+                <br />
+                программы на выбор;
+              </p>
+              <p className={"text-md m-5"}>
+                → Видеоуроки поступают по 1<br />
+                видеоуроку в день;
+              </p>
+              <p className={"text-md m-5"}>
+                → Тренировочный полигон с<br />
+                бесплатным контентом в{" "}
+                <a href={"https://t.me/ku_pomogu"}>Telegram-канале</a>.
+              </p>
+            </div>
             <Button
               loading={isLoadingMonthPayment}
               type={"primary"}
-              className={"big-button mt-5"}
+              className={"medium-button mt-5"}
               onClick={fetchMonthPayment}
             >
               Оплатить подписку
@@ -57,15 +72,31 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
           </Card>
           <Card
             style={{ height: "fit-content", borderColor: "#FF7D1F" }}
-            className={"text-center p-10 content m-5"}
+            className={"text-center content m-5"}
           >
-            <p className={"title-l m-0 brand-color"}>90 дней</p>
-            <p className={"m-5"}>Доступ ко всем программам и уровням</p>
-            <p className={"title-l m-0"}>12 000 ₽ / 1 польз.</p>
+            <p className={"title-l m-0"}>90 дней</p>
+            <p className={"text-md m-0 brand-color"}>Экономия ≈ 3 000₽</p>
+            <p className={"title-xl m-0"}>7 899₽</p>
+            <div className={"text-left"}>
+              <p className={"text-md m-5"}>
+                → Одновременно доступны все
+                <br />
+                программы на выбор;
+              </p>
+              <p className={"text-md m-5"}>
+                → Видеоуроки поступают по 1<br />
+                видеоуроку в день;
+              </p>
+              <p className={"text-md m-5"}>
+                → Тренировочный полигон с<br />
+                бесплатным контентом в{" "}
+                <a href={"https://t.me/ku_pomogu"}>Telegram-канале</a>.
+              </p>
+            </div>
             <Button
               loading={isLoadingQuarterPayment}
               type={"primary"}
-              className={"big-button mt-5"}
+              className={"medium-button mt-5"}
               onClick={fetchQuarterPayment}
             >
               Оплатить подписку

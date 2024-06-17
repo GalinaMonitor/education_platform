@@ -3,6 +3,7 @@ from urllib.parse import urljoin
 
 import httpx
 
+from src.exceptions import PaymentException
 from src.schemas import (
     BaseModel,
     LifePayCallbackPurchase,
@@ -14,12 +15,12 @@ from src.settings import settings
 SUBSCRIPTION_PARAMS = {
     SubscriptionLength.MONTH: {
         "description": "Месячная подписка на Ку-Помогу",
-        "amount": 5000,
+        "amount": 3599,
         "duration": timedelta(days=30),
     },
     SubscriptionLength.QUARTER: {
         "description": "Квартальная подписка на Ку-Помогу",
-        "amount": 12000,
+        "amount": 7899,
         "duration": timedelta(days=120),
     },
 }
@@ -45,9 +46,12 @@ class PaymentService:
         }
         if not settings.debug:
             request_data["callback_url"] = urljoin(settings.service_url, app.url_path_for("lifepay_callback"))
-        async with httpx.AsyncClient(base_url="https://api.life-pay.ru/v1/") as client:
-            response = await client.post(url="bill", json=request_data)
-        return PaymentData.model_validate(response.json()["data"])
+        try:
+            async with httpx.AsyncClient(base_url="https://api.life-pay.ru/v1/") as client:
+                response = await client.post(url="bill", json=request_data)
+            return PaymentData.model_validate(response.json()["data"])
+        except Exception:
+            raise PaymentException
 
     def get_subscription_info_from_cost(self, purchase_data: LifePayCallbackPurchase):
         for subscription_info in SUBSCRIPTION_PARAMS.values():

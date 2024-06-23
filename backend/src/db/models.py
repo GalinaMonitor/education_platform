@@ -39,14 +39,20 @@ class Chat(Base):
     coursechapter = relationship("CourseChapter", backref=backref("chats"))
 
     async def __admin_repr__(self, request: Request) -> str:
+        from src.db.config import get_session
+        from src.repositories.course_chapter import CourseChapterRepository
+        from src.repositories.user import UserRepository
         from src.services.course_chapter import CourseChapterService
         from src.services.user import UserService
 
         chat_repr = []
-        if self.coursechapter_id:
-            chat_repr.append((await CourseChapterService().retrieve(self.coursechapter_id)).name)
-        if self.user_id:
-            chat_repr.append((await UserService().retrieve(self.user_id)).email)
+        async with get_session() as session:
+            if self.coursechapter_id:
+                chat_repr.append(
+                    (await CourseChapterService(CourseChapterRepository(session)).retrieve(self.coursechapter_id)).name
+                )
+            if self.user_id:
+                chat_repr.append((await UserService(UserRepository(session)).retrieve(self.user_id)).email)
         return " ".join(chat_repr)
 
 

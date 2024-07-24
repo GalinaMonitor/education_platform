@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from celery import Celery
 from celery.schedules import crontab
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.db.config import get_session_context
 from src.exceptions import HasNoSubscriptionException, NotFoundException
@@ -111,57 +112,59 @@ def sync_kinescope_task() -> None:
     asyncio.run(sync_kinescope())
 
 
-async def send_video(email: str, coursechapter_id: int) -> None:
+async def send_video(email: str, coursechapter_id: int, session: AsyncSession) -> None:
     from src.services.chat import ChatService
     from src.services.course_chapter import CourseChapterService
     from src.services.message import MessageService
     from src.services.user import UserService
     from src.services.video import VideoService
 
-    async with get_session_context() as session:
-        coursechapter_service = CourseChapterService(CourseChapterRepository(session))
-        video_service = VideoService(VideoRepository(session))
-        chat_service = ChatService(ChatRepository(session))
-        user_service = UserService(UserRepository(session))
-        message_service = MessageService(MessageRepository(session))
+    coursechapter_service = CourseChapterService(CourseChapterRepository(session))
+    video_service = VideoService(VideoRepository(session))
+    chat_service = ChatService(ChatRepository(session))
+    user_service = UserService(UserRepository(session))
+    message_service = MessageService(MessageRepository(session))
 
-        user = await user_service.get_by_email(email)
-        chat = await chat_service.get_or_create_from_user_and_chapter(
-            user_id=user.id, coursechapter_id=coursechapter_id
+    user = await user_service.get_by_email(email)
+    chat = await chat_service.get_or_create_from_user_and_chapter(user_id=user.id, coursechapter_id=coursechapter_id)
+    new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+    if new_video:
+        new_video = new_video[0]
+    else:
+        return
+    await message_service.create(
+        Message(
+            datetime=datetime.now(),
+            content=f"{new_video.name}\n{new_video.description}",
+            content_type=DataType.TEXT,
+            chat_id=chat.id,
+            theme_id=new_video.theme_id,
         )
-        new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
-        if new_video:
-            new_video = new_video[0]
-        else:
-            return
-        await message_service.create(
-            Message(
-                datetime=datetime.now(),
-                content=f"{new_video.name}\n{new_video.description}",
-                content_type=DataType.TEXT,
-                chat_id=chat.id,
-                theme_id=new_video.theme_id,
-            )
+    )
+    await message_service.create(
+        Message(
+            datetime=datetime.now(),
+            content=new_video.link,
+            content_type=DataType.VIDEO,
+            chat_id=chat.id,
+            theme_id=new_video.theme_id,
         )
-        await message_service.create(
-            Message(
-                datetime=datetime.now(),
-                content=new_video.link,
-                content_type=DataType.VIDEO,
-                chat_id=chat.id,
-                theme_id=new_video.theme_id,
-            )
-        )
-        await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
-        coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
-        user = await user_service.retrieve(id=chat.user_id)
-        await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
-        session.commit()
+    )
+    await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
+    coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
+    user = await user_service.retrieve(id=chat.user_id)
+    await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+    await session.commit()
+
+
+async def prepare_send_video(email: str, coursechapter_id: int):
+    async with get_session_context() as session:
+        await send_video(email, coursechapter_id, session)
 
 
 @celery_app.task
 def send_video_task(email: str, coursechapter_id: int) -> None:
-    asyncio.run(send_video(email, coursechapter_id))
+    asyncio.run(prepare_send_video(email, coursechapter_id))
 
 
 async def send_video_all() -> None:

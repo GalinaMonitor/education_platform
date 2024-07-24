@@ -62,7 +62,7 @@ class ChatService(BaseService):
             )
             await self.repo.update(chat.id, {"get_welcome_message": True})
             for _ in range(5):
-                await send_video(email=user.email, coursechapter_id=coursechapter.id)
+                await send_video(email=user.email, coursechapter_id=coursechapter.id, session=self.repo._session)
         all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=coursechapter.course_id)
         await self.repo.update(chat.id, {"is_active": True})
         for deactivate_chat in all_chats:

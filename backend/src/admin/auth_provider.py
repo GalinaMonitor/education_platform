@@ -20,10 +20,9 @@ class MyAuthProvider(AuthProvider):
         from src.services.auth import AuthService
 
         async with get_session_context() as session:
-            user = await AuthService(
-                repo=UserRepository(session), user_service=UserService(UserRepository(session))
-            ).authenticate_admin(username, password)
-            token = await AuthService().create_access_token(user.email)
+            auth_service = AuthService(repo=UserRepository(session), user_service=UserService(UserRepository(session)))
+            user = await auth_service.authenticate_admin(username, password)
+            token = await auth_service.create_access_token(user.email)
             request.session.update(token.model_dump())
         return response
 

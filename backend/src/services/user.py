@@ -1,11 +1,14 @@
 import uuid
 from datetime import datetime, timedelta
-from urllib.parse import urljoin
 
 from fastapi import Depends
 from sqlalchemy.exc import IntegrityError
 
+from src.db.config import get_session_context
 from src.exceptions import AlreadyRegisteredException, HasNoSubscriptionException
+from src.repositories.chat import ChatRepository
+from src.repositories.course_chapter import CourseChapterRepository
+from src.repositories.message import MessageRepository
 from src.repositories.user import UserRepository
 from src.schemas import (
     AuthUser,
@@ -60,30 +63,32 @@ class UserService(BaseService):
         from src.services.course_chapter import CourseChapterService
         from src.services.message import MessageService
 
-        chat = await ChatService().create(Chat(user_id=user.id, chat_type=ChatType.MAIN))
-        message_service = MessageService()
-        await message_service.create(
-            Message(
-                datetime=datetime.now(),
-                content=INIT_MESSAGE_WELCOME,
-                content_type=DataType.TEXT,
-                chat_id=chat.id,
-                theme_id=None,
+        async with get_session_context() as session:
+            chat_service = ChatService(ChatRepository(session))
+            message_service = MessageService(MessageRepository(session))
+
+            chat = await chat_service.create(Chat(user_id=user.id, chat_type=ChatType.MAIN))
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=INIT_MESSAGE_WELCOME,
+                    content_type=DataType.TEXT,
+                    chat_id=chat.id,
+                    theme_id=None,
+                )
             )
-        )
-        await message_service.create(
-            Message(
-                datetime=datetime.now(),
-                content=f"{settings.aws_host}/{settings.aws_bucket_name}/Закрепленные материалы-41aef431-ea72-4f28-ada0-619381dc899e.png",
-                content_type=DataType.IMAGE,
-                chat_id=chat.id,
-                theme_id=None,
+            await message_service.create(
+                Message(
+                    datetime=datetime.now(),
+                    content=f"{settings.aws_host}/{settings.aws_bucket_name}/Закрепленные материалы-41aef431-ea72-4f28-ada0-619381dc899e.png",
+                    content_type=DataType.IMAGE,
+                    chat_id=chat.id,
+                    theme_id=None,
+                )
             )
-        )
-        course_chapters = await CourseChapterService().list()
-        chat_service = ChatService()
-        for course_chapter in course_chapters:
-            await chat_service.create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
+            course_chapters = await CourseChapterService(CourseChapterRepository(session)).list()
+            for course_chapter in course_chapters:
+                await chat_service.create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
 
     async def get_by_email(self, email: str) -> User:
         return self.model.model_validate(await self.repo.get_by_email(email))

@@ -4,8 +4,10 @@ from typing import List
 from fastapi import Depends
 from pydantic.tools import parse_obj_as
 
+from src.db.config import get_session_context
 from src.exceptions import NotFoundException
 from src.repositories.chat import ChatRepository
+from src.repositories.message import MessageRepository
 from src.schemas import (
     Chat,
     ChatMessages,
@@ -48,19 +50,20 @@ class ChatService(BaseService):
         from src.services.message import MessageService
 
         if not chat.get_welcome_message:
-            await MessageService().create(
-                Message(
-                    datetime=datetime.now(),
-                    content=f"Ку, {user.fullname}! " + coursechapter.welcome_message
-                    if user.fullname
-                    else "Ку! " + coursechapter.welcome_message,
-                    content_type=DataType.TEXT,
-                    chat_id=chat.id,
-                    theme_id=None,
+            async with get_session_context() as session:
+                await MessageService(MessageRepository(session)).create(
+                    Message(
+                        datetime=datetime.now(),
+                        content=f"Ку, {user.fullname}! " + coursechapter.welcome_message
+                        if user.fullname
+                        else "Ку! " + coursechapter.welcome_message,
+                        content_type=DataType.TEXT,
+                        chat_id=chat.id,
+                        theme_id=None,
+                    )
                 )
-            )
-            await self.repo.update(chat.id, {"get_welcome_message": True})
-            send_video_task.delay(email=user.email, coursechapter_id=coursechapter.id)
+                await self.repo.update(chat.id, {"get_welcome_message": True})
+                send_video_task.delay(email=user.email, coursechapter_id=coursechapter.id)
         all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=coursechapter.course_id)
         await self.repo.update(chat.id, {"is_active": True})
         for deactivate_chat in all_chats:

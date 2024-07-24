@@ -240,7 +240,7 @@ async def check_subscription_end() -> None:
                     datetime=datetime.now(),
                     content=f"Ку, {user.fullname}.<br>" + SUBSCRIPTION_END_MESSAGE,
                     content_type=DataType.TEXT,
-                    chat_id=(await UserService().get_base_chat(user.id)).id,
+                    chat_id=(await user_service.get_base_chat(user.id)).id,
                 )
             )
         session.commit()
@@ -267,7 +267,7 @@ async def check_subscription_last_day() -> None:
                     datetime=datetime.now(),
                     content=SUBSCRIPTION_LAST_DAY_MESSAGE,
                     content_type=DataType.TEXT,
-                    chat_id=(await UserService().get_base_chat(user.id)).id,
+                    chat_id=(await user_service.get_base_chat(user.id)).id,
                 )
             )
         session.commit()

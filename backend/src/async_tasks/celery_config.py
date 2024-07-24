@@ -5,7 +5,7 @@ from celery import Celery
 from celery.schedules import crontab
 from sqlalchemy.exc import IntegrityError
 
-from src.db.config import get_session
+from src.db.config import get_session_context
 from src.exceptions import HasNoSubscriptionException, NotFoundException
 from src.kinescope.api import KinescopeClient
 from src.repositories.chat import ChatRepository
@@ -49,7 +49,7 @@ async def sync_kinescope() -> None:
     from src.services.theme import ThemeService
     from src.services.video import VideoService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         theme_service = ThemeService(ThemeRepository(session))
         coursechapter_service = CourseChapterService(CourseChapterRepository(session))
         video_service = VideoService(VideoRepository(session))
@@ -118,7 +118,7 @@ async def send_video(email: str, coursechapter_id: int) -> None:
     from src.services.user import UserService
     from src.services.video import VideoService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         coursechapter_service = CourseChapterService(CourseChapterRepository(session))
         video_service = VideoService(VideoRepository(session))
         chat_service = ChatService(ChatRepository(session))
@@ -172,7 +172,7 @@ async def send_video_all() -> None:
     from src.services.user import UserService
     from src.services.video import VideoService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         coursechapter_service = CourseChapterService(CourseChapterRepository(session))
         chat_service = ChatService(ChatRepository(session))
         user_service = UserService(UserRepository(session))
@@ -228,7 +228,7 @@ async def check_subscription_end() -> None:
     from src.services.message import MessageService
     from src.services.user import UserService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         user_service = UserService(UserRepository(session))
         message_service = MessageService(MessageRepository(session))
 
@@ -255,7 +255,7 @@ async def check_subscription_last_day() -> None:
     from src.services.message import MessageService
     from src.services.user import UserService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         user_service = UserService(UserRepository(session))
         message_service = MessageService(MessageRepository(session))
 
@@ -281,7 +281,7 @@ def check_subscription_last_day_task() -> None:
 async def create_admin() -> None:
     from src.services.user import UserService
 
-    async with get_session() as session:
+    async with get_session_context() as session:
         user_service = UserService(UserRepository(session))
 
         try:

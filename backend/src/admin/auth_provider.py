@@ -2,7 +2,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette_admin.auth import AdminUser, AuthProvider
 
-from src.db.config import get_session
+from src.db.config import get_session_context
 from src.exceptions import UnauthorizedException
 from src.repositories.user import UserRepository
 from src.services.user import UserService
@@ -19,7 +19,7 @@ class MyAuthProvider(AuthProvider):
     ) -> Response:
         from src.services.auth import AuthService
 
-        async with get_session() as session:
+        async with get_session_context() as session:
             user = await AuthService(
                 repo=UserRepository(session), user_service=UserService(UserRepository(session))
             ).authenticate_admin(username, password)
@@ -32,7 +32,7 @@ class MyAuthProvider(AuthProvider):
 
         if request.session.get("access_token", None):
             try:
-                async with get_session() as session:
+                async with get_session_context() as session:
                     user = await get_current_user(
                         token=request.session.get("access_token"), user_service=UserService(UserRepository(session))
                     )

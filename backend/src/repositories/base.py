@@ -2,12 +2,11 @@ from typing import List, Sequence, Union
 
 from fastapi import Depends
 from sqlalchemy import select, update
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.db.config import async_session, get_session
+from src.db.config import get_session
 from src.db.models import Base
-from src.exceptions import AlreadyRegisteredException, NotFoundException
+from src.exceptions import NotFoundException
 
 
 class BaseRepository:

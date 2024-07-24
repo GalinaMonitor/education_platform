@@ -4,7 +4,6 @@ from typing import List
 from fastapi import Depends
 from pydantic.tools import parse_obj_as
 
-from src.async_tasks.celery_config import send_video
 from src.exceptions import NotFoundException
 from src.repositories.chat import ChatRepository
 from src.repositories.message import MessageRepository
@@ -46,7 +45,7 @@ class ChatService(BaseService):
         return parse_obj_as(list[Message], await self.repo.messages(id, pagination_params, theme_id))
 
     async def activate(self, chat: Chat, user: User, coursechapter: CourseChapter) -> None:
-        from src.async_tasks.celery_config import send_video_task
+        from src.async_tasks.celery_config import send_video
         from src.services.message import MessageService
 
         if not chat.get_welcome_message:

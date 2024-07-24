@@ -7,13 +7,14 @@ from src.db.models import Chat, CourseChapter, Message, Theme, Video
 from src.exceptions import NotFoundException
 from src.repositories.base import BaseRepository
 from src.repositories.user import UserRepository
-from src.services.user import UserService
 
 
 class CourseChapterRepository(BaseRepository):
     model = CourseChapter
 
     async def retrieve_from_user_and_id(self, id: int, user_id: int) -> dict:
+        from src.services.user import UserService
+
         messages_amount_subquery = (
             select(self.model.id, func.count(Message.id).label("messages_amount"))
             .join(Chat, self.model.id == Chat.coursechapter_id)

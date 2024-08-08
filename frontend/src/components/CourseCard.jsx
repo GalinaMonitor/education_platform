@@ -44,9 +44,13 @@ const CourseCard = ({ course, refresh, selected }) => {
 
   const handleCancelCourseModal = async (courseChapterId = null) => {
     setIsCourseModalOpen(false);
-    setTimeout(refresh, 500);
+    setTimeout(refresh, 1000);
     if (courseChapterId) {
-      setTimeout(navigate, 500, `${RouteNames.COURSE_CHAT}/${courseChapterId}`);
+      setTimeout(
+        navigate,
+        1000,
+        `${RouteNames.COURSE_CHAT}/${courseChapterId}`
+      );
     }
   };
 

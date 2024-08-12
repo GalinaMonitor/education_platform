@@ -9,13 +9,9 @@ const MobileBlock = () => {
       }
     >
       <p className={"title-s text-center pb-5 brand-color"}>
-        Мы осознанно отказались <br />
-        от мобильной версии
+        Нужно активировать аккаунт через компьютер
       </p>
-      <p className={"text-center pb-5"}>
-        Мы хотим, чтобы вы сразу приступили к повторению за действиями
-        наставника и быстро интегрировали услышанное и увиденное в работу.
-      </p>
+      <p className={"text-center pb-5"}>Мобильная версия сейчас недоступна</p>
       <Image src={"/mobile-block.svg"} preview={false} width={300} />
     </Layout>
   );

@@ -1,7 +1,8 @@
 import React from "react";
-import { Button, Card, Col, Row } from "antd";
+import { Button, Col, Row } from "antd";
 import TelegramIconSVG from "./UI/TelegramIconSVG";
 import ShareIconSVG from "./UI/ShareIconSVG";
+import Card from "./UI/Card";
 
 const notifications = [
   {
@@ -27,7 +28,11 @@ const Notifications = ({ className }) => {
         <Col span={6} className={"h-full"} key={index}>
           <Card
             className={"relative mr-5"}
-            style={{ backgroundColor: item.color }}
+            style={{
+              backgroundColor: item.color,
+              paddingTop: "20px",
+              paddingBottom: "20px",
+            }}
           >
             <p className={"title-md mb-2"} style={{ color: "#FFFFFF" }}>
               {item.text}

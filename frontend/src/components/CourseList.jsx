@@ -17,8 +17,8 @@ const CourseList = ({ courseChapterId }) => {
   }, [courseChapterId]);
 
   return (
-    <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"} style={{ height: "90%" }}>
-      <div style={{ height: "95%", overflow: "auto" }}>
+    <Card text={"ПРОГРАММЫ ДЛЯ ИЗУЧЕНИЯ"} className={"h-full"}>
+      <div style={{ overflow: "auto" }}>
         {courses.map((course, index) => (
           <CourseCard
             key={course.id}

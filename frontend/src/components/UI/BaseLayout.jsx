@@ -1,14 +1,20 @@
 import React from "react";
 import Navbar from "../Navbar";
 import { Row } from "antd";
+import Notifications from "../Notifications";
 
 const BaseLayout = ({ children }) => {
   return (
     <div className={"h-full"}>
-      <div className={"ml-16 mt-16 mr-16"}>
-        <Navbar className={"h-1/6"} />
+      <div className={"h-1/6 pt-5"}>
+        <Navbar className={"ml-5 mr-5"} />
       </div>
-      <Row className={"ml-16 mr-16 h-4/6 mt-5"}>{children}</Row>
+      <div className={"h-4/6 pt-5"}>
+        <Row className={"ml-5 mr-5 h-full"}>{children}</Row>
+      </div>
+      <div className={"h-1/6 pt-5"}>
+        <Notifications className={"ml-5 mr-5"} />
+      </div>
     </div>
   );
 };

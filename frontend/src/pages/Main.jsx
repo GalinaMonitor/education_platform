@@ -7,7 +7,6 @@ import useUserStore from "../store/useUserStore";
 import useInterfaceStore from "../store/useInterfaceStore";
 import Settings from "../components/Settings";
 import LayoutTwoBlocks from "../components/UI/LayoutTwoBlocks";
-import ShareLink from "../components/ShareLink";
 import { RouteNames } from "../router";
 import { useFetching } from "../hooks/useFetching";
 import UserService from "../services/UserService";
@@ -36,7 +35,6 @@ const Main = () => {
         <BaseChat />
       </LayoutTwoBlocks>
       <LinksBlock className={"absolute bottom-5 right-16"} />
-      <ShareLink className={"absolute bottom-5 left-16"} />
     </>
   );
 };

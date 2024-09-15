@@ -78,8 +78,8 @@ class UserService(BaseService):
         await message_service.create(
             Message(
                 datetime=datetime.now(),
-                content=f"{settings.aws_host}/{settings.aws_bucket_name}/Закрепленные материалы-41aef431-ea72-4f28-ada0-619381dc899e.png",
-                content_type=DataType.IMAGE,
+                content="https://kinescope.io/fV3cojCrJzfN8NB8gNfYnK",
+                content_type=DataType.VIDEO,
                 chat_id=chat.id,
                 theme_id=None,
             )

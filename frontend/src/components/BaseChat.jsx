@@ -34,11 +34,7 @@ const BaseChat = () => {
   }, [limit, page]);
 
   return (
-    <Card
-      style={{ height: "90%" }}
-      className={"relative"}
-      text={"ЧАТ С ПЛАТФОРМОЙ"}
-    >
+    <Card className={"relative h-full"} text={"ЧАТ С ПЛАТФОРМОЙ"}>
       <div
         id="scrollableDiv"
         className={`w-full pt-5 overflow-auto flex flex-col-reverse`}

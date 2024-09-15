@@ -100,8 +100,7 @@ const CourseChat = ({ courseName, courseChapterId = null, themeId = null }) => {
   return (
     <Card
       text={`ЧАТ С НАСТАВНИКОМ ${courseName}`}
-      style={{ height: "90%" }}
-      className={"relative"}
+      className={"h-full relative"}
     >
       <div
         id="scrollableDiv"

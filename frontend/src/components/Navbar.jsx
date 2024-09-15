@@ -21,18 +21,21 @@ const Navbar = ({ className }) => {
   };
 
   return (
-    <Card className={className}>
-      <Row justify={"space-around"} align={"middle"}>
+    <Card
+      className={`${className} h-full`}
+      style={{ paddingTop: "10px", paddingBottom: "10px" }}
+    >
+      <Row justify={"space-between"} align={"middle"}>
         <Link to={RouteNames.MAIN}>
           <div>
-            <Image src={"/ku-logo.svg"} preview={false} width={"250px"} />
+            <Image src={"/ku-logo.svg"} preview={false} width={"200px"} />
           </div>
         </Link>
         <Row justify={"space-around"} align={"middle"}>
           <Avatar
             onClick={openCloseSettings}
             icon={<DefaultIconSvg />}
-            size={90}
+            size={100}
             src={user.avatar}
             style={{ marginRight: "25px", cursor: "pointer" }}
           />

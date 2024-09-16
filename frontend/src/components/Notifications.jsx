@@ -27,7 +27,7 @@ const Notifications = ({ className }) => {
       {notifications.map((item, index) => (
         <Col span={6} className={"h-full"} key={index}>
           <Card
-            className={"relative mr-5"}
+            className={"relative mr-3"}
             style={{
               backgroundColor: item.color,
               paddingTop: "20px",

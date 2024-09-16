@@ -1,21 +1,29 @@
 import React from "react";
 import { Button, Card, Image, Modal, Row } from "antd";
 import { Link } from "react-router-dom";
-import { useFetching } from "../../hooks/useFetching";
-import PaymentService from "../../services/PaymentService";
+import { useMockFetching } from "../../hooks/useMockFetching";
 
 const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
-  const [fetchMonthPayment, isLoadingMonthPayment, errorMonthPayment] =
-    useFetching(async () => {
-      const paymentLink = await PaymentService.create_payment_link("month");
-      window.location = paymentLink.data;
-    });
+  // TODO Раскомментировать, когда подключим платежную систему
+  // const [fetchMonthPayment, isLoadingMonthPayment, errorMonthPayment] =
+  //   useFetching(async () => {
+  //     const paymentLink = await PaymentService.create_payment_link("month");
+  //     window.location = paymentLink.data;
+  //   });
 
+  // const [fetchQuarterPayment, isLoadingQuarterPayment, errorQuarterPayment] =
+  // useFetching(async () => {
+  //   const paymentLink = await PaymentService.create_payment_link("quarter");
+  //   window.location = paymentLink.data;
+  // });
+  const [fetchMonthPayment, isLoadingMonthPayment, errorMonthPayment] =
+    useMockFetching(
+      "Ошибка на стороне платежной системы. Обратитесь в поддержку."
+    );
   const [fetchQuarterPayment, isLoadingQuarterPayment, errorQuarterPayment] =
-    useFetching(async () => {
-      const paymentLink = await PaymentService.create_payment_link("quarter");
-      window.location = paymentLink.data;
-    });
+    useMockFetching(
+      "Ошибка на стороне платежной системы. Обратитесь в поддержку."
+    );
 
   return (
     <Modal

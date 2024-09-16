@@ -23,9 +23,9 @@ const Navbar = ({ className }) => {
   return (
     <Card
       className={`${className} h-full`}
-      style={{ paddingTop: "10px", paddingBottom: "10px" }}
+      style={{ paddingTop: "5px", paddingBottom: "5px" }}
     >
-      <Row justify={"space-between"} align={"middle"}>
+      <Row justify={"space-between"} align={"middle"} className={"h-full"}>
         <Link to={RouteNames.MAIN}>
           <div>
             <Image src={"/ku-logo.svg"} preview={false} width={"200px"} />

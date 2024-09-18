@@ -1,20 +1,21 @@
 import React from "react";
-import { Button, Col, Row } from "antd";
+import { Col, Row } from "antd";
 import TelegramIconSVG from "./UI/TelegramIconSVG";
 import ShareIconSVG from "./UI/ShareIconSVG";
 import Card from "./UI/Card";
+import { Link } from "react-router-dom";
 
 const notifications = [
   {
     text: "Подписывайтесь на наш ТГ-канал и смотрите еще больше видеоуроков",
-    color: "#455A64",
+    color: "#687982",
     button_icon: <TelegramIconSVG />,
     button_text: "ПОДПИСАТЬСЯ",
     button_link: "https://t.me/ku_pomogu",
   },
   {
     text: "Оставьте отзыв и получите шаблон инфографики в подарок",
-    color: "#FF7D1F",
+    color: "#FC954A",
     button_icon: <ShareIconSVG />,
     button_text: "ОСТАВИТЬ ОТЗЫВ",
     button_link: "https://ku-pomogu.ru/for-users",
@@ -37,15 +38,15 @@ const Notifications = ({ className }) => {
             <p className={"title-md mb-2"} style={{ color: "#FFFFFF" }}>
               {item.text}
             </p>
-            <Button
-              style={{ backgroundColor: "#FFFFFF", color: item.color }}
-              className={"medium-button"}
-              type="primary"
-              icon={item.button_icon}
-              href={item.button_link}
-            >
-              {item.button_text}
-            </Button>
+            <Link to={item.button_link}>
+              <div
+                className={"rounded-xl inline-flex items-center py-3 px-5"}
+                style={{ backgroundColor: "#FFFFFF", color: item.color }}
+              >
+                {item.button_icon}
+                <p className={"ml-2"}>{item.button_text}</p>
+              </div>
+            </Link>
           </Card>
         </Col>
       ))}

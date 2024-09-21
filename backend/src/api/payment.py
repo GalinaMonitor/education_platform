@@ -27,12 +27,16 @@ async def get_payment_link(
     payment_service: PaymentService = Depends(),
     current_user: Annotated[User, Depends(get_current_active_user)] = None,
 ) -> AnyUrl:
-    payment_data = await payment_service.get_payment_data(subscription_length, current_user.email)
+    payment_data = await payment_service.get_payment_data(
+        subscription_length, current_user.email
+    )
     return payment_data.payment_url
 
 
 async def get_data(request: Request) -> LifePayCallbackData:
-    return LifePayCallbackData.model_validate(json.loads(dict(await request.form())["data"]))
+    return LifePayCallbackData.model_validate(
+        json.loads(dict(await request.form())["data"])
+    )
 
 
 @router.post("/lifepay_callback/")
@@ -45,7 +49,9 @@ async def lifepay_callback(
         logger.warning(f"Payment error\n{data}")
         return
     user = await user_service.get_by_email(data.email)
-    subscription_info = payment_service.get_subscription_info_from_cost(data.purchase.pop())
+    subscription_info = payment_service.get_subscription_info_from_cost(
+        data.purchase.pop()
+    )
     if user.end_of_subscription and user.end_of_subscription >= datetime.now().date():
         end_of_subscription = user.end_of_subscription + subscription_info.duration
     else:

@@ -2,7 +2,6 @@ from typing import List
 
 from sqlalchemy import func, select
 
-from src.db.config import async_session
 from src.db.models import Chat, CourseChapter, Message, Theme, Video
 from src.exceptions import NotFoundException
 from src.repositories.base import BaseRepository
@@ -21,13 +20,17 @@ class CourseChapterRepository(BaseRepository):
             .join(Message, Message.chat_id == Chat.id)
             .where(Chat.user_id == user_id)
             .where(self.model.id == id)
-            .where(Message.is_read == False)
+            .where(Message.is_read is False)
             .group_by(self.model.id)
             .subquery()
         )
         statement = (
-            select(self.model.__table__.columns, messages_amount_subquery.c.messages_amount)
-            .outerjoin(messages_amount_subquery, self.model.id == messages_amount_subquery.c.id)
+            select(
+                self.model.__table__.columns, messages_amount_subquery.c.messages_amount
+            )
+            .outerjoin(
+                messages_amount_subquery, self.model.id == messages_amount_subquery.c.id
+            )
             .join(Chat, self.model.id == Chat.coursechapter_id)
             .where(Chat.user_id == user_id)
             .where(self.model.id == id)
@@ -38,7 +41,9 @@ class CourseChapterRepository(BaseRepository):
             raise NotFoundException()
         if "mentor_id" in result and result["mentor_id"]:
             result = dict(result)
-            result["mentor"] = await UserService(UserRepository(self._session)).retrieve(id=result["mentor_id"])
+            result["mentor"] = await UserService(
+                UserRepository(self._session)
+            ).retrieve(id=result["mentor_id"])
         return result
 
     async def themes(self, id: int, user_id: int) -> List[dict]:

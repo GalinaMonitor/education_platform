@@ -16,7 +16,9 @@ class MailService:
         message = MessageSchema(
             subject=EMAIL_ACTIVATE_ACCOUNT,
             recipients=[email],
-            template_body={"url": f"{settings.front_url}/activate_user/{email}/{user_uuid}"},
+            template_body={
+                "url": f"{settings.front_url}/activate_user/{email}/{user_uuid}"
+            },
             subtype=MessageType.html,
         )
         fm = FastMail(email_conf)
@@ -26,7 +28,9 @@ class MailService:
         message = MessageSchema(
             subject=EMAIL_RESTORE_PASSWORD,
             recipients=[email],
-            template_body={"url": f"{settings.front_url}/restore_password/{email}/{user_uuid}"},
+            template_body={
+                "url": f"{settings.front_url}/restore_password/{email}/{user_uuid}"
+            },
             subtype=MessageType.html,
         )
         fm = FastMail(email_conf)

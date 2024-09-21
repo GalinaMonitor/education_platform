@@ -1,10 +1,11 @@
 """init
 
 Revision ID: c37ea1a80143
-Revises: 
+Revises:
 Create Date: 2023-06-25 14:23:31.449108
 
 """
+
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
@@ -89,7 +90,9 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("datetime", sa.DateTime(), nullable=True),
         sa.Column("content", sa.Text(), nullable=True),
-        sa.Column("content_type", sa.Enum("TEXT", "VIDEO", name="datatype"), nullable=True),
+        sa.Column(
+            "content_type", sa.Enum("TEXT", "VIDEO", name="datatype"), nullable=True
+        ),
         sa.Column("chat_id", sa.Integer(), nullable=True),
         sa.Column("theme_id", sa.Text(), nullable=True),
         sa.ForeignKeyConstraint(

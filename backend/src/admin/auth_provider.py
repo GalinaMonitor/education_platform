@@ -20,7 +20,10 @@ class MyAuthProvider(AuthProvider):
         from src.services.auth import AuthService
 
         async with get_session_context() as session:
-            auth_service = AuthService(repo=UserRepository(session), user_service=UserService(UserRepository(session)))
+            auth_service = AuthService(
+                repo=UserRepository(session),
+                user_service=UserService(UserRepository(session)),
+            )
             user = await auth_service.authenticate_admin(username, password)
             token = await auth_service.create_access_token(user.email)
             request.session.update(token.model_dump())
@@ -33,7 +36,8 @@ class MyAuthProvider(AuthProvider):
             try:
                 async with get_session_context() as session:
                     user = await get_current_user(
-                        token=request.session.get("access_token"), user_service=UserService(UserRepository(session))
+                        token=request.session.get("access_token"),
+                        user_service=UserService(UserRepository(session)),
                     )
             except UnauthorizedException:
                 return False

@@ -20,7 +20,6 @@ from src.schemas import (
     User,
 )
 from src.services.base import BaseService
-from src.settings import settings
 from src.text_constants import INIT_MESSAGE_WELCOME
 
 
@@ -84,9 +83,13 @@ class UserService(BaseService):
                 theme_id=None,
             )
         )
-        course_chapters = await CourseChapterService(CourseChapterRepository(self.repo._session)).list()
+        course_chapters = await CourseChapterService(
+            CourseChapterRepository(self.repo._session)
+        ).list()
         for course_chapter in course_chapters:
-            await chat_service.create(ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id))
+            await chat_service.create(
+                ChatMessages(user_id=user.id, coursechapter_id=course_chapter.id)
+            )
 
     async def get_by_email(self, email: str) -> User:
         return self.model.model_validate(await self.repo.get_by_email(email))

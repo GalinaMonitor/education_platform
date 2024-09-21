@@ -13,7 +13,9 @@ class BaseService:
         self.repo = repo
 
     async def list(self, **kwargs) -> List[BaseModel]:
-        return [self.model.model_validate(model) for model in await self.repo.list(**kwargs)]
+        return [
+            self.model.model_validate(model) for model in await self.repo.list(**kwargs)
+        ]
 
     async def retrieve(self, id: Union[int, str]) -> BaseModel:
         return self.model.model_validate(await self.repo.retrieve(id))

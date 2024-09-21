@@ -27,24 +27,44 @@ class ChatService(BaseService):
         super().__init__()
         self.repo = repo
 
-    async def get_or_create_from_user_and_chapter(self, user_id: int, coursechapter_id: int) -> Chat:
+    async def get_or_create_from_user_and_chapter(
+        self, user_id: int, coursechapter_id: int
+    ) -> Chat:
         try:
-            result = await self.repo.get_from_user_and_chapter(user_id, coursechapter_id)
+            result = await self.repo.get_from_user_and_chapter(
+                user_id, coursechapter_id
+            )
         except NotFoundException:
             result = await self.repo.create(
-                ChatMessages(user_id=user_id, coursechapter_id=coursechapter_id, chat_type=ChatType.COURSE).model_dump()
+                ChatMessages(
+                    user_id=user_id,
+                    coursechapter_id=coursechapter_id,
+                    chat_type=ChatType.COURSE,
+                ).model_dump()
             )
         return self.model.model_validate(result)
 
-    async def get_from_user_and_course(self, user_id: int, course_id: int) -> List[Chat]:
-        return [parse_obj_as(Chat, chat) for chat in await self.repo.get_from_user_and_course(user_id, course_id)]
+    async def get_from_user_and_course(
+        self, user_id: int, course_id: int
+    ) -> List[Chat]:
+        return [
+            parse_obj_as(Chat, chat)
+            for chat in await self.repo.get_from_user_and_course(user_id, course_id)
+        ]
 
     async def messages(
-        self, id: int, pagination_params: PaginationParams | None = None, theme_id: str | None = None
+        self,
+        id: int,
+        pagination_params: PaginationParams | None = None,
+        theme_id: str | None = None,
     ) -> List[Message]:
-        return parse_obj_as(list[Message], await self.repo.messages(id, pagination_params, theme_id))
+        return parse_obj_as(
+            list[Message], await self.repo.messages(id, pagination_params, theme_id)
+        )
 
-    async def activate(self, chat: Chat, user: User, coursechapter: CourseChapter) -> None:
+    async def activate(
+        self, chat: Chat, user: User, coursechapter: CourseChapter
+    ) -> None:
         from src.async_tasks.celery_config import send_video
         from src.services.message import MessageService
 
@@ -62,8 +82,14 @@ class ChatService(BaseService):
             )
             await self.repo.update(chat.id, {"get_welcome_message": True})
             for _ in range(5):
-                await send_video(email=user.email, coursechapter_id=coursechapter.id, session=self.repo._session)
-        all_chats = await self.get_from_user_and_course(user_id=user.id, course_id=coursechapter.course_id)
+                await send_video(
+                    email=user.email,
+                    coursechapter_id=coursechapter.id,
+                    session=self.repo._session,
+                )
+        all_chats = await self.get_from_user_and_course(
+            user_id=user.id, course_id=coursechapter.course_id
+        )
         await self.repo.update(chat.id, {"is_active": True})
         for deactivate_chat in all_chats:
             if deactivate_chat.id != chat.id:

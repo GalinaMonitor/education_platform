@@ -50,7 +50,15 @@ class ChatView(ModelView):
 
 
 class CourseChapterView(ModelView):
-    fields = ["description", "name", "kinescope_project_id", "course_id", "welcome_message", "mentor_id", "mentor"]
+    fields = [
+        "description",
+        "name",
+        "kinescope_project_id",
+        "course_id",
+        "welcome_message",
+        "mentor_id",
+        "mentor",
+    ]
     exclude_fields_from_list = ["chats"]
 
 
@@ -60,11 +68,28 @@ class ThemeView(ModelView):
 
 
 class MessageView(ModelView):
-    fields = ["datetime", "content", "content_type", "is_read", "chat_id", "theme_id", "theme"]
+    fields = [
+        "datetime",
+        "content",
+        "content_type",
+        "is_read",
+        "chat_id",
+        "theme_id",
+        "theme",
+    ]
 
 
 class VideoView(ModelView):
-    fields = ["id", "order", "name", "link", "description", "coursechapter_id", "theme_id", "theme"]
+    fields = [
+        "id",
+        "order",
+        "name",
+        "link",
+        "description",
+        "coursechapter_id",
+        "theme_id",
+        "theme",
+    ]
 
 
 admin.add_view(ModelView(Course, label="Курс"))

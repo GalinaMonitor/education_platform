@@ -23,7 +23,9 @@ sentry_sdk.init(
 )
 
 app = FastAPI()
-Instrumentator(should_group_status_codes=False, excluded_handlers=["/metrics"]).instrument(app).expose(app)
+Instrumentator(
+    should_group_status_codes=False, excluded_handlers=["/metrics"]
+).instrument(app).expose(app)
 
 admin.mount_to(app)
 

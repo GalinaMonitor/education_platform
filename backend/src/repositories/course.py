@@ -3,7 +3,6 @@ from typing import List
 
 from sqlalchemy import func, select
 
-from src.db.config import async_session
 from src.db.models import Chat, Course, CourseChapter
 from src.repositories.base import BaseRepository
 from src.repositories.course_chapter import CourseChapterRepository
@@ -23,7 +22,7 @@ class CourseRepository(BaseRepository):
             .join(CourseChapter, CourseChapter.course_id == self.model.id)
             .join(Chat, CourseChapter.id == Chat.coursechapter_id)
             .where(Chat.user_id == user_id)
-            .where(Chat.is_active == True)
+            .where(Chat.is_active is True)
             .group_by(self.model.id)
             .subquery()
         )
@@ -39,7 +38,9 @@ class CourseRepository(BaseRepository):
         coursechapter_repo = CourseChapterRepository(self._session)
         for result in results:
             result = dict(result)
-            result["coursechapters"] = await coursechapter_repo.list(course_id=result["id"])
+            result["coursechapters"] = await coursechapter_repo.list(
+                course_id=result["id"]
+            )
             courses_with_coursechapters.append(result)
         return courses_with_coursechapters
 

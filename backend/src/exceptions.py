@@ -1,6 +1,5 @@
 from fastapi import HTTPException, status
 from pydantic import BaseModel
-from starlette import status
 
 
 class Error(BaseModel):

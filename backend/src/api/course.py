@@ -20,7 +20,9 @@ async def get_courses(
 
 
 @router.get("/{id}")
-async def get_course(id: int, course_service: CourseService = Depends(CourseService)) -> Course:
+async def get_course(
+    id: int, course_service: CourseService = Depends(CourseService)
+) -> Course:
     return await course_service.retrieve(id=id)
 
 

@@ -1,6 +1,5 @@
 from sqlalchemy import func, select
 
-from src.db.config import async_session
 from src.db.models import Chat, User
 from src.exceptions import NotFoundException
 from src.repositories.base import BaseRepository
@@ -20,7 +19,9 @@ class UserRepository(BaseRepository):
 
     async def get_base_chat(self, id: int) -> dict:
         statement = select(Chat).where(
-            Chat.user_id == id, Chat.coursechapter_id == None, Chat.chat_type == ChatType.MAIN
+            Chat.user_id == id,
+            Chat.coursechapter_id is None,
+            Chat.chat_type == ChatType.MAIN,
         )
         results = await self._session.execute(statement)
         result = results.scalar_one_or_none()

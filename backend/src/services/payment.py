@@ -33,7 +33,9 @@ class SubscriptionSchema(BaseModel):
 
 
 class PaymentService:
-    async def get_payment_data(self, subscription_length: SubscriptionLength, user_email: str) -> PaymentData:
+    async def get_payment_data(
+        self, subscription_length: SubscriptionLength, user_email: str
+    ) -> PaymentData:
         from src.main import app
 
         subscription_params = SUBSCRIPTION_PARAMS[subscription_length]
@@ -45,9 +47,13 @@ class PaymentService:
             "customer_email": user_email,
         }
         if not settings.debug:
-            request_data["callback_url"] = urljoin(settings.service_url, app.url_path_for("lifepay_callback"))
+            request_data["callback_url"] = urljoin(
+                settings.service_url, app.url_path_for("lifepay_callback")
+            )
         try:
-            async with httpx.AsyncClient(base_url="https://api.life-pay.ru/v1/") as client:
+            async with httpx.AsyncClient(
+                base_url="https://api.life-pay.ru/v1/"
+            ) as client:
                 response = await client.post(url="bill", json=request_data)
             return PaymentData.model_validate(response.json()["data"])
         except Exception:

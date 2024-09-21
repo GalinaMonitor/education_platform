@@ -8,5 +8,7 @@ router = APIRouter()
 
 
 @router.get("/{id}/messages")
-async def get_messages(id: int, chat_service: ChatService = Depends(ChatService)) -> Page[Message]:
+async def get_messages(
+    id: int, chat_service: ChatService = Depends(ChatService)
+) -> Page[Message]:
     return paginate(await chat_service.messages(id))

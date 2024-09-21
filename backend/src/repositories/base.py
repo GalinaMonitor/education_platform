@@ -51,7 +51,12 @@ class BaseRepository:
         return model
 
     async def update_all(self, ids: List[Union[int, str]], data: dict) -> dict:
-        statement = update(self.model).where(self.model.id.in_(ids)).values(data).returning(self.model)
+        statement = (
+            update(self.model)
+            .where(self.model.id.in_(ids))
+            .values(data)
+            .returning(self.model)
+        )
         results = await self._session.scalars(statement)
         await self._session.flush()
         return results.all()

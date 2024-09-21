@@ -59,7 +59,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
                   >
                     <Elem color={course.color} />
                     <p className={"mt-5 font-semibold title-l"}>
-                      {previewImages[index].level}
+                      {course.name}
                     </p>
                   </div>
                 );

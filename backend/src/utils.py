@@ -28,7 +28,9 @@ from src.services.theme import ThemeService
 from src.services.user import UserService
 
 
-async def create_message(course_id: int, message_id: int, chat_id: int, theme_id: str, session: AsyncSession) -> None:
+async def create_message(
+    course_id: int, message_id: int, chat_id: int, theme_id: str, session: AsyncSession
+) -> None:
     await MessageService(MessageRepository(session=session)).create(
         Message(
             datetime=datetime.now(),
@@ -41,7 +43,11 @@ async def create_message(course_id: int, message_id: int, chat_id: int, theme_id
 
 
 async def create_theme(
-    theme_id: str, course_id: int, coursechapter_id: int, chat_id: int, session: AsyncSession
+    theme_id: str,
+    course_id: int,
+    coursechapter_id: int,
+    chat_id: int,
+    session: AsyncSession,
 ) -> None:
     theme = await ThemeService(ThemeRepository(session=session)).create(
         ThemeVideos(
@@ -54,8 +60,12 @@ async def create_theme(
         await create_message(course_id, i, chat_id, theme.id, session)
 
 
-async def create_course_chapter(course_id: int, coursechapter_id: int, user_id: int, session: AsyncSession) -> None:
-    course_chapter = await CourseChapterService(CourseChapterRepository(session=session)).create(
+async def create_course_chapter(
+    course_id: int, coursechapter_id: int, user_id: int, session: AsyncSession
+) -> None:
+    course_chapter = await CourseChapterService(
+        CourseChapterRepository(session=session)
+    ).create(
         CourseChapterThemes(
             name=f"Курс {course_id} Уровень {coursechapter_id}",
             course_id=course_id,
@@ -88,7 +98,9 @@ async def create_course(course_id: int, user_id: int, session: AsyncSession) -> 
 async def init_data() -> None:
     async with get_session_context() as session:
         user_service = UserService(UserRepository(session=session))
-        user = await user_service.create(AuthUser(email="test@test.com", password="secret"))
+        user = await user_service.create(
+            AuthUser(email="test@test.com", password="secret")
+        )
         user = await user_service.update(
             id=user.id,
             data=UpdateUser(
@@ -100,7 +112,7 @@ async def init_data() -> None:
                 user_id=user.id,
             )
         )
-        message = await MessageService(MessageRepository(session=session)).create(
+        await MessageService(MessageRepository(session=session)).create(
             Message(
                 datetime=datetime.now(),
                 content="Test base text content",

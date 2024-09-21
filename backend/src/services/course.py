@@ -17,11 +17,14 @@ class CourseService(BaseService):
         self.repo = repo
 
     async def list(self, user_id: int) -> List[CourseRead]:
-        return [parse_obj_as(CourseRead, course) for course in await self.repo.list(user_id)]
+        return [
+            parse_obj_as(CourseRead, course) for course in await self.repo.list(user_id)
+        ]
 
     async def course_chapters(self, id: int) -> List[CourseChapterThemes]:
         return [
-            parse_obj_as(CourseChapterThemes, coursechapter) for coursechapter in await self.repo.course_chapters(id)
+            parse_obj_as(CourseChapterThemes, coursechapter)
+            for coursechapter in await self.repo.course_chapters(id)
         ]
 
     async def change_receive_time(self, id: int, user_id, receive_time: time) -> None:

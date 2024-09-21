@@ -26,7 +26,6 @@ async def get_session_context() -> AsyncGenerator:
 async def get_session() -> AsyncGenerator:
     async with async_session() as session:
         try:
-            print(session)
             yield session
         except Exception as e:
             await session.rollback()

@@ -59,7 +59,9 @@ async def sync_kinescope() -> None:
         for course_chapter in course_chapters:
             if not course_chapter.kinescope_project_id:
                 continue
-            video_list = KinescopeClient().get_project_video_list(course_chapter.kinescope_project_id)
+            video_list = KinescopeClient().get_project_video_list(
+                course_chapter.kinescope_project_id
+            )
             for video in video_list:
                 if video.folder_id:
                     try:
@@ -126,8 +128,12 @@ async def send_video(email: str, coursechapter_id: int, session: AsyncSession) -
     message_service = MessageService(MessageRepository(session))
 
     user = await user_service.get_by_email(email)
-    chat = await chat_service.get_or_create_from_user_and_chapter(user_id=user.id, coursechapter_id=coursechapter_id)
-    new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+    chat = await chat_service.get_or_create_from_user_and_chapter(
+        user_id=user.id, coursechapter_id=coursechapter_id
+    )
+    new_video = await video_service.list(
+        coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1
+    )
     if new_video:
         new_video = new_video[0]
     else:
@@ -153,7 +159,9 @@ async def send_video(email: str, coursechapter_id: int, session: AsyncSession) -
     await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
     coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
     user = await user_service.retrieve(id=chat.user_id)
-    await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+    await MailService().send_new_video_email(
+        user.email, coursechapter.name, new_video.name
+    )
     await session.commit()
 
 
@@ -191,7 +199,9 @@ async def send_video_all() -> None:
             except HasNoSubscriptionException:
                 continue
 
-            new_video = await video_service.list(coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1)
+            new_video = await video_service.list(
+                coursechapter_id=chat.coursechapter_id, order=chat.last_video + 1
+            )
             if new_video:
                 new_video = new_video[0]
             else:
@@ -215,9 +225,15 @@ async def send_video_all() -> None:
                     theme_id=new_video.theme_id,
                 )
             )
-            await chat_service.update(id=chat.id, data=Chat(last_video=chat.last_video + 1))
-            coursechapter = await coursechapter_service.retrieve(id=chat.coursechapter_id)
-            await MailService().send_new_video_email(user.email, coursechapter.name, new_video.name)
+            await chat_service.update(
+                id=chat.id, data=Chat(last_video=chat.last_video + 1)
+            )
+            coursechapter = await coursechapter_service.retrieve(
+                id=chat.coursechapter_id
+            )
+            await MailService().send_new_video_email(
+                user.email, coursechapter.name, new_video.name
+            )
         session.commit()
 
 
@@ -237,7 +253,10 @@ async def check_subscription_end() -> None:
 
         users_without_subscription = await user_service.list(end_of_subscription=date)
         for user in users_without_subscription:
-            await user_service.update(id=user.id, data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION))
+            await user_service.update(
+                id=user.id,
+                data=UpdateUser(subscription_type=SubscriptionType.NO_SUBSCRIPTION),
+            )
             await message_service.create(
                 Message(
                     datetime=datetime.now(),
@@ -295,7 +314,9 @@ async def create_admin() -> None:
                 )
             )
             await user_service.init_user(user)
-            await user_service.update(user.id, data=AuthUser(is_active=True, is_admin=True))
+            await user_service.update(
+                user.id, data=AuthUser(is_active=True, is_admin=True)
+            )
         except IntegrityError:
             pass
         session.commit()

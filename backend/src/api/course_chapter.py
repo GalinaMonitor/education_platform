@@ -27,7 +27,9 @@ async def get_course_chapter(
     coursechapter_service: CourseChapterService = Depends(CourseChapterService),
     current_user: Annotated[User, Depends(get_current_active_user)] = None,
 ) -> CourseChapterRead:
-    return await coursechapter_service.retrieve_from_user_and_id(id=id, user_id=current_user.id)
+    return await coursechapter_service.retrieve_from_user_and_id(
+        id=id, user_id=current_user.id
+    )
 
 
 @router.get("/{id}/messages", response_model=List[Message])
@@ -39,9 +41,15 @@ async def get_messages(
     chat_service: ChatService = Depends(ChatService),
     message_service: MessageService = Depends(MessageService),
 ) -> List[Message]:
-    chat = await chat_service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
-    messages = await chat_service.messages(chat.id, pagination_params, theme_id=theme_id)
-    await message_service.update_all([m.id for m in messages], data=Message(is_read=True))
+    chat = await chat_service.get_or_create_from_user_and_chapter(
+        user_id=current_user.id, coursechapter_id=id
+    )
+    messages = await chat_service.messages(
+        chat.id, pagination_params, theme_id=theme_id
+    )
+    await message_service.update_all(
+        [m.id for m in messages], data=Message(is_read=True)
+    )
     return messages
 
 
@@ -55,5 +63,7 @@ async def activate_course_chapter(
 ) -> None:
     await user_service.check_subscription(current_user)
     coursechapter = await coursechapter_service.retrieve(id=id)
-    chat = await chat_service.get_or_create_from_user_and_chapter(user_id=current_user.id, coursechapter_id=id)
+    chat = await chat_service.get_or_create_from_user_and_chapter(
+        user_id=current_user.id, coursechapter_id=id
+    )
     await chat_service.activate(chat, current_user, coursechapter)

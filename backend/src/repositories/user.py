@@ -20,7 +20,7 @@ class UserRepository(BaseRepository):
     async def get_base_chat(self, id: int) -> dict:
         statement = select(Chat).where(
             Chat.user_id == id,
-            Chat.coursechapter_id is None,
+            Chat.coursechapter_id.is_(None),
             Chat.chat_type == ChatType.MAIN,
         )
         results = await self._session.execute(statement)

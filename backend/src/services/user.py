@@ -68,8 +68,8 @@ class UserService(BaseService):
         await message_service.create(
             Message(
                 datetime=datetime.now(),
-                content=INIT_MESSAGE_WELCOME,
-                content_type=DataType.TEXT,
+                content="https://kinescope.io/fV3cojCrJzfN8NB8gNfYnK",
+                content_type=DataType.VIDEO,
                 chat_id=chat.id,
                 theme_id=None,
             )
@@ -77,8 +77,8 @@ class UserService(BaseService):
         await message_service.create(
             Message(
                 datetime=datetime.now(),
-                content="https://kinescope.io/fV3cojCrJzfN8NB8gNfYnK",
-                content_type=DataType.VIDEO,
+                content=INIT_MESSAGE_WELCOME,
+                content_type=DataType.TEXT,
                 chat_id=chat.id,
                 theme_id=None,
             )

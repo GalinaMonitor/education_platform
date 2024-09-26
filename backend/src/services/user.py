@@ -39,7 +39,7 @@ class UserService(BaseService):
                     "email": data.email,
                     "hashed_password": pwd_context.hash(data.password),
                     "subscription_type": SubscriptionType.DEMO,
-                    "end_of_subscription": datetime.now().date() + timedelta(days=7),
+                    "end_of_subscription": datetime.now().date() + timedelta(days=30),
                 }
             )
         except IntegrityError:

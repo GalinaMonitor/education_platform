@@ -58,9 +58,7 @@ const ChooseLevelModal = ({ isModalOpen, handleCancel, course }) => {
                     }}
                   >
                     <Elem color={course.color} />
-                    <p className={"mt-5 font-semibold title-l"}>
-                      {course.name}
-                    </p>
+                    <p className={"mt-5 font-semibold title-l"}>{item.name}</p>
                   </div>
                 );
               })

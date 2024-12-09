@@ -52,7 +52,9 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             className={"text-center content m-5"}
           >
             <p className={"title-l m-0"}>30 дней</p>
-            <p className={"title-xl mt-5"}>3 599₽</p>
+            <p className={"text-md m-0 brand-color"}>Экономия ≈ 3 100</p>
+            <p className={"title-xl m-0 line-through"}>3 599₽</p>
+            <p className={"title-xl m-0"}>499</p>
             <div className={"text-left"}>
               <p className={"text-md m-5"}>
                 → Одновременно доступны все
@@ -83,8 +85,9 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             className={"text-center content m-5"}
           >
             <p className={"title-l m-0"}>90 дней</p>
-            <p className={"text-md m-0 brand-color"}>Экономия ≈ 3 000₽</p>
-            <p className={"title-xl m-0"}>7 899₽</p>
+            <p className={"text-md m-0 brand-color"}>Экономия ≈ 7 000</p>
+            <p className={"title-xl m-0 line-through"}>7 899₽</p>
+            <p className={"title-xl m-0 line-through"}>899</p>
             <div className={"text-left"}>
               <p className={"text-md m-5"}>
                 → Одновременно доступны все

@@ -15,12 +15,12 @@ from src.settings import settings
 SUBSCRIPTION_PARAMS = {
     SubscriptionLength.MONTH: {
         "description": "Месячная подписка на Ку-Помогу",
-        "amount": 3599,
-        "duration": timedelta(days=30),
+        "amount": 499,
+        "duration": timedelta(days=7),
     },
     SubscriptionLength.QUARTER: {
         "description": "Квартальная подписка на Ку-Помогу",
-        "amount": 7899,
+        "amount": 899,
         "duration": timedelta(days=120),
     },
 }

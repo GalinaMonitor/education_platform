@@ -9,7 +9,7 @@ const ButtonMessage = ({ text, time = null, buttonText, buttonUrl }) => {
     <>
       <div
         className={`border-2 border-solid rounded-t-2xl rounded-b-md relative p-6 mx-10 mt-10 mb-0`}
-        style={{ borderColor: "#ff7d1f" }}
+        style={{ borderColor: "#ff3300" }}
       >
         <div className={"top-0 left-0 text-left"}>{parsedText}</div>
         {time ? (

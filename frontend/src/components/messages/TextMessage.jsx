@@ -7,8 +7,8 @@ const TextMessage = ({ text, time = null, isRead = true }) => {
     <div
       className={`border-2 border-solid rounded-2xl relative p-6 m-10`}
       style={{
-        borderColor: "#ff7d1f",
-        backgroundColor: isRead ? "#ffffff" : "#ff7d1f",
+        borderColor: "#ff3300",
+        backgroundColor: isRead ? "#ffffff" : "#ff3300",
         color: isRead ? "#000000" : "#ffffff",
       }}
     >

@@ -38,16 +38,16 @@ const App = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "#FF7D1F",
-            colorInfo: "#FF7D1F",
+            colorPrimary: "#FF3300",
+            colorInfo: "#FF3300",
             fontFamily: "Semibold",
             borderRadius: 10,
             fontSize: 12,
             controlHeight: 40,
-            colorLink: "#FF7D1F",
-            colorLinkActive: "#FF7D1F",
-            colorLinkHover: "#FF7D1F",
-            colorPrimaryHover: "#FF7D1F",
+            colorLink: "#FF3300",
+            colorLinkActive: "#FF3300",
+            colorLinkHover: "#FF3300",
+            colorPrimaryHover: "#FF3300",
           },
         }}
       >

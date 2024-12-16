@@ -48,7 +48,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
           className={"mb-5 items justify-center"}
         >
           <Card
-            style={{ height: "fit-content", borderColor: "#FF7D1F" }}
+            style={{ height: "fit-content", borderColor: "#ff3300" }}
             className={"text-center content m-5"}
           >
             <p className={"title-l m-0"}>30 дней</p>
@@ -81,7 +81,7 @@ const SubscriptionModal = ({ isModalOpen, handleCancel }) => {
             </Button>
           </Card>
           <Card
-            style={{ height: "fit-content", borderColor: "#FF7D1F" }}
+            style={{ height: "fit-content", borderColor: "#ff3300" }}
             className={"text-center content m-5"}
           >
             <p className={"title-l m-0"}>90 дней</p>

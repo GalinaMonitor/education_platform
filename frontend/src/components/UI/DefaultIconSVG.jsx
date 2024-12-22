@@ -9,7 +9,7 @@ const DefaultIconSvg = () => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle cx="45" cy="45" r="45" fill="#FF7D1F" />
+      <circle cx="45" cy="45" r="45" fill="#ff3300" />
       <path
         d="M45 56C51.6274 56 57 50.6274 57 44C57 37.3726 51.6274 32 45 32C38.3726 32 33 37.3726 33 44C33 50.6274 38.3726 56 45 56Z"
         stroke="white"

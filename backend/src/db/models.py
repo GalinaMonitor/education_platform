@@ -143,7 +143,7 @@ class Course(Base):
 
     description = Column(Text, default="")
     name = Column(Text, default="")
-    color = Column(Text, default="#ff7d1f")
+    color = Column(Text, default="#ff3300")
     coursechapters = relationship(
         CourseChapter,
         backref=backref("course"),

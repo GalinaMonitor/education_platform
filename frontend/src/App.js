@@ -11,6 +11,7 @@ import "./fonts/GraphikLCG-Bold.ttf";
 import "./fonts/GraphikLCG-Regular.ttf";
 import "./fonts/GraphikLCG-Semibold.ttf";
 import "./fonts/GraphikLCG-Medium.ttf";
+import Snowfall from "react-snowfall";
 
 const App = () => {
   const { checkAuth, setTimeOnPlatform, timeOnPlatform } = useUserStore();
@@ -52,6 +53,7 @@ const App = () => {
         }}
       >
         <Layout className={"h-full relative"}>
+          <Snowfall style={{ zIndex: 100 }} />
           <Media
             queries={{
               small: "(max-width: 599px)",

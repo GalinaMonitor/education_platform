@@ -15,7 +15,7 @@ const notifications = [
   },
   {
     text: "Оставьте отзыв и получите шаблон инфографики в подарок",
-    color: "#FC954A",
+    color: "#ff3300",
     button_icon: <ShareIconSVG />,
     button_text: "ОСТАВИТЬ ОТЗЫВ",
     button_link: "https://ku-pomogu.ru/for-users",

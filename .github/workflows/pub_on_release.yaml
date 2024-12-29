@@ -76,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download repository
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: repository
       - name: Create kube config

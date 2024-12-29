@@ -1,0 +1,108 @@
+replicaCount: 1
+
+image:
+  repository: gmonitor/education_platform-back
+  pullPolicy: IfNotPresent
+  tag: master
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  automount: true
+  annotations: {}
+  name: ""
+
+podAnnotations:
+  vault.security.banzaicloud.io/vault-addr: "https://vault:8200" # optional, the address of the Vault service, default values is https://vault:8200
+  vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
+  vault.security.banzaicloud.io/vault-skip-verify: "false" # optional, skip TLS verification of the Vault server certificate
+  vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+  vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
+  vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
+
+podLabels: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8000
+  name: http
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+
+command: "['uvicorn', 'src.main:app', '--proxy-headers', '--reload', '--port', '8000', '--host', '0.0.0.0']"
+
+livenessProbe:
+  httpGet:
+    path: /api/docs
+    port: http
+readinessProbe:
+  httpGet:
+    path: /api/docs
+    port: http
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+volumes: []
+volumeMounts: []
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+migrations:
+  enabled: true
+  command: "alembic upgrade head"
+  activeDeadlineSeconds: 1000
+  backoffLimit: 1
+
+secrets:
+  annotations:
+    test: test
+    vault.security.banzaicloud.io/vault-addr: "https://vault:8200" # optional, the address of the Vault service, default values is https://vault:8200
+    vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
+    vault.security.banzaicloud.io/vault-skip-verify: "false" # optional, skip TLS verification of the Vault server certificate
+    vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
+    vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
+    vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
+
+
+env:
+  nonsecret:
+    TZ: "Europe/Moscow"
+    REDIS_URL: "redis://redis:6379/0"
+    REACT_APP_API_URL: "http://localhost:8000/"
+    FRONT_URL: "http://localhost:3000"
+    AWS_ACCESS_KEY_ID: "cj73880"
+    AWS_BUCKET_NAME: "2d09b0cd-educationplatform"
+    AWS_HOST: "https://s3.timeweb.com"
+    MAIL_SERVER: "smtp.timeweb.ru"
+    FORWARDED_ALLOW_IPS: "*"
+    PGDATA: "/var/lib/postgresql/data/pgdata"
+    UID: "1000"
+    GID: "1000"
+    SERVICE_URL: "http://127.0.0.1:8000"
+    DEBUG: "1"
+    VAULT_ADDR: "http://vault:8200"
+    JWT_PATH: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    SERVICE_PORT: "8080"
+    TEST: "vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY"

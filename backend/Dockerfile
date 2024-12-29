@@ -32,10 +32,12 @@ RUN poetry install --only main
 
 # PRODUCTION
 FROM python-base AS production
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y curl git \
+    && rm -rf /var/lib/apt/lists/*
+
 
 # Copying venv into image
 WORKDIR "backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .
-
-ENTRYPOINT alembic upgrade head && uvicorn src.main:app --proxy-headers --reload --port 8000 --host 0.0.0.0

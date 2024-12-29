@@ -1,0 +1,12 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "educationplatform.fullname" . }}-env-migrations
+  annotations:
+    helm.sh/hook: pre-install,pre-upgrade
+    helm.sh/hook-weight: "4"
+    helm.sh/hook-delete-policy: before-hook-creation,hook-succeeded,hook-failed
+data:
+  {{- range $key, $value := .Values.env.nonsecret }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

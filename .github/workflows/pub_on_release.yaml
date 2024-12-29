@@ -45,11 +45,11 @@ jobs:
       REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
     steps:
       - name: Upload repository
-          uses: actions/upload-artifact@v4
-          with:
-            name: repository
-            path: |
-              ${{ github.workspace }}/infra
+        uses: actions/upload-artifact@v4
+        with:
+          name: repository
+          path: |
+            ${{ github.workspace }}/infra
 
       - name: Login to docker.io
         run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin

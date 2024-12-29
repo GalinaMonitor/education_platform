@@ -85,9 +85,6 @@ jobs:
           token: '${{ github.token }}'
           values: |
             name: foobar
-          value-files: >-
-          [
-            "infra/values.yaml",
-          ]
+          value-files: ["infra/values.yaml"]
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

@@ -72,19 +72,26 @@ jobs:
         run: docker push $LOGIN/$NAME-back:${GITHUB_REF:11}
 
   deploy:
-    runs-on: [ ubuntu-latest ]
-    needs: build
+    needs: [build]
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: 'Deploy'
-        uses: 'deliverybot/helm@v1'
+      - name: Download repository
+        uses: actions/download-artifact@v2
         with:
-          release: 'nginx'
-          namespace: 'default'
-          chart: 'app'
-          token: '${{ github.token }}'
-          values: |
-            name: foobar
-          value-files: "./infra/values.yaml"
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+          name: repository
+      - name: Create kube config
+        run: |
+          mkdir -p $HOME/.kube/
+          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
+      - name: Install helm
+        run: |
+          curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz
+          tar -zxvf helm-v3.8.0-linux-amd64.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
+          helm version
+      - name: Lint helm charts
+        run: helm lint ./infra
+      - name: Deploy
+        run: |
+          helm upgrade --install myrelease ./infra -f ./infra/values.yaml

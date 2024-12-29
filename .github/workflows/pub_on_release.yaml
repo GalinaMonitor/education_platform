@@ -86,6 +86,7 @@ jobs:
           mkdir -p $HOME/.kube/
           echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
       - name: Install helm
         run: |
           curl -LO https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz

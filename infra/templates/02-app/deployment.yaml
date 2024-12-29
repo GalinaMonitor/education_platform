@@ -44,6 +44,9 @@ spec:
                 name:  {{ include "educationplatform.fullname" . }}-env
             - secretRef:
                 name: {{ include "educationplatform.fullname" . }}-env
+          env:
+            - name: AWS_SECRET_ACCESS_KEY
+              value: vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}

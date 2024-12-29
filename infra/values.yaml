@@ -105,4 +105,4 @@ env:
     VAULT_ADDR: "http://vault:8200"
     JWT_PATH: "/var/run/secrets/kubernetes.io/serviceaccount/token"
     SERVICE_PORT: "8080"
-    TEST: "vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY"
+    TEST: vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY

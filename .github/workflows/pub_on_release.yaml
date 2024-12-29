@@ -76,7 +76,7 @@ jobs:
     env:
       LOGIN: ${{ secrets.DOCKER_LOGIN }}
       NAME: ${{ secrets.DOCKER_NAME }}
-      KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+      KUBECONFIG: ${{ secrets.KUBECONFIG }}
     steps:
       - name: Login to docker.io
         run: echo '${{ secrets.DOCKER_PWD }}' | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
@@ -84,7 +84,7 @@ jobs:
       - name: Create kube config
         run: |
           mkdir -p $HOME/.kube/
-          echo "${{ secrets.KUBE_CONFIG }}" > $HOME/.kube/config
+          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
           chmod 600 $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
       - name: Install helm

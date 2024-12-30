@@ -10,6 +10,7 @@ spec:
   ports:
     - port: {{ .Values.frontend.service.port }}
       targetPort: {{ .Values.frontend.service.targetPort }}
+      nodePort: {{ .Values.frontend.service.nodePort }}
       protocol: TCP
       name: {{ .Values.frontend.service.name }}
   selector:

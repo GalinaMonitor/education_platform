@@ -10,6 +10,7 @@ backend:
     type: NodePort
     port: 8000
     targetPort: 8000
+    nodePort: 30002
     name: http
   migrations:
     enabled: true
@@ -30,6 +31,7 @@ frontend:
     type: NodePort
     port: 80
     targetPort: 80
+    nodePort: 30001
     name: http
 
 imagePullSecrets: []

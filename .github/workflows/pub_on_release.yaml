@@ -93,7 +93,7 @@ jobs:
           mv linux-amd64/helm /usr/local/bin/helm
           helm version
       - name: Lint helm charts
-        run: helm lint ./infra
+        run: helm lint ./.infra
       - name: Deploy
         run: |
-          helm upgrade --install myrelease ./infra -f ./.infra/values.yaml
+          helm upgrade --install myrelease ./.infra -f ./.infra/values.yaml

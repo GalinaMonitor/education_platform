@@ -71,7 +71,7 @@ affinity: {}
 
 migrations:
   enabled: true
-  command: "alembic upgrade head"
+  command: "echo $TEST && echo $AWS_SECRET_ACCESS_KEY"
   activeDeadlineSeconds: 1000
   backoffLimit: 1
 

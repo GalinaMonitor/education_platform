@@ -6,9 +6,7 @@ metadata:
     {{- include "educationplatform.labels" . | nindent 4 }}
     pod: backend
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "educationplatform.selectorLabels" . | nindent 6 }}
@@ -25,16 +23,8 @@ spec:
         pod: backend
     spec:
       serviceAccountName: default
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
           {{ if .Values.backend.image.tag }}
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
           {{- else }}
@@ -58,18 +48,4 @@ spec:
           readinessProbe:
             {{- omit .Values.readinessProbe "enabled" | toYaml | nindent 12 }}
           {{- end }}
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
           terminationMessagePolicy: FallbackToLogsOnError
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}

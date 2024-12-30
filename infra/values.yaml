@@ -34,16 +34,6 @@ frontend:
     nodePort: 30001
     name: http
 
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
-serviceAccount:
-  create: false
-  automount: true
-  annotations: {}
-  name: ""
-
 podAnnotations:
   vault.security.banzaicloud.io/vault-addr: "https://vault:8200" # optional, the address of the Vault service, default values is https://vault:8200
   vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
@@ -51,23 +41,6 @@ podAnnotations:
   vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
   vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
   vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
-
-podLabels: {}
-podSecurityContext: {}
-securityContext: {}
-
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: chart-example.local
-      paths:
-        - path: /
-          pathType: ImplementationSpecific
-  tls: []
-
-resources: {}
 
 livenessProbe:
   httpGet:
@@ -77,18 +50,6 @@ readinessProbe:
   httpGet:
     path: /api/docs
     port: http
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-
-volumes: []
-volumeMounts: []
-nodeSelector: {}
-tolerations: []
-affinity: {}
 
 secrets:
   annotations:

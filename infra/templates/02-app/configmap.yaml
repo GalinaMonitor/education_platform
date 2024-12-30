@@ -1,8 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: {{ include "educationplatform.fullname" . }}-env
-data:
-  {{- range $key, $value := .Values.env.nonsecret }}
-  {{ $key }}: {{ $value | quote }}
-  {{- end }}

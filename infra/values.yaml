@@ -1,9 +1,36 @@
 replicaCount: 1
 
-image:
-  repository: gmonitor/education_platform-back
-  pullPolicy: IfNotPresent
-  tag: master
+backend:
+  image:
+    repository: gmonitor/education_platform-back
+    pullPolicy: IfNotPresent
+    tag: master
+  command: "['uvicorn', 'src.main:app', '--proxy-headers', '--reload', '--port', '8000', '--host', '0.0.0.0']"
+  service:
+    type: NodePort
+    port: 8000
+    targetPort: 8000
+    name: http
+  migrations:
+    enabled: true
+    command: "alembic upgrade head"
+    activeDeadlineSeconds: 1000
+    backoffLimit: 1
+
+celery:
+  beat_command: "['celery', '-A', 'src.async_tasks.celery_config', 'beat', '--loglevel=INFO']"
+  worker_command: "['celery', '-A', 'src.async_tasks.celery_config', 'worker', '--loglevel=INFO']"
+
+frontend:
+  image:
+    repository: gmonitor/education_platform-front
+    pullPolicy: IfNotPresent
+    tag: master
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 80
+    name: http
 
 imagePullSecrets: []
 nameOverride: ""
@@ -27,12 +54,6 @@ podLabels: {}
 podSecurityContext: {}
 securityContext: {}
 
-service:
-  type: NodePort
-  port: 80
-  targetPort: 8000
-  name: http
-
 ingress:
   enabled: false
   className: ""
@@ -45,8 +66,6 @@ ingress:
   tls: []
 
 resources: {}
-
-command: "['uvicorn', 'src.main:app', '--proxy-headers', '--reload', '--port', '8000', '--host', '0.0.0.0']"
 
 livenessProbe:
   httpGet:
@@ -69,22 +88,14 @@ nodeSelector: {}
 tolerations: []
 affinity: {}
 
-migrations:
-  enabled: true
-  command: "echo $TEST && echo $AWS_SECRET_ACCESS_KEY"
-  activeDeadlineSeconds: 1000
-  backoffLimit: 1
-
 secrets:
   annotations:
-    test: test
     vault.security.banzaicloud.io/vault-addr: "https://vault:8200" # optional, the address of the Vault service, default values is https://vault:8200
     vault.security.banzaicloud.io/vault-role: "default" # optional, the default value is the name of the ServiceAccount the Pod runs in, in case of Secrets and ConfigMaps it is "default"
     vault.security.banzaicloud.io/vault-skip-verify: "false" # optional, skip TLS verification of the Vault server certificate
     vault.security.banzaicloud.io/vault-tls-secret: "vault-tls" # optional, the name of the Secret where the Vault CA cert is, if not defined it is not mounted
     vault.security.banzaicloud.io/vault-agent: "false" # optional, if true, a Vault Agent will be started to do Vault authentication, by default not needed and vault-env will do Kubernetes Service Account based Vault authentication
     vault.security.banzaicloud.io/vault-path: "kubernetes" # optional, the Kubernetes Auth mount path in Vault the default value is "kubernetes"
-
 
 env:
   nonsecret:
@@ -95,6 +106,7 @@ env:
     AWS_ACCESS_KEY_ID: "cj73880"
     AWS_BUCKET_NAME: "2d09b0cd-educationplatform"
     AWS_HOST: "https://s3.timeweb.com"
+    MAIL_USERNAME: "support@ku-pomogu.ru"
     MAIL_SERVER: "smtp.timeweb.ru"
     FORWARDED_ALLOW_IPS: "*"
     PGDATA: "/var/lib/postgresql/data/pgdata"
@@ -104,5 +116,22 @@ env:
     DEBUG: "1"
     VAULT_ADDR: "http://vault:8200"
     JWT_PATH: "/var/run/secrets/kubernetes.io/serviceaccount/token"
+    ADMIN_EMAIL: "admin@ku-pomogu.ru"
     SERVICE_PORT: "8080"
-    TEST: vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY
+
+  secret:
+    POSTGRES_DB: "vault:secret/data/secret#POSTGRES_DB"
+    POSTGRES_USER: "vault:secret/data/secret#POSTGRES_USER"
+    POSTGRES_PASSWORD: "vault:secret/data/secret#POSTGRES_PASSWORD"
+    DB_URL: "vault:secret/data/secret#DB_URL"
+    DATABASE_URL: "vault:secret/data/secret#DATABASE_URL"
+    FLASK_SQLALCHEMY_DATABASE_URI: "vault:secret/data/secret#FLASK_SQLALCHEMY_DATABASE_URI"
+    SECRET_KEY: "vault:secret/data/secret#SECRET_KEY"
+    KINESCOPE_API_KEY: "vault:secret/data/secret#KINESCOPE_API_KEY"
+    AWS_SECRET_ACCESS_KEY: "vault:secret/data/secret#AWS_SECRET_ACCESS_KEY"
+    MAIL_PASSWORD: "vault:secret/data/secret#MAIL_PASSWORD"
+    ADMIN_PASSWORD: "vault:secret/data/secret#ADMIN_PASSWORD"
+    FLASK_SECRET_KEY: "vault:secret/data/secret#FLASK_SECRET_KEY"
+    SENTRY_DSN: "vault:secret/data/secret#SENTRY_DSN"
+    LIFEPAY_LOGIN: "vault:secret/data/secret#LIFEPAY_LOGIN"
+    LIFEPAY_API_KEY: "vault:secret/data/secret#LIFEPAY_API_KEY"

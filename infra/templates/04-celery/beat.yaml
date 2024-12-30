@@ -1,9 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "educationplatform.fullname" . }}
+  name: {{ include "educationplatform.fullname" . }}-celery-beat
   labels:
     {{- include "educationplatform.labels" . | nindent 4 }}
+    pod: celery
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -11,6 +12,7 @@ spec:
   selector:
     matchLabels:
       {{- include "educationplatform.selectorLabels" . | nindent 6 }}
+      pod: celery
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -20,6 +22,7 @@ spec:
       {{- end }}
       labels:
         {{- include "educationplatform.selectorLabels" . | nindent 8 }}
+        pod: celery
     spec:
       serviceAccountName: default
       {{- with .Values.imagePullSecrets }}
@@ -32,24 +35,21 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          {{ if .Values.image.tag }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          {{ if .Values.backend.image.tag }}
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
           {{- else }}
-          image: "{{ .Values.image.repository }}"
+          image: "{{ .Values.backend.image.repository }}"
           {{- end }}
-          command: {{ .Values.command }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: {{ .Values.celery.beat_command }}
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           envFrom:
             - configMapRef:
                 name:  {{ include "educationplatform.fullname" . }}-env
             - secretRef:
                 name: {{ include "educationplatform.fullname" . }}-env
-          env:
-            - name: AWS_SECRET_ACCESS_KEY
-              value: vault:secret/data/demosecret/aws#AWS_SECRET_ACCESS_KEY
           ports:
             - name: http
-              containerPort: {{ .Values.service.targetPort }}
+              containerPort: {{ .Values.backend.service.targetPort }}
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             {{- omit .Values.livenessProbe "enabled" | toYaml | nindent 12 }}

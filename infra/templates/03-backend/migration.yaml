@@ -1,4 +1,4 @@
-{{- if .Values.migrations.enabled }}
+{{- if .Values.backend.migrations.enabled }}
 ---
 apiVersion: batch/v1
 kind: Job
@@ -6,8 +6,9 @@ metadata:
   name: {{ include "educationplatform.fullname" . }}-migrations
   labels:
     {{- include "educationplatform.labels" . | nindent 4 }}
+    pod: backend
 spec:
-  activeDeadlineSeconds: {{ .Values.migrations.activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .Values.backend.migrations.activeDeadlineSeconds }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -25,10 +26,10 @@ spec:
       - name: migrations
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
         command: ["/bin/bash"]
-        args: ["-c", {{ .Values.migrations.command }} ]
+        args: ["-c", {{ .Values.backend.migrations.command }} ]
         envFrom:
           - secretRef:
               name: {{ include "educationplatform.fullname" . }}-env
@@ -37,6 +38,6 @@ spec:
         resources:
           {{- toYaml .Values.resources.migrations | nindent 12 }}
       restartPolicy: Never
-  backoffLimit: {{ .Values.migrations.backoffLimit }}
+  backoffLimit: {{ .Values.backend.migrations.backoffLimit }}
 ...
 {{- end }}

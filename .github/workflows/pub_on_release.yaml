@@ -96,4 +96,4 @@ jobs:
         run: helm lint ./infra
       - name: Deploy
         run: |
-          helm upgrade --install myrelease ./infra -f ./infra/values.yaml
+          helm upgrade --install myrelease ./infra -f ./.infra/values.yaml

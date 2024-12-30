@@ -103,8 +103,6 @@ env:
   nonsecret:
     TZ: "Europe/Moscow"
     REDIS_URL: "redis://redis:6379/0"
-    REACT_APP_API_URL: "http://localhost:8000/"
-    FRONT_URL: "http://localhost:3000"
     AWS_ACCESS_KEY_ID: "cj73880"
     AWS_BUCKET_NAME: "2d09b0cd-educationplatform"
     AWS_HOST: "https://s3.timeweb.com"
@@ -114,7 +112,6 @@ env:
     PGDATA: "/var/lib/postgresql/data/pgdata"
     UID: "1000"
     GID: "1000"
-    SERVICE_URL: "http://127.0.0.1:8000"
     DEBUG: "1"
     VAULT_ADDR: "http://vault:8200"
     JWT_PATH: "/var/run/secrets/kubernetes.io/serviceaccount/token"
@@ -122,6 +119,9 @@ env:
     SERVICE_PORT: "8080"
 
   secret:
+    FRONT_URL: "vault:secret/data/secret#FRONT_URL"
+    SERVICE_URL: "vault:secret/data/secret#SERVICE_URL"
+    REACT_APP_API_URL: "vault:secret/data/secret#REACT_APP_API_URL"
     POSTGRES_DB: "vault:secret/data/secret#POSTGRES_DB"
     POSTGRES_USER: "vault:secret/data/secret#POSTGRES_USER"
     POSTGRES_PASSWORD: "vault:secret/data/secret#POSTGRES_PASSWORD"

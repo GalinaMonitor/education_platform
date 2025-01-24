@@ -32,13 +32,12 @@ RUN poetry install --only main
 
 # PRODUCTION
 FROM python-base AS production
-RUN apt-get update \
+RUN apt-get update && apt-get upgrade -y \
     && apt-get install --no-install-recommends -y curl git \
     && rm -rf /var/lib/apt/lists/*
-
-RUN pip install debugpy
 
 # Copying venv into image
 WORKDIR "/backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
+RUN pip install debugpy
 COPY . .

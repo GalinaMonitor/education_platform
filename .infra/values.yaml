@@ -3,7 +3,7 @@ replicaCount: 1
 backend:
   image:
     repository: gmonitor/education_platform-back
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: master
   command: "['uvicorn', 'src.main:app', '--proxy-headers', '--reload', '--port', '8000', '--host', '0.0.0.0']"
   service:
@@ -25,7 +25,7 @@ celery:
 frontend:
   image:
     repository: gmonitor/education_platform-front
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: master
   service:
     type: NodePort

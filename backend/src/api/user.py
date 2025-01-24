@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, Response, UploadFile
 from fastapi_pagination import Page, paginate
 
 from src.auth import get_current_active_user
@@ -17,6 +17,13 @@ router = APIRouter()
 @router.get("/total_users")
 async def get_total_users(user_service: UserService = Depends(UserService)) -> int:
     return await user_service.get_total_users()
+
+
+@router.get("/test_endpoint")
+async def get_test_endpoint() -> int:
+    print(1)
+    print(2)
+    return Response(123)
 
 
 @router.get("/messages")

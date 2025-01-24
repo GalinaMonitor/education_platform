@@ -1,5 +1,5 @@
 # BASE
-FROM python:3.11-slim AS python-base
+FROM python:3.11.4-slim-buster AS python-base
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
@@ -36,8 +36,9 @@ RUN apt-get update \
     && apt-get install --no-install-recommends -y curl git \
     && rm -rf /var/lib/apt/lists/*
 
+RUN pip install debugpy
 
 # Copying venv into image
-WORKDIR "backend"
+WORKDIR "/backend"
 COPY --from=builder-base $VENV_PATH $VENV_PATH
 COPY . .

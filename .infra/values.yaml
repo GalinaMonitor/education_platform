@@ -78,6 +78,7 @@ env:
     JWT_PATH: "/var/run/secrets/kubernetes.io/serviceaccount/token"
     ADMIN_EMAIL: "admin@ku-pomogu.ru"
     SERVICE_PORT: "8080"
+    DEBUGPY_LOG_DIR: "/backend/logs"
 
   secret:
     FRONT_URL: "vault:secret/data/secret#FRONT_URL"

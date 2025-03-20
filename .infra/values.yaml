@@ -67,7 +67,7 @@ env:
     AWS_ACCESS_KEY_ID: "cj73880"
     AWS_BUCKET_NAME: "2d09b0cd-educationplatform"
     AWS_HOST: "https://s3.timeweb.com"
-    MAIL_USERNAME: "support@ku-pomogu.ru"
+    MAIL_USERNAME: "admin@ku-pomogu.ru"
     MAIL_SERVER: "smtp.timeweb.ru"
     FORWARDED_ALLOW_IPS: "*"
     PGDATA: "/var/lib/postgresql/data/pgdata"
